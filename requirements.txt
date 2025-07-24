@@ -4,3 +4,4 @@ pathos
 scipy
 pandas
 scikit-learn
+pympler

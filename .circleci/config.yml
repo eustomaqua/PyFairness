@@ -3,6 +3,7 @@
 #
 # https://coveralls.io/github/eustomaqua/PyFairness
 # https://circleci.com/developer/orbs/orb/coveralls/coveralls
+# https://docs.codacy.com/coverage-reporter/#generating-coverage
 #
 version: 2.1
 
@@ -11,7 +12,8 @@ _defaults: &defaults
   docker:
     # CircleCI maintains a library of pre-built images
     # documented at https://circleci.com/developer/images/image/cimg/python
-    - image: cimg/python:3.11.8
+    # - image: cimg/python:3.11.8
+    - image: cimg/python:3.12
   working_directory: ~/project
 
 
@@ -32,7 +34,7 @@ jobs:
             coverage report
             coverage html
             coverage xml
-            export CODACY_PROJECT_TOKEN=082ca48f7f2e46649be75c2a495cfc66
+            export CODACY_PROJECT_TOKEN=e5364f1287c94650b2575c849d47c40a
             export CODECOV_TOKEN=c7609124-b53c-4019-a893-cec9f98cfe97
             export COVERALLS_REPO_TOKEN=vVh9U1eIjWuYcPfvpPaNif7kL8rJA6iRZ
             bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.xml
@@ -40,14 +42,14 @@ jobs:
             # python -m pytest fairml/facils/excl_test*
             # rm chart*.pdf && rm cheers*.pdf && rm fairgbm*.pdf
           
-      - name: Upload coverage reports to Codecov
-          uses: codecov/codecov-action@v5
-          with:
-              token: ${{ secrets.CODECOV_TOKEN }}
-      - name: Upload coverage reports to Coveralls
-          uses: coveralls/coveralls@2.2.5
-          with:
-              token: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      # - name: Upload coverage reports to Codecov
+      #     uses: codecov/codecov-action@v5
+      #     with:
+      #         token: ${{ secrets.CODECOV_TOKEN }}
+      # - name: Upload coverage reports to Coveralls
+      #     uses: coveralls/coveralls@2.2.5
+      #     with:
+      #         token: ${{ secrets.COVERALLS_REPO_TOKEN }}
 
       - persist_to_workspace:
           root: ~/project
