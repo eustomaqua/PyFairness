@@ -39,7 +39,6 @@ def test_timer():
     print(elegant_dated(tim, 'txt'))
     print(elegant_dated(tim, 'day'))
     print(elegant_dated(tim, 'wks'))
-
     return
 
 
@@ -47,10 +46,8 @@ def test_const():
     from pyfairness.facil.utils_const import (
         CONST_ZERO, CONST_DIFF, check_zero, check_equal,
         check_signed_zero, unique_column, judge_transform_need,
-        judge_mathcal_Y, np_sum, np_prod,  # renew_rand_seed,
-        synthetic_lbl, synthetic_dat, synthetic_set, synthetic_clf)
-    from pyfairness.facil.utils_const import \
-        random_seed_generator as renew_rand_seed
+        judge_mathcal_Y, np_sum, np_prod)  # ,# renew_rand_seed,
+    #     synthetic_lbl, synthetic_dat, synthetic_set, synthetic_clf)
     import numpy as np
 
     assert check_zero(0) == CONST_ZERO
@@ -67,12 +64,14 @@ def test_const():
     vY, dY = judge_transform_need(y)
     assert dY <= 4
     tmp = judge_mathcal_Y(dY)
-    assert all([i == j for i, j in zip(vY, tmp)])
+    # assert all([i == j for i, j in zip(vY, tmp)])
+    assert check_equal(vY, tmp)
     y = np.random.randint(2, size=17).tolist()
     vY, dY = judge_transform_need(y)
     assert dY == 2  # 1
     tmp = judge_mathcal_Y(dY)
-    assert all([i == j for i, j in zip(vY, tmp)])
+    # assert all([i == j for i, j in zip(vY, tmp)])
+    assert check_equal(vY, tmp)
 
     nb_col = 26 + 26**2 + 26**3
     alphabet = [chr(i) for i in range(97, 123)]
@@ -87,6 +86,16 @@ def test_const():
 
     assert np_sum(range(1, 11)) == 55
     assert np_prod(range(1, 5)) == 24
+    return
+
+
+def test_simulator():
+    from pyfairness.facil.utils_const import (
+        synthetic_lbl, synthetic_dat, synthetic_set, synthetic_clf)
+    from pyfairness.facil.utils_const import \
+        random_seed_generator as renew_rand_seed
+    import numpy as np
+
     _, prng = renew_rand_seed('fixed_tim')  # psed,
     nb_lbl, nb_spl, nb_ftr, nb_clf = 3, 21, 4, 7
     X, y = synthetic_dat(nb_lbl, nb_spl, nb_ftr)

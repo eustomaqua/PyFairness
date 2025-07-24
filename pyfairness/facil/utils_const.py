@@ -60,20 +60,18 @@ def non_negative(tmp):
 
 
 def check_equal(tmp_a, tmp_b, diff=CONST_DIFF):
-    '''
-    flag_a = check_belong(tmp_a, list, tuple, np.ndarray)
-    flag_b = check_belong(tmp_b, list, tuple, np.ndarray)
-    if not (flag_a or flag_b):
-        return True if abs(tmp_a - tmp_b) < diff else False
-
-    if flag_a and check_belong(tmp_b, int, float):
-        tmp = [abs(i - tmp_b) < diff for i in tmp_a]
-    elif flag_b and check_belong(tmp_a, int, float):
-        tmp = [abs(tmp_a - i) < diff for i in tmp_b]
-    elif flag_a and flag_b:
-        # tmp = [i == j for i, j in zip(tmp_a, tmp_b)]
-        tmp = [abs(i - j) < diff for i, j in zip(tmp_a, tmp_b)]
-    '''
+    # flag_a = check_belong(tmp_a, list, tuple, np.ndarray)
+    # flag_b = check_belong(tmp_b, list, tuple, np.ndarray)
+    # if not (flag_a or flag_b):
+    #     return True if abs(tmp_a - tmp_b) < diff else False
+    #
+    # if flag_a and check_belong(tmp_b, int, float):
+    #     tmp = [abs(i - tmp_b) < diff for i in tmp_a]
+    # elif flag_b and check_belong(tmp_a, int, float):
+    #     tmp = [abs(tmp_a - i) < diff for i in tmp_b]
+    # elif flag_a and flag_b:
+    #     # tmp = [i == j for i, j in zip(tmp_a, tmp_b)]
+    #     tmp = [abs(i - j) < diff for i, j in zip(tmp_a, tmp_b)]
 
     flag_a = isinstance(tmp_a, (list, tuple, np.ndarray))
     flag_b = isinstance(tmp_b, (list, tuple, np.ndarray))
@@ -117,9 +115,17 @@ def judge_mathcal_Y(nc=1):
     return list(range(nc))
 
 
+def _sub_ABC(nb_col, alphabet, double):
+    triple = [i + j + k for i in alphabet for j in alphabet for k in alphabet]
+    index = nb_col - 26 - 26**2
+    if index <= 26**3:
+        return alphabet + double + triple[: index]
+    return triple
+
+
 def unique_column(nb_col, alphabet=None):
     # i.e., generate_unique_column_name
-
+    #
     # alphabet = [chr(i) for i in range(97, 123)]  # 'a' etc.
     # alphabet = [chr(i) for i in range(65, 91)]  ## 'A' etc.
     # import string
@@ -135,12 +141,8 @@ def unique_column(nb_col, alphabet=None):
     if index <= 26**2:
         return alphabet + double[: index]
 
-    triple = [i + j + k for i in alphabet for j in alphabet for k in alphabet]
-    index = nb_col - 26 - 26**2
-    if index <= 26**3:
-        return alphabet + double + triple[: index]
-
-    return list()
+    # return list()
+    return _sub_ABC(nb_col, alphabet, double)
 
 
 # RuntimeWarning:

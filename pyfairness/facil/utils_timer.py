@@ -121,41 +121,39 @@ def fantasy_durat_major(tim_elapsed, abbreviation=True):
     return "{:.0f} mo {}".format(month_, format_text)
 
 
-"""
-def fantasy_durat_major(tim_elapsed, verbose=False,
-                        abbreviation=True):
-    unit_sec = "''" if abbreviation else " sec"
-    unit_min = "'" if abbreviation else " min"
-    format_text = "{:.2f}{}".format(tim_elapsed, unit_sec)
-    if (not verbose) and tim_elapsed < 60:
-        return format_text
-
-    second = tim_elapsed % 60
-    minute = tim_elapsed // 60
-    format_text = "{:.2f}{}".format(second, unit_sec)
-    if (not verbose) and minute < 60:
-        return "{:.0f}{} {}".format(minute, unit_min, format_text)
-
-    tim_elapsed = minute
-    minute = tim_elapsed % 60
-    hours_ = tim_elapsed // 60
-    format_text = "{:.0f}{} {}".format(minute, unit_min, format_text)
-    if (not verbose) and hours_ < 24:
-        return "{:.0f} hr {}".format(hours_, format_text)
-
-    tim_elapsed = hours_
-    hours_ = tim_elapsed % 24
-    days__ = tim_elapsed // 24
-    format_text = "{:.0f} hr {}".format(hours_, format_text)
-    if (not verbose) and days__ < 30:
-        return "{:.0f} d {}".format(days__, format_text)
-
-    tim_elapsed = days__  # mo/mos/mth
-    days__ = tim_elapsed % 30
-    month_ = tim_elapsed // 30
-    format_text = "{:.0f} d {}".format(days__, format_text)
-    return "{:.0f} mo {}".format(month_, format_text)
-"""
+# def fantasy_durat_major(tim_elapsed, verbose=False,
+#                         abbreviation=True):
+#     unit_sec = "''" if abbreviation else " sec"
+#     unit_min = "'" if abbreviation else " min"
+#     format_text = "{:.2f}{}".format(tim_elapsed, unit_sec)
+#     if (not verbose) and tim_elapsed < 60:
+#         return format_text
+#
+#     second = tim_elapsed % 60
+#     minute = tim_elapsed // 60
+#     format_text = "{:.2f}{}".format(second, unit_sec)
+#     if (not verbose) and minute < 60:
+#         return "{:.0f}{} {}".format(minute, unit_min, format_text)
+#
+#     tim_elapsed = minute
+#     minute = tim_elapsed % 60
+#     hours_ = tim_elapsed // 60
+#     format_text = "{:.0f}{} {}".format(minute, unit_min, format_text)
+#     if (not verbose) and hours_ < 24:
+#         return "{:.0f} hr {}".format(hours_, format_text)
+#
+#     tim_elapsed = hours_
+#     hours_ = tim_elapsed % 24
+#     days__ = tim_elapsed // 24
+#     format_text = "{:.0f} hr {}".format(hours_, format_text)
+#     if (not verbose) and days__ < 30:
+#         return "{:.0f} d {}".format(days__, format_text)
+#
+#     tim_elapsed = days__  # mo/mos/mth
+#     days__ = tim_elapsed % 30
+#     month_ = tim_elapsed // 30
+#     format_text = "{:.0f} d {}".format(days__, format_text)
+#     return "{:.0f} mo {}".format(month_, format_text)
 
 
 def fantasy_durat(tim_elapsed, verbose=True, abbreviation=False):
