@@ -30,9 +30,10 @@ jobs:
             pip install -r requirements.txt
             pip install carbontracker pytest
             pip install coverage coveralls pytest-xdist
-            coverage run -m pytest --ignore-glob="*/excl_test*,*/pkgs*"
+            coverage run -m pytest --ignore-glob="*/excl_test_*,*/pkgs*"
             coverage report
             coverage html
+            # rm *.png && rm *.csv && rm *.log
             coverage xml
             export CODACY_PROJECT_TOKEN=e5364f1287c94650b2575c849d47c40a
             export CODECOV_TOKEN=c7609124-b53c-4019-a893-cec9f98cfe97
@@ -41,15 +42,6 @@ jobs:
             # bash <(curl -Ls https://coverage.codacy.com/get.sh)
             # python -m pytest fairml/facils/excl_test*
             # rm chart*.pdf && rm cheers*.pdf && rm fairgbm*.pdf
-          
-      # - name: Upload coverage reports to Codecov
-      #     uses: codecov/codecov-action@v5
-      #     with:
-      #         token: ${{ secrets.CODECOV_TOKEN }}
-      # - name: Upload coverage reports to Coveralls
-      #     uses: coveralls/coveralls@2.2.5
-      #     with:
-      #         token: ${{ secrets.COVERALLS_REPO_TOKEN }}
 
       - persist_to_workspace:
           root: ~/project
@@ -71,6 +63,15 @@ workflows:
 #     jobs:
 #       - checkout 
 #       - codecov/upload
+
+# - name: Upload coverage reports to Codecov
+#     uses: codecov/codecov-action@v5
+#     with:
+#         token: ${{ secrets.CODECOV_TOKEN }}
+# - name: Upload coverage reports to Coveralls
+#     uses: coveralls/coveralls@2.2.5
+#     with:
+#         token: ${{ secrets.COVERALLS_REPO_TOKEN }}
 
 
 
@@ -105,7 +106,7 @@ workflows:
 #       # Checkout the code as the first step.
 #       - checkout
 #       - python/install-packages:
-          pkg-manager: pip
+#           pkg-manager: pip
 #           # app-dir: ~/project/package-directory/  # If your requirements.txt isn't in the root directory.
 #           # pip-dependency-file: test-requirements.txt  # if you have a different name for your requirements file, maybe one that combines your runtime and test requirements.
 #       - run:
