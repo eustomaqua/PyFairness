@@ -21,7 +21,7 @@ annotZs = ('Y1', 'Y2', 'Y3', 'Y4')
 
 def test_multi_scatter():
     # figsize, base, locate = 'M-WS', None, PLT_LOCATION
-    base, locate = None, PLT_LOCATION     # fsz = (7, 6)
+    # fsz = (7, 6)
     identity, figname = False, 'chart_d'
 
     X = np.random.randint(100, size=sz).astype('float')

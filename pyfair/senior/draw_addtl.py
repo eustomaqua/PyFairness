@@ -259,27 +259,27 @@ def boxplot_k_cv_with_real(X, Ys, z,
 #   for 若干个数据集放在一起
 
 
-'''
-def _diff_between_approx_and_direct(Yss, zs):
-    # difference: abs(approx - direct) / direct
-    # Yss.shape= (#att_sens, nb_iter, #num)
-    # zs .shape= (#att_sens, nb_iter)
-
-    nb_att, nb_iter, num = Yss.shape
-    diff = np.zeros_like(Yss) - 1.
-    for j in range(nb_att):
-        for i in range(nb_iter):
-            diff[j][i] = np.abs(Yss[j][i] - zs[j][i])
-            diff[j][i] /= check_zero(zs[j][i])
-    return diff
-
-
-def approximated_dist_comparison(X, Yss, zs, picked_keys,
-                                 figsize='M-WS',
-                                 figname='hyperpm_multi'):
-    # nb_att, nb_iter, num = Yss.shape
-    diff = _diff_between_approx_and_direct(Yss, zs)
-'''
+# '''
+# def _diff_between_approx_and_direct(Yss, zs):
+#     # difference: abs(approx - direct) / direct
+#     # Yss.shape= (#att_sens, nb_iter, #num)
+#     # zs .shape= (#att_sens, nb_iter)
+#
+#     nb_att, nb_iter, num = Yss.shape
+#     diff = np.zeros_like(Yss) - 1.
+#     for j in range(nb_att):
+#         for i in range(nb_iter):
+#             diff[j][i] = np.abs(Yss[j][i] - zs[j][i])
+#             diff[j][i] /= check_zero(zs[j][i])
+#     return diff
+#
+#
+# def approximated_dist_comparison(X, Yss, zs, picked_keys,
+#                                  figsize='M-WS',
+#                                  figname='hyperpm_multi'):
+#     # nb_att, nb_iter, num = Yss.shape
+#     diff = _diff_between_approx_and_direct(Yss, zs)
+# '''
 
 
 def approximated_dist_comparison(

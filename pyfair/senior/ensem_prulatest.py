@@ -562,19 +562,19 @@ def _MRMREP_F_statistic(y, Ci):
     for i in range(C):
         denominator[y == vY[i]] = mu_c[i]
     denominator = [(Ci[i] - denominator[i])**2 for i in range(N)]
-    '''
-    # method 2:
-    for i in range(C):
-        idx = y == vY[i]
-        denominator[idx] = Ci[idx] - mu_c[i]
-    # method 3:
-    for i in range(N):
-        for j in range(C):
-            if vY[j] == y[i]:
-                denominator[i] = Ci[i] - mu_c[j]
-    # method 2&3:
-    denominator = [i ** 2 for i in denominator]
-    '''
+    # '''
+    # # method 2:
+    # for i in range(C):
+    #     idx = y == vY[i]
+    #     denominator[idx] = Ci[idx] - mu_c[i]
+    # # method 3:
+    # for i in range(N):
+    #     for j in range(C):
+    #         if vY[j] == y[i]:
+    #             denominator[i] = Ci[i] - mu_c[j]
+    # # method 2&3:
+    # denominator = [i ** 2 for i in denominator]
+    # '''
     denominator = np.sum(denominator) / (N - C)
     return numerator / check_zero(denominator)
 
@@ -683,46 +683,46 @@ def _MRMREP_distance_of_each_pair(ys):
     return WD.tolist()
 
 
-"""
-# Lastly, the target function of the second stage can be expressed
-# as follows:
-#       min R(S),
-#   R = \frac{1}{|S|^2} \sum{c_i,c_j\in S, i\neq j} d(c_i,c_j)  (11)
+# """
+# # Lastly, the target function of the second stage can be expressed
+# # as follows:
+# #       min R(S),
+# #   R = \frac{1}{|S|^2} \sum{c_i,c_j\in S, i\neq j} d(c_i,c_j)  (11)
+# #
+# def MRMREP_target_function_of_second_stage(yt, S, hyperparam='1'):
+#     # if np.array(S).dtype == DTY_BOL:
+#     #     S = np.where(S)[0].tolist()
+#     S = judge_double_check_pruned_index(S)
+#     if hyperparam == '1':
+#         WD = MRMREP_distance_of_each_pair(yt)
+#         WD = np.array(WD, dtype=DTY_FLT)
+#         # WD = WD[S]
+#         # WD = WD[:, S]
+#         WD = WD[S][:, S].tolist()
+#     elif hyperparam == '2':
+#         yt = np.array(yt)[S].tolist()
+#         WD = MRMREP_distance_of_each_pair(yt)
+#     number_S = len(S)
+#     return np.sum(WD) / number_S ** 2
 #
-def MRMREP_target_function_of_second_stage(yt, S, hyperparam='1'):
-    # if np.array(S).dtype == DTY_BOL:
-    #     S = np.where(S)[0].tolist()
-    S = judge_double_check_pruned_index(S)
-    if hyperparam == '1':
-        WD = MRMREP_distance_of_each_pair(yt)
-        WD = np.array(WD, dtype=DTY_FLT)
-        # WD = WD[S]
-        # WD = WD[:, S]
-        WD = WD[S][:, S].tolist()
-    elif hyperparam == '2':
-        yt = np.array(yt)[S].tolist()
-        WD = MRMREP_distance_of_each_pair(yt)
-    number_S = len(S)
-    return np.sum(WD) / number_S ** 2
-
-
 #
-# dist = WD[i,j]     \in [0, nb_y]
-# half of np.sum(WD) \in [0, nb_y] * m*(m-1)/2
-# np.sum(WD)         \in [0, nb_y] * (m*m -m)
-# np.sum(WD)/|S|**2  \in [0, nb_y] * (m-1)/m < [0, nb_y]
-#
-def MRMREP_second_objective_based_distance_WD(WD, S):
-    # if np.array(S).dtype == DTY_BOL:
-    #     S = np.where(S)[0].tolist()
-    S = judge_double_check_pruned_index(S)
-    WD = np.array(WD, dtype=DTY_FLT)
-    # WD = WD[:, S]
-    # WD = WD[S]
-    WD = WD[:, S][S].tolist()
-    number_S = len(WD)
-    return np.sum(WD) / number_S ** 2
-"""
+# #
+# # dist = WD[i,j]     \in [0, nb_y]
+# # half of np.sum(WD) \in [0, nb_y] * m*(m-1)/2
+# # np.sum(WD)         \in [0, nb_y] * (m*m -m)
+# # np.sum(WD)/|S|**2  \in [0, nb_y] * (m-1)/m < [0, nb_y]
+# #
+# def MRMREP_second_objective_based_distance_WD(WD, S):
+#     # if np.array(S).dtype == DTY_BOL:
+#     #     S = np.where(S)[0].tolist()
+#     S = judge_double_check_pruned_index(S)
+#     WD = np.array(WD, dtype=DTY_FLT)
+#     # WD = WD[:, S]
+#     # WD = WD[S]
+#     WD = WD[:, S][S].tolist()
+#     number_S = len(WD)
+#     return np.sum(WD) / number_S ** 2
+# """
 
 
 def _MRMREP_target_function_of_second_stage(yt, S):

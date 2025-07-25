@@ -79,7 +79,8 @@ def test_KL_divergence():
     bi_ans = _KLD_vectors(bi_ha, bi_hb)
     mu_ans = _KLD_vectors(mu_ha, mu_hb)
     assert tr_ans == bi_ans  # check_equal(tr_ans, bi_ans)
-    assert all(isinstance(i, float) for i in [tr_ans, bi_ans, mu_ans])
+    assert all(isinstance(
+        i, float) for i in [tr_ans, bi_ans, mu_ans])
     # assert tr_ans != KLD_vectors(tr_hb, tr_ha)
     # assert bi_ans != KLD_vectors(bi_hb, bi_ha)
     # assert mu_ans != KLD_vectors(mu_hb, mu_ha)
@@ -101,7 +102,8 @@ def test_KL_divergence():
     bi_ans = _JU_set_of_vectors(bi_yt)
     mu_ans = _JU_set_of_vectors(mu_yt)
     assert tr_ans == bi_ans
-    assert all(isinstance(i, float) for i in [tr_ans, bi_ans, mu_ans])
+    assert all(isinstance(
+        i, float) for i in [tr_ans, bi_ans, mu_ans])
     assert len(set(map(id, [tr_ans, bi_ans, mu_ans]))) == 3
 
     P = np.random.randint(2, size=nb_cls, dtype='bool').tolist()
@@ -813,8 +815,8 @@ def test_compared_utus():
         assert len(opt_coef) == len(opt_clfs) == sum(P) == len(seq)
         assert 1 <= len(seq) < nb_cls
 
-        (opt_coef, opt_clfs, _, _, _,  # _, ys_insp, ys_pred,
-         ut, us, P, seq,
+        (opt_coef, opt_clfs, _, _, _,  # _, ys_insp, ys_pred,ut,us,
+         _, _, P, seq,
          flag) = contrastive_pruning_according_validation(
             name_pru, nb_cls, nb_pru, y_trn, y_insp, epsilon, rho,
             [], y_pred, coef, clfs)

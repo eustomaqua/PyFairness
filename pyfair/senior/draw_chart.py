@@ -125,21 +125,21 @@ def multi_scatter_hor(X, Ys, annots, annotZs, identity):
         _sns_line_err_bars(axs, {  # "alpha": .2
             "color": _nat_sci_cs[i], "alpha": .3,
             "lw": 1}, X, Ys[i])
-    '''
-    if base is not None:
-        _setup_locater(fig, base)
-    '''
+    # '''
+    # if base is not None:
+    #     _setup_locater(fig, base)
+    # '''
     plt.xlabel(annots[0])
     plt.ylabel(annots[1])
-    '''
-    plt.legend(loc=locate, frameon=PLT_FRAMEBOX,
-               labelspacing=.07, prop={'size': 9})
-    if figsize is not None:
-        fig = _setup_figsize(fig, figsize)
-    _setup_figshow(fig, figname)
-    plt.close(fig)
-    return
-    '''
+    # '''
+    # plt.legend(loc=locate, frameon=PLT_FRAMEBOX,
+    #            labelspacing=.07, prop={'size': 9})
+    # if figsize is not None:
+    #     fig = _setup_figsize(fig, figsize)
+    # _setup_figshow(fig, figname)
+    # plt.close(fig)
+    # return
+    # '''
     return fig
 
 
@@ -176,22 +176,22 @@ def multi_scatter_vrt(X, Ys, annots, annotZs, identity):
         _sns_line_err_bars(axs, {
             "color": _nat_sci_cs[i], "alpha": .3,
             "lw": 1}, Ys[i], X)
-    '''
-    if base is not None:
-        _setup_locater(fig, base)
-    '''
+    # '''
+    # if base is not None:
+    #     _setup_locater(fig, base)
+    # '''
     # axs.set_aspect(1)
     plt.xlabel(annots[1])
     plt.ylabel(annots[0])
-    '''
-    plt.legend(loc=locate, frameon=PLT_FRAMEBOX,
-               labelspacing=.07, prop={'size': 9})
-    if figsize is not None:
-        fig = _setup_figsize(fig, figsize)
-    _setup_figshow(fig, figname)
-    plt.close(fig)
-    return
-    '''
+    # '''
+    # plt.legend(loc=locate, frameon=PLT_FRAMEBOX,
+    #            labelspacing=.07, prop={'size': 9})
+    # if figsize is not None:
+    #     fig = _setup_figsize(fig, figsize)
+    # _setup_figshow(fig, figname)
+    # plt.close(fig)
+    # return
+    # '''
     return fig
 
 

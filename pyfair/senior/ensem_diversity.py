@@ -40,59 +40,60 @@ from pyfair.junior.diver_nonpairwise import (
 # Classifier:  \mathcal{H} = \{h_j\}_{j=1}^n
 #
 
-"""
-def contingency_table_binary(hi, hj):
-    if not (len(hi) == len(hj)):  # number of instances/samples
-        raise AssertionError("These two individual classifiers have"
-                             " two different shapes.")
-    tem = np.concatenate([hi, hj])
-    _, dY = judge_transform_need(tem)
-    del tem
-    if dY > 2:
-        raise AssertionError("contingency_table only works for binary"
-                             " classification.")  # works for only.
-    elif dY == 2:
-        hi = [i * 2 - 1 for i in hi]
-        hj = [i * 2 - 1 for i in hj]
-    #   #   #
-    hi = np.array(hi, dtype=DTY_INT)
-    hj = np.array(hj, dtype=DTY_INT)
-    a = np.sum((hi == 1) & (hj == 1))
-    b = np.sum((hi == 1) & (hj == -1))
-    c = np.sum((hi == -1) & (hj == 1))
-    d = np.sum((hi == -1) & (hj == -1))
-    # return int(a), int(b), int(c), int(d)
-    return a, b, c, d
 
-
-def contingency_table_multi(hi, hj, y):
-    tem = np.concatenate([hi, hj, y])
-    # vY = np.unique(tem)
-    # dY = len(vY)
-    vY, dY = judge_transform_need(tem)
-    del tem
-    if dY == 1:
-        dY = 2
-    ha, hb = np.array(hi), np.array(hj)  # y=np.array(y)
-    # construct a contingency table
-    Cij = np.zeros(shape=(dY, dY), dtype=DTY_INT)
-    for i in range(dY):
-        for j in range(dY):
-            Cij[i, j] = np.sum((ha == vY[i]) & (hb == vY[j]))
-    #   #   #
-    # return Cij.tolist()  # list
-    return Cij.copy()  # Cij, np.ndarray
-
-
-def contingency_table_multiclass(ha, hb, y):
-    # construct a contingency table, Cij
-    a = np.sum(np.logical_and(np.equal(ha, y), np.equal(hb, y)))
-    c = np.sum(np.logical_and(np.equal(ha, y), np.not_equal(hb, y)))
-    b = np.sum(np.logical_and(np.not_equal(ha, y), np.equal(hb, y)))
-    d = np.sum(np.logical_and(np.not_equal(ha, y), np.not_equal(hb, y)))
-    # a,b,c,d are `np.integer` (not `int`), a/b/c/d.tolist() gets `int`
-    return int(a), int(b), int(c), int(d)
-"""
+# """
+# def contingency_table_binary(hi, hj):
+#     if not (len(hi) == len(hj)):  # number of instances/samples
+#         raise AssertionError("These two individual classifiers have"
+#                              " two different shapes.")
+#     tem = np.concatenate([hi, hj])
+#     _, dY = judge_transform_need(tem)
+#     del tem
+#     if dY > 2:
+#         raise AssertionError("contingency_table only works for binary"
+#                              " classification.")  # works for only.
+#     elif dY == 2:
+#         hi = [i * 2 - 1 for i in hi]
+#         hj = [i * 2 - 1 for i in hj]
+#     #   #   #
+#     hi = np.array(hi, dtype=DTY_INT)
+#     hj = np.array(hj, dtype=DTY_INT)
+#     a = np.sum((hi == 1) & (hj == 1))
+#     b = np.sum((hi == 1) & (hj == -1))
+#     c = np.sum((hi == -1) & (hj == 1))
+#     d = np.sum((hi == -1) & (hj == -1))
+#     # return int(a), int(b), int(c), int(d)
+#     return a, b, c, d
+#
+#
+# def contingency_table_multi(hi, hj, y):
+#     tem = np.concatenate([hi, hj, y])
+#     # vY = np.unique(tem)
+#     # dY = len(vY)
+#     vY, dY = judge_transform_need(tem)
+#     del tem
+#     if dY == 1:
+#         dY = 2
+#     ha, hb = np.array(hi), np.array(hj)  # y=np.array(y)
+#     # construct a contingency table
+#     Cij = np.zeros(shape=(dY, dY), dtype=DTY_INT)
+#     for i in range(dY):
+#         for j in range(dY):
+#             Cij[i, j] = np.sum((ha == vY[i]) & (hb == vY[j]))
+#     #   #   #
+#     # return Cij.tolist()  # list
+#     return Cij.copy()  # Cij, np.ndarray
+#
+#
+# def contingency_table_multiclass(ha, hb, y):
+#     # construct a contingency table, Cij
+#     a = np.sum(np.logical_and(np.equal(ha, y), np.equal(hb, y)))
+#     c = np.sum(np.logical_and(np.equal(ha, y), np.not_equal(hb, y)))
+#     b = np.sum(np.logical_and(np.not_equal(ha, y), np.equal(hb, y)))
+#     d = np.sum(np.logical_and(np.not_equal(ha, y), np.not_equal(hb, y)))
+#     # a,b,c,d are `np.integer` (not `int`), a/b/c/d.tolist() gets `int`
+#     return int(a), int(b), int(c), int(d)
+# """
 
 
 # ----------------------------------
@@ -167,27 +168,27 @@ def contrastive_diversity_whole_multi(name_div, y, yt):
 # ----------------------------------
 
 
-'''
-def div_inst_item_cont_tab(ha, hb, vY, dY, change="mu"):
-    if (change == "bi") or (dY == 2):  # dY == 2
-        ha = ha * 2 - 1  # ha = [i * 2 - 1 for i in ha]
-        hb = hb * 2 - 1  # hb = [i * 2 - 1 for i in hb]
-    if (change in ["bi", "tr"]) or (dY in [1, 2]):
-        a = np.sum(np.equal(ha, 1) & np.equal(hb, 1))
-        b = np.sum(np.equal(ha, 1) & np.equal(hb, -1))
-        c = np.sum(np.equal(ha, -1) & np.equal(hb, 1))
-        d = np.sum(np.equal(ha, -1) & np.equal(hb, -1))
-        return a, b, c, d
-    elif (change == "mu") or (dY >= 3):
-        Cij = np.zeros(shape=(dY, dY), dtype=DTY_INT)
-        for i in range(dY):
-            for j in range(dY):
-                Cij[i, j] = np.sum(
-                    np.equal(ha, vY[i]) & np.equal(hb, vY[j]))
-        return Cij.copy()
-    raise ValueError(
-        "Check `change`, it should belong to {tr,bi,mu}.")
-'''
+# '''
+# def div_inst_item_cont_tab(ha, hb, vY, dY, change="mu"):
+#     if (change == "bi") or (dY == 2):  # dY == 2
+#         ha = ha * 2 - 1  # ha = [i * 2 - 1 for i in ha]
+#         hb = hb * 2 - 1  # hb = [i * 2 - 1 for i in hb]
+#     if (change in ["bi", "tr"]) or (dY in [1, 2]):
+#         a = np.sum(np.equal(ha, 1) & np.equal(hb, 1))
+#         b = np.sum(np.equal(ha, 1) & np.equal(hb, -1))
+#         c = np.sum(np.equal(ha, -1) & np.equal(hb, 1))
+#         d = np.sum(np.equal(ha, -1) & np.equal(hb, -1))
+#         return a, b, c, d
+#     elif (change == "mu") or (dY >= 3):
+#         Cij = np.zeros(shape=(dY, dY), dtype=DTY_INT)
+#         for i in range(dY):
+#             for j in range(dY):
+#                 Cij[i, j] = np.sum(
+#                     np.equal(ha, vY[i]) & np.equal(hb, vY[j]))
+#         return Cij.copy()
+#     raise ValueError(
+#         "Check `change`, it should belong to {tr,bi,mu}.")
+# '''
 
 
 def div_inst_item_cont_tab(ha, hb, vY, dY, change="mu"):

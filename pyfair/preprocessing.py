@@ -4,7 +4,7 @@
 import numpy as np
 # import pandas as pd
 
-from pyfair.facil.utils_saver import elegant_print
+from pyfair.facil.utils_saver import elegant_print, DTY_BOL
 from pyfair.datasets import process_above, process_below, DATASETS
 
 
@@ -16,17 +16,17 @@ from pyfair.datasets import process_above, process_below, DATASETS
 # -------------------------------------
 
 
-'''
-def find_group(dataset, processed_data):
-  belongs_priv = dataset.find_where_belongs(processed_data)
-  if len(belongs_priv) > 1:
-    belongs_priv_with_joint = np.logical_and(
-        belongs_priv[0], belongs_priv[1]).tolist()
-  else:
-    belongs_priv_with_joint = []
-
-  return belongs_priv, belongs_priv_with_joint
-'''
+# '''
+# def find_group(dataset, processed_data):
+#   belongs_priv = dataset.find_where_belongs(processed_data)
+#   if len(belongs_priv) > 1:
+#     belongs_priv_with_joint = np.logical_and(
+#         belongs_priv[0], belongs_priv[1]).tolist()
+#   else:
+#     belongs_priv_with_joint = []
+#
+#   return belongs_priv, belongs_priv_with_joint
+# '''
 
 
 def adverse_perturb(dataset, processed_data, ratio=.64):
@@ -121,16 +121,16 @@ def transform_unpriv_tag(dataset, processed_data):
     belongs_priv = dataset.find_where_belongs(processed_data)
     if len(belongs_priv) > 1:
         # belongs_priv_with_joint = np.logical_and(
-        """
-        belongs_priv_with_joint = np.logical_or(
-            belongs_priv[0], belongs_priv[1]
-        ).astype('bool').tolist()  # DTY_INT
-        # ICML 23: initial / first submission
-        """
+        # "" "
+        # belongs_priv_with_joint = np.logical_or(
+        #     belongs_priv[0], belongs_priv[1]
+        # ).astype('bool').tolist()  # DTY_INT
+        # # First submission (have modified)
+        # "" "
 
         belongs_priv_with_joint = np.logical_and(
             belongs_priv[0], belongs_priv[1]
-        ).astype('bool').tolist()  # DTY_INT
+        ).astype(DTY_BOL).tolist()  # DTY_INT
 
     else:
         belongs_priv_with_joint = []

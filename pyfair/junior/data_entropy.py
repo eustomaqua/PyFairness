@@ -243,17 +243,17 @@ def DIV1(S, L, lam):
 def DIV2(S, L, lam):
     S = np.array(S)
     k = S.shape[1]
-    '''
-    ans1, ans2 = 0., 0.
-    for i in range(k):
-        for j in range(k):
-            ans1 += VI(S[:, i].tolist(), S[:, j].tolist())
-    ans1 *= lam/2.
-    for i in range(k):
-        ans2 += MI(S[:, i].tolist(), L)
-    ans2 *= (1.-lam)*(k-1.)/2.
-    ans = ans1 + ans2
-    '''
+    # '''
+    # ans1, ans2 = 0., 0.
+    # for i in range(k):
+    #     for j in range(k):
+    #         ans1 += VI(S[:, i].tolist(), S[:, j].tolist())
+    # ans1 *= lam/2.
+    # for i in range(k):
+    #     ans2 += MI(S[:, i].tolist(), L)
+    # ans2 *= (1.-lam)*(k-1.)/2.
+    # ans = ans1 + ans2
+    # '''
     ans1 = [[VI(S[:, i].tolist(), S[:, j].tolist())
              for j in range(k)] for i in range(k)]
     ans1 = np.sum(ans1)

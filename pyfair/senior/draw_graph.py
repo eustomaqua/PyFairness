@@ -250,11 +250,11 @@ def sns_scatter_corr(X, Y, figname, figsize='M-WS',
         loc_x = _set_quantile(2.27, *ax.get_xlim())
         # loc_x: 2.19, 2.21,
 
-    '''
-    ax.text(loc_x, loc_y,
-          "Pearson: {:.2f}".format(df.corr().iloc[1, 0]),
-          transform=ax.transAxes)  # 添加相关性
-    '''
+    # '''
+    # ax.text(loc_x, loc_y,
+    #       "Pearson: {:.2f}".format(df.corr().iloc[1, 0]),
+    #       transform=ax.transAxes)  # 添加相关性
+    # '''
     key = df.corr().iloc[1, 0]
     if not identity:
         plt.text(loc_x, loc_y,

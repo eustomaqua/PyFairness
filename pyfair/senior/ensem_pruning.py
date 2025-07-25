@@ -697,27 +697,27 @@ def _LocalSearch_kappa_sum(S, y):
     return float(ans)
 
 
-"""
-def _LCS_sub_get_index(nb_cls, nb_pru, row, col):
-    rndsed, prng = random_seed_generator()
-    idx2 = np.arange(nb_cls).tolist()
-    prng.shuffle(idx2)
-    idx3 = idx2[: nb_pru]
-    del rndsed, prng
+# """
+# def _LCS_sub_get_index(nb_cls, nb_pru, row, col):
+#     rndsed, prng = random_seed_generator()
+#     idx2 = np.arange(nb_cls).tolist()
+#     prng.shuffle(idx2)
+#     idx3 = idx2[: nb_pru]
+#     del rndsed, prng
 
-    if (row not in idx3) and (col not in idx3):
-        idx3 = idx3[: -2]
-    elif (row in idx3) and (col in idx3):
-        idx3.remove(row)
-        idx3.remove(col)
-    elif (row in idx3) and (col not in idx3):
-        idx3.remove(row)
-        idx3 = idx3[: -1]
-    elif (col in idx3) and (row not in idx3):
-        idx3.remove(col)
-        idx3 = idx3[: -1]
-    return idx3, idx2
-"""
+#     if (row not in idx3) and (col not in idx3):
+#         idx3 = idx3[: -2]
+#     elif (row in idx3) and (col in idx3):
+#         idx3.remove(row)
+#         idx3.remove(col)
+#     elif (row in idx3) and (col not in idx3):
+#         idx3.remove(row)
+#         idx3 = idx3[: -1]
+#     elif (col in idx3) and (row not in idx3):
+#         idx3.remove(col)
+#         idx3 = idx3[: -1]
+#     return idx3, idx2
+# """
 
 
 def _LCS_sub_get_index(nb_cls, nb_pru, row, col):
@@ -957,20 +957,20 @@ def _DREP_sub_find_idx(tr_y, tr_yt, rho, P):
 def DREP_Pruning(y, yt, nb_cls, rho):
     vY = np.concatenate([[y], yt]).reshape(-1).tolist()
     vY, dY = judge_transform_need(vY)
-    '''
-    if dY > 2:
-        raise UserWarning("DREP only works for binary classification."
-                          " Check np.unique(y) please.")
-    elif dY == 2:
-        # pass
-        tr_y = [i * 2 - 1 for i in y]
-        tr_yt = (np.array(yt) * 2 - 1).tolist()
-    elif dY == 1 and len(vY) == 2:
-        ## y = [(i + 1) // 2 for i in y]
-        ## yt = np.array((np.array(yt) + 1) / 2, dtype=DTY_INT).tolist()
-        tr_y, tr_yt = y, yt
-    #   #   #
-    '''
+    # '''
+    # if dY > 2:
+    #     raise UserWarning("DREP only works for binary classification."
+    #                       " Check np.unique(y) please.")
+    # elif dY == 2:
+    #     # pass
+    #     tr_y = [i * 2 - 1 for i in y]
+    #     tr_yt = (np.array(yt) * 2 - 1).tolist()
+    # elif dY == 1 and len(vY) == 2:
+    #     ## y = [(i + 1) // 2 for i in y]
+    #     ## yt = np.array((np.array(yt) + 1) / 2, dtype=DTY_INT).tolist()
+    #     tr_y, tr_yt = y, yt
+    # #   #   #
+    # '''
     if dY > 2:
         raise UserWarning(
             "DREP only works for binary classification."

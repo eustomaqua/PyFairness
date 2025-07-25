@@ -31,30 +31,30 @@ def contingency_tab_bi(y, y_hat, pos=1):
 # P[f()=1 | y=1] = tp/(tp+fn) =g_Cm[0]/g_Cm[0+2]
 
 
-# For multi-class classification
-'''
-|True Label|      Prediction       |
-|          | Class 0   | Class 1   |
-| Class 0  |    0      | cost_{01} |
-| Class 1  | cost_{10} |    0      |
-
-contingency_table_multi
-  |             |hb= c_0 |hb= c_1 |hb= c_{n_c-1}|
-  |ha= c_0      | C_{00} | C_{01} | C_{0?}      |
-  |ha= c_1      | C_{10} | C_{11} | C_{1?}      |
-  |ha= c_{n_c-1}| C_{?0} | C_{?1} | C_{??}      |
-contingency_table_{?} when ?==2
-  |            |hb!=y, hb=-1|hb==y, hb=1|
-  |ha!=y, ha=-1|  d  /TN    |  c  /FP   |
-  |ha==y, ha==1|  b  /FN    |  a  /TP   | when ha is yt
-
-# 多分类有几种：
-# 第一种：用这个样本分对了还是分错了区分
-# 第二种：用一个确定的作为pos，其他类都是neg，转化成二分类再做
-# 第三种：变成 NxN 矩阵
-
-分类结果混淆矩阵（多分类）
-'''
+# # For multi-class classification
+# '''
+# |True Label|      Prediction       |
+# |          | Class 0   | Class 1   |
+# | Class 0  |    0      | cost_{01} |
+# | Class 1  | cost_{10} |    0      |
+#
+# contingency_table_multi
+#   |             |hb= c_0 |hb= c_1 |hb= c_{n_c-1}|
+#   |ha= c_0      | C_{00} | C_{01} | C_{0?}      |
+#   |ha= c_1      | C_{10} | C_{11} | C_{1?}      |
+#   |ha= c_{n_c-1}| C_{?0} | C_{?1} | C_{??}      |
+# contingency_table_{?} when ?==2
+#   |            |hb!=y, hb=-1|hb==y, hb=1|
+#   |ha!=y, ha=-1|  d  /TN    |  c  /FP   |
+#   |ha==y, ha==1|  b  /FN    |  a  /TP   | when ha is yt
+#
+# # 多分类有几种：
+# # 第一种：用这个样本分对了还是分错了区分
+# # 第二种：用一个确定的作为pos，其他类都是neg，转化成二分类再做
+# # 第三种：变成 NxN 矩阵
+#
+# 分类结果混淆矩阵（多分类）
+# '''
 
 
 def contg_tab_mu_type3(y, y_hat, vY):

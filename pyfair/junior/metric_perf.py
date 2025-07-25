@@ -16,11 +16,11 @@ from pyfair.facil.utils_const import check_zero, non_negative
 # After having gotten Confusion matrix
 # NB. for one single classifier
 
-'''
-|                      |prediction is positive|predict negative|
-|true label is positive| true positive (TP)|false negative (FN)|
-|true label is negative|false positive (FP)| true negative (TN)|
-'''
+# '''
+# |                      |prediction is positive|predict negative|
+# |true label is positive| true positive (TP)|false negative (FN)|
+# |true label is negative|false positive (FP)| true negative (TN)|
+# '''
 
 
 # 精度 /正确率

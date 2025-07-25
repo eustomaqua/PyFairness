@@ -380,12 +380,12 @@ class PropublicaViolentRecidivism(Data):
             'days_b_screening_arrest', 'is_recid', 'decile_score',
             'score_text'])
 
-        '''
-        # >>> np.all(df['two_year_recid.1'] == df.two_year_recid)
-        # True
-        data_frame = data_frame.drop(columns=['two_year_recid.1'])
-        '''
-        # BUG. Cannot delete this column.
+        # '' '
+        # # >>> np.all(df['two_year_recid.1'] == df.two_year_recid)
+        # # True
+        # data_frame = data_frame.drop(columns=['two_year_recid.1'])
+        # '' '
+        # # BUG. Cannot delete this column.
 
         return data_frame
 

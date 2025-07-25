@@ -31,7 +31,7 @@ def _regulate_vals(vals, typ='acc'):
     # assert typ in ['acc', 'err'], "No such test for "+typ
 
 
-def _regulate_sign(judge, content="$\mu$"):  # judgment
+def _regulate_sign(judge, content=r"$\mu$"):  # judgment
     mark = "Accept H0" if judge else "Reject H0"
     if not content:
         return mark  # that is, content==''
@@ -250,34 +250,34 @@ _qchisq_critical_value = {
 }  # [alpha][freedom]
 
 
-'''
-contingency_table_binary
-    |         | hj = +1 | hj = -1 |
-    | hi = +1 |    a    |    b    |
-    | hi = -1 |    c    |    d    |
-
-contingency_table_multiclass
-    |         | hb == y | hb != y |
-    | ha == y |    a    |    b    |
-    | ha != y |    c    |    d    |
-'''
-'''
-Kuncheva2003measures
-|              |hk correct (1)|hk wrong (0)|
-|hi correct (1)|   N^{11}     |   N^{10}   |
-|hi  wrong  (0)|   N^{01}     |   N^{00}   |
-Total, N= N^{00}+N^{01}+N^{10}+N^{11}
-
-i.e.,
-|          |hk correct|hk wrong|
-|hi correct|   tp     |   fn   | or | a | b |
-|hi  wrong |   fp     |   tn   |    | c | d |
-
-McNemar test
-|             |Alg B correct|Alg B  wrong |
-|Alg A correct|    e_{00}   |    e_{10}   |
-|Alg A  wrong |    e_{01}   |    e_{11}   |
-'''
+# '''
+# contingency_table_binary
+#     |         | hj = +1 | hj = -1 |
+#     | hi = +1 |    a    |    b    |
+#     | hi = -1 |    c    |    d    |
+#
+# contingency_table_multiclass
+#     |         | hb == y | hb != y |
+#     | ha == y |    a    |    b    |
+#     | ha != y |    c    |    d    |
+# '''
+# '''
+# Kuncheva2003measures
+# |              |hk correct (1)|hk wrong (0)|
+# |hi correct (1)|   N^{11}     |   N^{10}   |
+# |hi  wrong  (0)|   N^{01}     |   N^{00}   |
+# Total, N= N^{00}+N^{01}+N^{10}+N^{11}
+#
+# i.e.,
+# |          |hk correct|hk wrong|
+# |hi correct|   tp     |   fn   | or | a | b |
+# |hi  wrong |   fp     |   tn   |    | c | d |
+#
+# McNemar test
+# |             |Alg B correct|Alg B  wrong |
+# |Alg A correct|    e_{00}   |    e_{10}   |
+# |Alg A  wrong |    e_{01}   |    e_{11}   |
+# '''
 
 
 def contingency_tab_multiclass(ha, hb, y):

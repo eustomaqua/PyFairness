@@ -99,21 +99,26 @@ def test_MRMR():
     assert 0 <= tr_ans == bi_ans <= 1
     assert 0 <= mu_ans <= 1
 
-    fj_in_S = np.random.randint(nb_cls, size=(nb_pru + 1)).tolist()
+    fj_in_S = np.random.randint(
+        nb_cls, size=(nb_pru + 1)).tolist()
     fj_in_S, k = fj_in_S[: -1], fj_in_S[-1]
     tr_ans = _MRMR_subroute(tr_y, tr_yt, fj_in_S, k)
     bi_ans = _MRMR_subroute(bi_y, bi_yt, fj_in_S, k)
     mu_ans = _MRMR_subroute(mu_y, mu_yt, fj_in_S, k)
     assert tr_ans == bi_ans
-    assert all(isinstance(i, float) for i in [tr_ans, bi_ans, mu_ans])
+    assert all(isinstance(
+        i, float) for i in [tr_ans, bi_ans, mu_ans])
 
     tr_P, tr_seq = procedure_MRMR(tr_y, tr_yt, nb_cls, nb_pru)
     bi_P, bi_seq = procedure_MRMR(tr_y, tr_yt, nb_cls, nb_pru)
-    assert id(tr_P) != id(bi_P) and id(tr_seq) != id(bi_seq)
+    assert id(tr_P) != id(bi_P)
+    assert id(tr_seq) != id(bi_seq)
     bi_P, bi_seq = procedure_MRMR(bi_y, bi_yt, nb_cls, nb_pru)
     mu_P, mu_seq = procedure_MRMR(mu_y, mu_yt, nb_cls, nb_pru)
-    assert np.all(np.equal(tr_P, bi_P)) and np.all(np.equal(tr_seq, bi_seq))
-    assert sum(tr_P) == len(tr_seq) == sum(bi_P) == len(bi_seq) == nb_pru
+    assert np.all(np.equal(tr_P, bi_P))
+    assert np.all(np.equal(tr_seq, bi_seq))
+    assert sum(tr_P) == len(tr_seq) == sum(
+        bi_P) == len(bi_seq) == nb_pru
     assert sum(mu_P) == len(mu_seq) == nb_pru
 
 
@@ -696,17 +701,17 @@ def test_compared_utus():
         assert ys_cast == []
         assert sum(tr_P) == len(tr_seq)
 
-        (_, _, _, _, _, _, us, bi_P,  # ut,
+        (_, _, _, _, _, _, _, bi_P,  # ut,us,
          bi_seq) = contrastive_pruning_lately_validate(
             name_pru, nb_cls, nb_pru, bi_y, [], bi_yt, [],
             bi_ycast, coef, clfs, alpha, L, R, **kwargs)
         assert np.all(np.equal(tr_seq, bi_seq))  # TODO: BUG?
         assert sum(bi_P) == len(bi_seq)
 
-        _, _, _, _, _, ut, us, mu_P, \
-            mu_seq = contrastive_pruning_lately_validate(
-                name_pru, nb_cls, nb_pru, mu_y, [], mu_yt, [],
-                mu_ycast, coef, clfs, alpha, L, R, **kwargs)
+        (_, _, _, _, _, _, _, mu_P,  # ut,us,
+         mu_seq) = contrastive_pruning_lately_validate(
+            name_pru, nb_cls, nb_pru, mu_y, [], mu_yt, [],
+            mu_ycast, coef, clfs, alpha, L, R, **kwargs)
         assert 1 <= sum(mu_P) == len(mu_seq) < nb_cls
 
 

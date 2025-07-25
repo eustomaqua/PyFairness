@@ -24,28 +24,28 @@ from pyfair.facil.metric_cont import contingency_tab_bi
 # Oracle bounds (previous version)
 
 
-# Contingency table
-'''
-marginalised groups
-|      | h(xneg,gzero)=1 | h(xneg,gzero)=0 |
-| y= 1 |    TP_{gzero}   |    FN_{gzero}   |
-| y= 0 |    FP_{gzero}   |    TN_{gzero}   |
-privileged group
-|      | h(xneg,gones)=1 | h(xneg,gones)=0 |
-| y= 1 |    TP_{gones}   |    FN_{gones}   |
-| y= 0 |    FP_{gones}   |    TN_{gones}   |
-
-instance (xneg,xpos) --> (xneg,xqtb)
-        xpos might be `gzero` or `gones`
-
-C_{ij}
-|     | hx=0 | hx=1 | ... | hx=? |
-| y=0 | C_00 | C_01 | ... | C_0* |
-| y=1 | C_10 | C_11 |     | C_1* |
-| ... | ...  | ...  |     | ...  |
-| y=? | C_*0 | C_*1 | ... | C_*? |
-'''
-# y, hx: list of scalars (as elements)
+# # Contingency table
+# '''
+# marginalised groups
+# |      | h(xneg,gzero)=1 | h(xneg,gzero)=0 |
+# | y= 1 |    TP_{gzero}   |    FN_{gzero}   |
+# | y= 0 |    FP_{gzero}   |    TN_{gzero}   |
+# privileged group
+# |      | h(xneg,gones)=1 | h(xneg,gones)=0 |
+# | y= 1 |    TP_{gones}   |    FN_{gones}   |
+# | y= 0 |    FP_{gones}   |    TN_{gones}   |
+#
+# instance (xneg,xpos) --> (xneg,xqtb)
+#         xpos might be `gzero` or `gones`
+#
+# C_{ij}
+# |     | hx=0 | hx=1 | ... | hx=? |
+# | y=0 | C_00 | C_01 | ... | C_0* |
+# | y=1 | C_10 | C_11 |     | C_1* |
+# | ... | ...  | ...  |     | ...  |
+# | y=? | C_*0 | C_*1 | ... | C_*? |
+# '''
+# # y, hx: list of scalars (as elements)
 
 
 def marginalised_contingency(y, hx, vY, dY):
@@ -299,9 +299,9 @@ def marginalised_np_gen(y, y_hat, A, priv_val=1,
     # return gs_Cm, vA, idx, ex
 
     if (0 in A) and (len(set(A)) == 2):
-        vY = list(set(A))[:: -1]
+        vA = list(set(A))[:: -1]
     else:
-        vY = sorted(set(A))
+        vA = sorted(set(A))
     idx = vA.index(priv_val)
     g_y = [y[A == i] for i in vA]
     g_hx = [y_hat[A == i] for i in vA]
