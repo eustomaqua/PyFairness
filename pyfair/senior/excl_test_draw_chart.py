@@ -12,6 +12,7 @@ from pyfair.senior.draw_chart import (
     PLT_LOCATION, PLT_FRAMEBOX, _line_std_drawer)
 # from pyfair.senior.draw_chart import _setup_config, _setup_figshow
 
+np.random.seed(1523)
 sz = 21
 # df = pd.DataFrame({'X': X, 'Y': Ys[0]})
 annots = ('X', 'Ys')
@@ -19,8 +20,8 @@ annotZs = ('Y1', 'Y2', 'Y3', 'Y4')
 
 
 def test_multi_scatter():
-    figsize, base, locate = 'M-WS', None, PLT_LOCATION
-    # fsz = (7, 6)
+    # figsize, base, locate = 'M-WS', None, PLT_LOCATION
+    base, locate = None, PLT_LOCATION     # fsz = (7, 6)
     identity, figname = False, 'chart_d'
 
     X = np.random.randint(100, size=sz).astype('float')
@@ -85,6 +86,9 @@ def test_analogous_confu():
     sens = ['race', 'sex', 'age', 'orientate']
     analogous_confusion_alternative(
         [Mat for _ in range(4)], sens, key, fn + '6')
+    analogous_confusion_alternative(
+        [Mat for _ in range(4)], sens, key, fn + '6p',
+        normalize=True)
 
 
 def test_hist_chart():

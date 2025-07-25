@@ -805,8 +805,9 @@ def test_compared_utus():
     clfs = [tree.DecisionTreeClassifier() for _ in range(nb_cls)]
 
     for name_pru in AVAILABLE_NAME_PRUNE:
-        (opt_coef, opt_clfs, _, _, _, ut,  # ys_insp,ys_cast,ys_pred,
-         us, P, seq, flag) = contrastive_pruning_according_validation(
+        (opt_coef, opt_clfs, _, _, _, _, _, P, seq,
+         # ys_insp,ys_cast,ys_pred,ut,us,
+         flag) = contrastive_pruning_according_validation(
             name_pru, nb_cls, nb_pru, y_val, y_cast, epsilon, rho,
             y_insp, y_pred, coef, clfs)
         assert len(opt_coef) == len(opt_clfs) == sum(P) == len(seq)

@@ -64,19 +64,24 @@ def test_MRMR():
     assert np.all(np.equal(tr_rel, bi_rel))
     assert np.all(np.equal(tr_ci, bi_ci))
     assert 0 <= tr_c == bi_c <= 1
+    assert len(mu_rel) == nb_cls
 
     assert 0 <= mu_c <= 1
     assert all(0 <= i <= 1 for i in tr_ci)
     assert all(0 <= i <= 1 for i in bi_ci)
     assert all(0 <= i <= 1 for i in mu_ci)
 
-    tr_com, tr_s, tr_ci = _complementary_score(tr_y, tr_yt[:-1], tr_yt[-1])
-    bi_com, bi_s, bi_ci = _complementary_score(bi_y, bi_yt[:-1], bi_yt[-1])
-    mu_com, mu_s, mu_ci = _complementary_score(mu_y, mu_yt[:-1], mu_yt[-1])
+    tr_com, tr_s, tr_ci = _complementary_score(
+        tr_y, tr_yt[:-1], tr_yt[-1])
+    bi_com, bi_s, bi_ci = _complementary_score(
+        bi_y, bi_yt[:-1], bi_yt[-1])
+    mu_com, mu_s, mu_ci = _complementary_score(
+        mu_y, mu_yt[:-1], mu_yt[-1])
     assert tr_com == bi_com
     assert 0 <= tr_s == bi_s <= 1
     assert 0 <= tr_ci == bi_ci <= 1
     assert 0 <= mu_s <= 1 and 0 <= mu_ci <= 1
+    assert isinstance(mu_com, float)
 
     tr_ans = _MRMR_MI_binary(tr_ha, tr_hb)
     bi_ans = _MRMR_MI_binary(bi_ha, bi_hb)
@@ -683,17 +688,18 @@ def test_compared_utus():
             kwargs["X_trn"] = X_trn
             kwargs["X_val"] = X_val
 
-        (_, _, _, ys_cast, _,  # opt_coef,opt_clfs,ys_insp,,ys_pred,ut,
-         _, us, tr_P, tr_seq) = contrastive_pruning_lately_validate(
+        (_, _, _, ys_cast, _, _, _,
+         # opt_coef,opt_clfs,ys_insp,,ys_pred,ut,us,
+         tr_P, tr_seq) = contrastive_pruning_lately_validate(
             name_pru, nb_cls, nb_pru, tr_y, [], tr_yt, [],
             tr_ycast, coef, clfs, alpha, L, R, **kwargs)
         assert ys_cast == []
         assert sum(tr_P) == len(tr_seq)
 
-        _, _, _, _, _, ut, us, bi_P, \
-            bi_seq = contrastive_pruning_lately_validate(
-                name_pru, nb_cls, nb_pru, bi_y, [], bi_yt, [],
-                bi_ycast, coef, clfs, alpha, L, R, **kwargs)
+        (_, _, _, _, _, _, us, bi_P,  # ut,
+         bi_seq) = contrastive_pruning_lately_validate(
+            name_pru, nb_cls, nb_pru, bi_y, [], bi_yt, [],
+            bi_ycast, coef, clfs, alpha, L, R, **kwargs)
         assert np.all(np.equal(tr_seq, bi_seq))  # TODO: BUG?
         assert sum(bi_P) == len(bi_seq)
 

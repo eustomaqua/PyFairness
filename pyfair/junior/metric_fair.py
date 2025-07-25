@@ -278,18 +278,30 @@ def marginalised_np_mat(y, y_hat, pos_label=1,
 
 def marginalised_np_gen(y, y_hat, A, priv_val=1,
                         pos_label=1):
-    # if 0 in A and len(set(A)) == 2:
-    if (0 in A) and (len(set(A)) == 2):
-        vA = list(set(A))[:: -1]
-        idx = vA.index(priv_val)
-        g_y = [y[A == i] for i in vA]
-        g_hx = [y_hat[A == i] for i in vA]
-        g_Cm = [contingency_tab_bi(
-            i, j, pos_label) for i, j in zip(g_y, g_hx)]
-        ex = [sum(A == i) for i in vA]
-        return g_Cm, vA, idx, ex
+    # # if 0 in A and len(set(A)) == 2:
+    # if (0 in A) and (len(set(A)) == 2):
+    #     vA = list(set(A))[:: -1]
+    #     idx = vA.index(priv_val)
+    #     g_y = [y[A == i] for i in vA]
+    #     g_hx = [y_hat[A == i] for i in vA]
+    #     g_Cm = [contingency_tab_bi(
+    #         i, j, pos_label) for i, j in zip(g_y, g_hx)]
+    #     ex = [sum(A == i) for i in vA]
+    #     return g_Cm, vA, idx, ex
+    #
+    # vA = sorted(set(A))
+    # idx = vA.index(priv_val)
+    # g_y = [y[A == i] for i in vA]
+    # g_hx = [y_hat[A == i] for i in vA]
+    # gs_Cm = [contingency_tab_bi(
+    #     i, j, pos_label) for i, j in zip(g_y, g_hx)]
+    # ex = [sum(A == i) for i in vA]
+    # return gs_Cm, vA, idx, ex
 
-    vA = sorted(set(A))
+    if (0 in A) and (len(set(A)) == 2):
+        vY = list(set(A))[:: -1]
+    else:
+        vY = sorted(set(A))
     idx = vA.index(priv_val)
     g_y = [y[A == i] for i in vA]
     g_hx = [y_hat[A == i] for i in vA]

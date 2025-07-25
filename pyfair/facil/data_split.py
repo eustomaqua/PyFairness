@@ -340,7 +340,8 @@ def situation_split1(y, pr_trn, pr_tst=None):
     # return split_idx
 
     # nb_y = len(y)
-    dY, iY, lY, tY, _ = _sub_sp_indices(y)
+    # dY, iY, lY, tY, _ = _sub_sp_indices(y)
+    dY, _, lY, tY, _ = _sub_sp_indices(y)
     if pr_tst is None:
         sY = [int(np.max([
             np.round(j * pr_trn), 1])) for j in lY]
@@ -401,7 +402,7 @@ def situation_split2(pr_trn, nb_cv, y_trn):
     sY = [int(np.max([
         np.round(j * pr_trn), 1])) for j in lY]
     split_idx = []
-    for k in range(nb_cv):
+    for _ in range(nb_cv):  # for k in
         for i in tmp_idx:
             np.random.shuffle(i)
         tmp = _sub_sp_2sets(dY, iY, tmp_idx, sY,
@@ -471,7 +472,7 @@ def situation_split3(pr_trn, pr_tst, nb_cv, y):
     sY = [[int(np.max([np.round(j * i), 1])) for i in (
         pr_trn, pr_trn + pr_tst)] for j in lY]
     split_idx = []
-    for k in range(nb_cv):
+    for _ in range(nb_cv):  # for k in
         for i in tmp_idx:
             np.random.shuffle(i)
         tmp = _sub_sp_3sets(dY, iY, tmp_idx, sY,

@@ -230,6 +230,18 @@ def multiple_scatter_chart(X, Ys, annots=('X', 'Ys'),
     return
 
 
+def _alt_confus_cm(num_z, Mat_k):  # ,normalize):
+    cm = np.zeros((num_z, num_z))
+    for i in range(num_z):
+        for j in range(num_z):
+            cm[i, j] = np.corrcoef(Mat_k[i], Mat_k[j])[1, 0]
+
+    # if normalize:
+    #     cm = cm / cm.sum(axis=1)[:, np.newaxis]
+    # # thresh = cm.max() / 1.5 if normalize else cm.max() / 2
+    return cm
+
+
 def analogous_confusion(Mat, label_vals, figname,
                         figsize='L-NT', cmap=None,
                         normalize=True, rotate=25):
@@ -238,10 +250,12 @@ def analogous_confusion(Mat, label_vals, figname,
         # cmap = plt.get_cmap("Blues")  # "Blues_r")
         cmap = plt.colormaps.get_cmap("Blues")
     num_z = len(Mat)  # i.e. len(label_vals)
-    cm = np.zeros((num_z, num_z))
-    for i in range(num_z):
-        for j in range(num_z):
-            cm[i, j] = np.corrcoef(Mat[i], Mat[j])[1, 0]
+    # cm = np.zeros((num_z, num_z))
+    # for i in range(num_z):
+    #     for j in range(num_z):
+    #         cm[i, j] = np.corrcoef(Mat[i], Mat[j])[1, 0]
+    cm = _alt_confus_cm(num_z, Mat)
+
     fig = plt.figure(figsize=(8, 6))
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
     plt.colorbar()
@@ -483,10 +497,12 @@ def analogous_confusion_alternative(Mat, sens,
     # ax = ax.flatten()
     # for k, (mt, sa) in enumerate(zip(Mat, sens)):
     for k, (_, sa) in enumerate(zip(Mat, sens)):  # mt,
-        cm = np.zeros((num_z, num_z))
-        for i in range(num_z):
-            for j in range(num_z):
-                cm[i, j] = np.corrcoef(Mat[k][i], Mat[k][j])[1, 0]
+        # cm = np.zeros((num_z, num_z))
+        # for i in range(num_z):
+        #     for j in range(num_z):
+        #         cm[i, j] = np.corrcoef(Mat[k][i], Mat[k][j])[1, 0]
+        cm = _alt_confus_cm(num_z, Mat[k])  # ,normalize)
+
         img = ax[k].imshow(cm, interpolation='nearest', cmap=cmap)
         ax[k].set_xticks(tick_marks)
         ax[k].set_yticks(tick_marks)

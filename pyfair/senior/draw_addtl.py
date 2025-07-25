@@ -936,6 +936,32 @@ def _uncertainty_read_in(dfs_pl, col_X, col_Y, num_gap=1000,
     return X, np.array(baseline_Ys, dtype=DTY_FLT)
 
 
+def _sub_unc_text(annotY, alpha_loc):
+    # if annotY is None:
+    #     if alpha_loc == 'b4':
+    #         annotY = r'$\alpha·$ performance $+(1-\alpha)·$ fairness'
+    #     elif alpha_loc == 'af':
+    #         annotY = r'$(1-\alpha)·$ performance $+\alpha·$ fairness'
+    # else:
+    #     if alpha_loc == 'b4':
+    #         annotY = r'$\alpha·${} $+($1$-\alpha)·$ fairness'.format(annotY)
+    #     elif alpha_loc == 'af':
+    #         annotY = r'$($1$-\alpha)·${} $+\alpha·$ fairness'.format(annotY)
+
+    assert alpha_loc in ['b4', 'af']
+    if annotY is None:
+        if alpha_loc == 'b4':
+            annotY = r'$\alpha·$ performance $+(1-\alpha)·$ fairness'
+        elif alpha_loc == 'af':
+            annotY = r'$(1-\alpha)·$ performance $+\alpha·$ fairness'
+        return annotY
+    if alpha_loc == 'b4':
+        annotY = r'$\alpha·${} $+($1$-\alpha)·$ fairness'.format(annotY)
+    elif alpha_loc == 'af':
+        annotY = r'$($1$-\alpha)·${} $+\alpha·$ fairness'.format(annotY)
+    return annotY    # CC 7->6
+
+
 def _uncertainty_plotting(X, Ys, picked_keys, annotY=None, ddof=0,
                           alpha_loc='b4|af', cmap_name='husl',
                           figsize='M-WS', figname='lwu',
@@ -974,16 +1000,7 @@ def _uncertainty_plotting(X, Ys, picked_keys, annotY=None, ddof=0,
         'size': 9 if len(picked_keys) <= 6 else 8})
     ax.set_xlim(X[0], X[-1])
     ax.set_xlabel(r'$\alpha$')
-    if annotY is None:
-        if alpha_loc == 'b4':
-            annotY = r'$\alpha·$ performance $+(1-\alpha)·$ fairness'
-        elif alpha_loc == 'af':
-            annotY = r'$(1-\alpha)·$ performance $+\alpha·$ fairness'
-    else:
-        if alpha_loc == 'b4':
-            annotY = r'$\alpha·${} $+($1$-\alpha)·$ fairness'.format(annotY)
-        elif alpha_loc == 'af':
-            annotY = r'$($1$-\alpha)·${} $+\alpha·$ fairness'.format(annotY)
+    annotY = _sub_unc_text(annotY, alpha_loc)
 
     '''
     assert alpha_loc in ('b4', 'af')

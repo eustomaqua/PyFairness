@@ -51,9 +51,11 @@ def test_friedman_chart():
 
     # friedman_chart(
     Friedman_chart(
-        index_bar, pick_name_pru, 'chart_b1', alpha=.05)
+        index_bar, pick_name_pru, 'chart_b1', alpha=.05,
+        anotCD=True)
     Friedman_chart(
-        index_bar, pick_name_pru, 'chart_b2', alpha=.1)
+        index_bar, pick_name_pru, 'chart_b2', alpha=.1,
+        anotCD=True)
 
     stat_chart_stack(
         index_bar, pick_name_pru, 'chart_b3')  # .jpg
@@ -146,7 +148,7 @@ def test_histchart():
     # Y = np.random.rand(nb, 4) * 5 + X  # or X.T
     X = np.random.rand(nb) * 170
     Y = np.random.rand(nb, 4) * 35 + np.reshape(-1, 1)
-    _, _, Y_std, ind = _hist_calc_XY(X, Y)  # X_avg,Y_avg,
+    _, _, _, ind = _hist_calc_XY(X, Y)  # X_avg,Y_avg,Y_std,
 
     # histogram_hor(X, Y, figname)
     # histogram_vrt(X, Y, figname)

@@ -320,6 +320,39 @@ def sns_corr_chart(X, Y, sens, figname, figsize='M-WS'):
 # Friedman 统计检验图
 
 
+def _Friedman_plt(fig, k, ep1, ep2, anotCD, CD, offset):
+    axs = plt.gca()
+    # axs.set_yticks(np.arange(k), picked_keys)
+    for t in range(k):
+        plt.plot([ep1[t], ep2[t]], [t, t], '-b', lw=1.5)
+    plt.ylim(-0.7, k - 0.3)
+
+    xt = axs.get_xticks()
+    axs.set_xlim(np.floor(xt[0]), np.ceil(xt[-1]))
+    if anotCD:
+        # plt.text(xt[-2], k - .7, r'CD = {:.4f}'.format(CD))
+        plt.text(xt[-3] + .2, k - 1.3, r'CD = {:.4f}'.format(CD))
+        axs.set_xlim(np.floor(xt[0]), np.ceil(xt[-1]) + 1.2)
+    # plt.plot([ep2[k - 2], ep2[k - 2]], [-1.2, k + 1], 'r--', lw=1)
+    '''
+    plt.plot([ep1[k - 1], ep1[k - 1]], [-1.2, k + 1], 'r--', lw=1)
+    plt.plot([ep2[k - 1], ep2[k - 1]], [-1.2, k + 1], 'r--', lw=1)
+    '''
+    if offset in [-1, -2]:
+        plt.plot([ep1[k + offset], ] * 2, [-1.2, k + 1],
+                 'r--', lw=1)
+        plt.plot([ep2[k + offset], ] * 2, [-1.2, k + 1],
+                 'r--', lw=1)
+    elif offset in [-3]:
+        plt.plot([ep2[k - 1], ] * 2, [-1.2, k + 1], 'r--', lw=1)
+        plt.plot([ep2[k - 2], ] * 2, [-1.2, k + 1], 'r--', lw=1)
+    elif offset in [-4]:
+        plt.plot([ep1[k - 1], ] * 2, [-1.2, k + 1], 'r--', lw=1)
+        plt.plot([ep1[k - 2], ] * 2, [-1.2, k + 1], 'r--', lw=1)
+    # axs.invert_yaxis()
+    return fig
+
+
 def Friedman_chart(index_bar, picked_keys,
                    figname, figsize='S-NT',
                    alpha=.05, logger=None,
@@ -352,33 +385,7 @@ def Friedman_chart(index_bar, picked_keys,
     fig = plt.figure(figsize=_setup_config['L-NT'])
     plt.plot(avg_order, np.arange(k), '.', markersize=11)
     plt.yticks(np.arange(k), picked_keys)
-    axs = plt.gca()
-    # axs.set_yticks(np.arange(k), picked_keys)
-    for t in range(k):
-        plt.plot([ep1[t], ep2[t]], [t, t], '-b', lw=1.5)
-    plt.ylim(-0.7, k - 0.3)
-
-    xt = axs.get_xticks()
-    axs.set_xlim(np.floor(xt[0]), np.ceil(xt[-1]))
-    if anotCD:
-        # plt.text(xt[-2], k - .7, r'CD = {:.4f}'.format(CD))
-        plt.text(xt[-3] + .2, k - 1.3, r'CD = {:.4f}'.format(CD))
-        axs.set_xlim(np.floor(xt[0]), np.ceil(xt[-1]) + 1.2)
-    # plt.plot([ep2[k - 2], ep2[k - 2]], [-1.2, k + 1], 'r--', lw=1)
-    '''
-    plt.plot([ep1[k - 1], ep1[k - 1]], [-1.2, k + 1], 'r--', lw=1)
-    plt.plot([ep2[k - 1], ep2[k - 1]], [-1.2, k + 1], 'r--', lw=1)
-    '''
-    if offset in [-1, -2]:
-        plt.plot([ep1[k + offset], ] * 2, [-1.2, k + 1], 'r--', lw=1)
-        plt.plot([ep2[k + offset], ] * 2, [-1.2, k + 1], 'r--', lw=1)
-    elif offset in [-3]:
-        plt.plot([ep2[k - 1], ] * 2, [-1.2, k + 1], 'r--', lw=1)
-        plt.plot([ep2[k - 2], ] * 2, [-1.2, k + 1], 'r--', lw=1)
-    elif offset in [-4]:
-        plt.plot([ep1[k - 1], ] * 2, [-1.2, k + 1], 'r--', lw=1)
-        plt.plot([ep1[k - 2], ] * 2, [-1.2, k + 1], 'r--', lw=1)
-    # axs.invert_yaxis()
+    fig = _Friedman_plt(fig, k, ep1, ep2, anotCD, CD, offset)
     fig = _setup_figsize(fig, figsize, invt=True)
     _setup_figshow(fig, figname)
     plt.close(fig)

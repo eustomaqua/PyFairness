@@ -88,7 +88,7 @@ def get_accuracy_of_multiclass(y, yt, coef=None):
         nb_cls = len(yt)
         coef = [1. / nb_cls for _ in range(nb_cls)]
     # plurality_voting
-    fens = weighted_voting(y, yt, coef)
+    fens = weighted_voting(yt, coef)  # y,
 
     accpl = [np.mean(np.equal(t, y)) for t in yt]
     accsg = np.mean(np.equal(fens, y))
