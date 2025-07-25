@@ -5,6 +5,12 @@ sphinx_markdown_tables
 solar-theme
 piccolo-theme
 sphinx-conestack-theme
+sphinx-nefertiti
+sphinx-pdj-theme
+python-docs-theme
+sphinx-readable-theme
+furo
+sphinx-wagtail-theme
 
 mkdocs
 mkdocs-material

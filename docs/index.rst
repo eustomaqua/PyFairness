@@ -16,4 +16,13 @@ PyFairness documentation
    :caption: Contents:
 
 
-Welcome to the PyFairness's documentation. This is an open-source library for **Fairness** measures as well as **Ensemble Learning** methods, Diversity measures, and Ensemble Pruning methods.
+Welcome to the PyFairness's documentation. This is an open-source library for **fairness** measures as well as **ensemble learning** methods, involving diversity measures and ensemble pruning methods.
+
+
+SHORTCUTS
+^^^^^^^^^^
+.. toctree::
+   :maxdepth: 1
+
+   posts/quickstart.rst
+   posts/configuration.rst

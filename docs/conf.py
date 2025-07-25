@@ -3,15 +3,17 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-import solar_theme
+# import solar_theme
+# import sphinx_pdj_theme
+# import sphinx_readable_theme
 
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'PyEnsemble'
-copyright = '2025, eustomadew'
-author = 'eustomadew'
+project = 'PyFairness'
+copyright = '2025, eustomaqua'
+author = 'eustomaqua'
 release = '0.1.0'
 
 
@@ -29,8 +31,21 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # html_theme = 'conestack'
 # html_theme = 'piccolo_theme'
-html_theme = 'solar_theme'
-html_theme_path = [solar_theme.theme_path]
+# html_theme = 'python_docs_theme'
+# html_theme = 'readable'
+# html_theme_path = [sphinx_readable_theme.get_html_theme_path()]
+# html_theme = 'sphinx_pdj_theme'
+# html_theme_path = [sphinx_pdj_theme.get_html_theme_path()]
+# html_theme = 'furo'
+# html_theme = 'karma_sphinx_theme'
+# extensions.append("sphinx_wagtail_theme")
+# html_theme = 'sphinx_wagtail_theme'
+# html_theme = 'nature'
+html_theme = 'sphinxdoc'
+# html_theme = 'solar_theme'
+# html_theme_path = [solar_theme.theme_path]
+# html_theme = 'sphinx_nefertiti'
+
 # html_theme = "sphinx_rtd_theme"
 # extensions = ['recommonmark', 'sphinx_markdown_tables']
 # html_theme = 'alabaster'
