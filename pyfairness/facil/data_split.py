@@ -272,7 +272,7 @@ def sitch_cross_validation(nb_cv, y, split_type='cv3'):
     # gc.collect()
     # return split_idx
 
-    dY, iY, lY, tY, _ = _sub_sp_indices(y)
+    dY, _, lY, tY, _ = _sub_sp_indices(y)
     sY = [int(np.floor(j / float(nb_cv))) for j in lY]
     if nb_cv in [2, 3, 1]:
         sY = [int(np.floor(j / (nb_cv + 1.))) for j in lY]

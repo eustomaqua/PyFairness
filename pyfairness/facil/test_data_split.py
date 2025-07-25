@@ -2,7 +2,7 @@
 
 
 import numpy as np
-import pdb
+# import pdb
 from pyfairness.facil.utils_const import synthetic_dat
 
 from pyfairness.facil.data_split import (
