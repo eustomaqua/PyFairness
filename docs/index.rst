@@ -24,5 +24,5 @@ SHORTCUTS
 .. toctree::
    :maxdepth: 1
 
-   posts/quickstart.rst
-   posts/configuration.rst
+   posts/quickstart
+   posts/configuration

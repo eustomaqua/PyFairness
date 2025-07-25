@@ -111,6 +111,7 @@ def judge_transform_need(y):
     vY = sorted(set(y))  # list(set(y))
     dY = len(vY)
     if dY == 2 and (-1 in vY) and (1 in vY):
+        # if dY == 2 and (-1 in vY):
         dY = 1
     return vY, dY  # 2, or ...
 

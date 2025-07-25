@@ -9,7 +9,7 @@ Set up the environment
 ..   :linenos:
 
 
-We developed `PyFairness <https://github.com/eustomaqua/PyFairness>`_ with ``Python 3.8`` and released the code to help you reproduce our work. Note that the experimental parts must be run on the ``Ubuntu`` operating system due to FairGBM (one baseline method that we used for comparison).
+We developed `FairML <https://github.com/eustomaqua/FairML>`_, `ApproxBias <https://github.com/eustomaqua/ApproxBias>`_, and `PyFairness <https://github.com/eustomaqua/PyFairness>`_ with ``Python 3.8`` and released the code to help you reproduce our work. Note that the experimental parts must be run on the ``Ubuntu`` operating system due to FairGBM (one baseline method that we used for comparison).
 
 
 Initialization

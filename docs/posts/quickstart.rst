@@ -7,7 +7,7 @@ Getting started
 
 
 Requirements
-------------
+-------------
 
 We may test the code on different environments, and in that case, please choose the corresponding Python packages.
 
