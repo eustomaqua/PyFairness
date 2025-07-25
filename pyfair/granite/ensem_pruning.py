@@ -28,7 +28,7 @@ from pyfair.facil.utils_remark import AVAILABLE_NAME_PRUNE
 from pyfair.facil.ensem_voting import plurality_voting
 # from pyfair.senior.ensem_diversity import (
 #     kappa_statistic_multiclass, Kappa_Statistic_multi)
-from pyfair.junior.diver_pairwise import (
+from pyfair.marble.diver_pairwise import (
     kappa_statistic_multiclass, Kappa_Statistic_multi)
 gc.enable()
 
@@ -1791,36 +1791,49 @@ def contrastive_pruning_methods(name_pru, nb_cls, nb_pru,
     assert name_pru in AVAILABLE_NAME_PRUNE
 
     if name_pru == "ES":
-        ys_cast, P, seq = Early_Stopping(y_cast, nb_cls, nb_pru)
+        ys_cast, P, seq = Early_Stopping(
+            y_cast, nb_cls, nb_pru)
     elif name_pru == "KL":
-        ys_cast, P, seq = KL_divergence_Pruning(y_cast, nb_cls, nb_pru)
+        ys_cast, P, seq = KL_divergence_Pruning(
+            y_cast, nb_cls, nb_pru)
     elif name_pru == "KL+":
-        ys_cast, P, seq = KL_divergence_Pruning_modify(y_cast, nb_cls, nb_pru)
+        ys_cast, P, seq = KL_divergence_Pruning_modify(
+            y_cast, nb_cls, nb_pru)
     elif name_pru == "KPk":
-        ys_cast, P, seq = Kappa_Pruning_kuncheva(y_val, y_cast, nb_cls, nb_pru)
+        ys_cast, P, seq = Kappa_Pruning_kuncheva(
+            y_val, y_cast, nb_cls, nb_pru)
     elif name_pru == "KPz":
-        ys_cast, P, seq = Kappa_Pruning_zhoubimu(y_val, y_cast, nb_cls, nb_pru)
+        ys_cast, P, seq = Kappa_Pruning_zhoubimu(
+            y_val, y_cast, nb_cls, nb_pru)
 
     elif name_pru == "RE":
-        ys_cast, P, seq = Reduce_Error_Pruning(y_val, y_cast, nb_cls, nb_pru)
+        ys_cast, P, seq = Reduce_Error_Pruning(
+            y_val, y_cast, nb_cls, nb_pru)
     elif name_pru == "CM":
-        ys_cast, P, seq = Complementarity_Measure_Pruning(y_val, y_cast, nb_cls, nb_pru)
+        ys_cast, P, seq = Complementarity_Measure_Pruning(
+            y_val, y_cast, nb_cls, nb_pru)
     elif name_pru == "OO":
-        ys_cast, P, seq, flag = Orientation_Ordering_Pruning(y_val, y_cast)
+        ys_cast, P, seq, flag = Orientation_Ordering_Pruning(
+            y_val, y_cast)
 
     elif name_pru in ["GMA", "GMM"]:  # == "GMA":
-        ys_cast, P, seq = GMM_Algorithm(y_val, y_cast, nb_cls, nb_pru)
+        ys_cast, P, seq = GMM_Algorithm(
+            y_val, y_cast, nb_cls, nb_pru)
     elif name_pru == "LCS":
-        ys_cast, P, seq = Local_Search(y_val, y_cast, nb_cls, nb_pru, epsilon)
+        ys_cast, P, seq = Local_Search(
+            y_val, y_cast, nb_cls, nb_pru, epsilon)
 
     elif name_pru == "DREP":  # works for binary classification only
-        vY = np.concatenate([[y_val], y_cast]).reshape(-1).tolist()
+        vY = np.concatenate([
+            [y_val], y_cast]).reshape(-1).tolist()
         vY, dY = judge_transform_need(vY)
         if dY > 2:
-            raise UserWarning("DREP works for binary classification only.")
+            raise UserWarning(
+                "DREP works for binary classification only.")
         ys_cast, P, seq = DREP_Pruning(y_val, y_cast, nb_cls, rho)
     elif name_pru == "drepm":
-        ys_cast, P, seq = drep_multi_modify_pruning(y_val, y_cast, nb_cls, rho)
+        ys_cast, P, seq = drep_multi_modify_pruning(
+            y_val, y_cast, nb_cls, rho)
 
     elif name_pru == "SEP":
         ys_cast, P, seq = PEP_SEP(y_val, y_cast, nb_cls, rho)
@@ -1832,9 +1845,11 @@ def contrastive_pruning_methods(name_pru, nb_cls, nb_pru,
         ys_cast, P, seq = PEP_PEP_modify(y_val, y_cast, nb_cls, rho)
 
     elif name_pru == "pepre":
-        ys_cast, P, seq = pep_pep_integrate(y_val, y_cast, nb_cls, rho)
+        ys_cast, P, seq = pep_pep_integrate(
+            y_val, y_cast, nb_cls, rho)
     elif name_pru == "pepr+":
-        ys_cast, P, seq = pep_pep_re_modify(y_val, y_cast, nb_cls, rho)
+        ys_cast, P, seq = pep_pep_re_modify(
+            y_val, y_cast, nb_cls, rho)
     else:
         # raise UserWarning("Error occurred in `contrastive_pruning_methods`.")
         # propose for `ustc_diversity`
@@ -1845,7 +1860,7 @@ def contrastive_pruning_methods(name_pru, nb_cls, nb_pru,
 
     if name_pru != "OO":
         flag = None
-    # time_elapsed = time.time() - since
+    # tim_elapsed = time.time() - since
     return ys_cast, P, seq, flag
 
 
@@ -1858,7 +1873,8 @@ def contrastive_pruning_according_validation(
     time_elapsed = time.time() - since
 
     ys_pred = np.array(y_pred)[P].tolist()
-    ys_insp = np.array(y_insp)[P].tolist() if len(y_insp) > 0 else []
+    ys_insp = np.array(y_insp)[P].tolist() if len(
+        y_insp) > 0 else []
     # if we only have trn/tst with val, then
     # ys_cast is ys_insp and ys_insp=[] (for val)
 

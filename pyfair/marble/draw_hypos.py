@@ -207,7 +207,7 @@ def scipy_ttest_for2(valA, valB, alpha=.05):
     mark = _regulate_sign(sig > alpha)
 
     # mk_s2 = _regulate_sign(mk_s2) + ": sigma2"
-    mk_s2 = _regulate_sign(mk_s2, "$\sigma^2$")
+    mk_s2 = _regulate_sign(mk_s2, r"$\sigma^2$")
     return mark, clue, sig, mk_s2
 
 
@@ -672,7 +672,7 @@ def comp_t_prep(valA, valB, alpha=.05, method="manual"):
 
     mk_s2 = stats.levene(valA, valB)
     mk_s2 = mk_s2.pvalue > alpha
-    mk_s2 = _regulate_sign(mk_s2, "$\sigma^2$")
+    mk_s2 = _regulate_sign(mk_s2, r"$\sigma^2$")
     return mk_mu, mk_s2
 
 

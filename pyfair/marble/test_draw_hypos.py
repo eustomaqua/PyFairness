@@ -2,7 +2,7 @@
 
 import numpy as np
 from pyfair.facil.utils_const import check_equal
-from pyfair.junior.draw_hypos import (
+from pyfair.marble.draw_hypos import (
     _regulate_vals, _regulate_sign,
     _Friedman_sequential, _Friedman_successive,
     binomial_test, t_test, scipy_ttest_for1, scipy_ttest_for2,
@@ -10,6 +10,7 @@ from pyfair.junior.draw_hypos import (
     McNemar_test, Friedman_init, Friedman_test, Nememyi_posthoc_test,
     cmp_paired_avg, cmp_paired_wtl, comp_t_init, comp_t_prep,
     Pearson_correlation)
+
 
 accs = [0.7, 0.8, 0.6, 0.85, 0.65]
 errs = _regulate_vals(accs, 'acc')

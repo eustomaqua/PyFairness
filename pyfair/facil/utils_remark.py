@@ -61,6 +61,9 @@ NAME_INDIVIDUALS = {
     'MLP': neural_network.MLPClassifier(),  # NN
 }
 
+INDIVIDUALS = NAME_INDIVIDUALS
+
+
 SPEC_INDIVIDUALS = {
     'DT': tree.DecisionTreeClassifier(),
     'NB': naive_bayes.GaussianNB(),

@@ -100,7 +100,7 @@ def test_contingency():
 
 def test_performance():
     from pyfair.facil.metric_cont import contingency_tab_bi
-    from pyfair.junior.metric_perf import (
+    from pyfair.marble.metric_perf import (
         calc_accuracy, calc_precision, calc_recall,
         calc_f1_score, calc_f_beta, calc_error_rate)
 
@@ -145,7 +145,7 @@ Sjs_non = [idx_priv == 1, idx_priv == 0, idx_priv == 2]
 
 
 def test_group_fair():
-    from pyfair.junior.metric_fair import (
+    from pyfair.marble.metric_fair import (
         # unpriv_grp_one, unpriv_grp_two, unpriv_grp_thr,
         unpriv_group_one, unpriv_group_two, unpriv_group_thr,
         marginalised_np_mat, unpriv_unaware, unpriv_manual,
@@ -201,7 +201,7 @@ def test_group_fair():
 def test_group_prev():
     # from fairml.metrics.group_fair import (
     # from fairml.facils.fairness_group import (
-    from pyfair.junior.metric_fair import (
+    from pyfair.marble.metric_fair import (
         marginalised_contingency, marginalised_confusion,
         prev_unpriv_grp_one, prev_unpriv_grp_two,
         prev_unpriv_grp_thr, marginalised_pd_mat,

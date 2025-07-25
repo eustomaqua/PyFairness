@@ -3,7 +3,7 @@
 import numpy as np
 # from prgm.nucleus.utils_chart import *
 # from fairml.facilc.draw_chart import (
-from pyfair.senior.draw_chart import (
+from pyfair.granite.draw_chart import (
     # multi_scatter_hor, multi_scatter_vrt, multiple_scatter_chart,
     multiple_scatter_chart,
     analogous_confusion, multiple_scatter_alternative,
@@ -46,7 +46,7 @@ def test_multi_scatter():
 
 def test_mu_scatter_alter():
     # from prgm.nucleus.utils_chart import (
-    from pyfair.senior.draw_chart import (
+    from pyfair.granite.draw_chart import (
         _alternative_multi_scatter_hor,
         _alternative_multi_scatter_vrt)
     identity, locate, box = True, PLT_LOCATION, PLT_FRAMEBOX
@@ -107,6 +107,7 @@ def test_hist_chart():
     avg_1, r1_p, r2_p = _line_std_drawer(Ys)
     avg_0, r1_q, r2_q = _line_std_drawer(Ys, ddof=0)
     assert np.all(np.equal(avg_1, avg_0))
+    assert len(r1_p) == len(r2_p) == len(r1_q) == len(r2_q)
 
     X = np.random.rand(sz).tolist()
     X = sorted(X)

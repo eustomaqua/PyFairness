@@ -17,7 +17,7 @@ from pyfair.facil.draw_prelim import (
     PLT_LOCATION, PLT_FRAMEBOX, _setup_config,
     _style_set_axis, _setup_figsize, _setup_figshow,
     _setup_rgb_color)
-from pyfair.senior.draw_graph import _sns_line_err_bars
+from pyfair.granite.draw_graph import _sns_line_err_bars
 # from pyfair.senior.draw_graph import (
 #     _sns_line_err_bars, _setup_rgb_color)
 # _setup_locater,_set_quantile, cnames, cname_keys, cmap_names,

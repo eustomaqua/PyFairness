@@ -12,7 +12,7 @@ from scipy import stats
 from sklearn.metrics import confusion_matrix
 
 from pyfair.facil.utils_saver import elegant_print
-from pyfair.junior.draw_hypos import (
+from pyfair.marble.draw_hypos import (
     Friedman_test, Nememyi_posthoc_test)
 from pyfair.facil.draw_prelim import (
     PLT_LOCATION, PLT_FRAMEBOX, _style_set_fig, _setup_config,

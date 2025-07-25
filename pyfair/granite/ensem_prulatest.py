@@ -22,7 +22,7 @@ from pympler.asizeof import asizeof
 
 from pyfair.facil.utils_const import check_zero, DTY_INT, DTY_BOL
 from pyfair.facil.ensem_voting import plurality_voting
-from pyfair.junior.data_entropy import I as EntropyI
+from pyfair.marble.data_entropy import I as EntropyI
 gc.enable()
 
 

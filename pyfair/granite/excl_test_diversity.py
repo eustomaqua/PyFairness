@@ -13,7 +13,7 @@ ki, kj = 0, 1  # idx
 
 
 def test_contingency_table():
-    from pyfair.junior.diver_pairwise import (
+    from pyfair.marble.diver_pairwise import (
         contingency_table_binary,
         contingency_table_multi,
         contingency_table_multiclass)
@@ -52,7 +52,7 @@ def test_contingency_table():
 
 
 def test_number_individual():
-    from pyfair.junior.diver_nonpairwise import (
+    from pyfair.marble.diver_nonpairwise import (
         number_individuals_correctly,
         number_individuals_fall_through)
     rho_tr = number_individuals_correctly(tr_yt, tr_y)
@@ -83,7 +83,7 @@ def test_number_individual():
 
 
 def test_q_statistic():
-    from pyfair.junior.diver_pairwise import (
+    from pyfair.marble.diver_pairwise import (
         Q_statistic_multiclass,
         Q_Statistic_binary,
         Q_Statistic_multi)
@@ -110,11 +110,11 @@ def test_q_statistic():
 
 
 def test_kappa_statistic():
-    from pyfair.junior.diver_pairwise import \
+    from pyfair.marble.diver_pairwise import \
         kappa_statistic_multiclass as kpa_multiclass
-    from pyfair.junior.diver_pairwise import \
+    from pyfair.marble.diver_pairwise import \
         Kappa_Statistic_binary as KStat_binary
-    from pyfair.junior.diver_pairwise import \
+    from pyfair.marble.diver_pairwise import \
         Kappa_Statistic_multi as KStat_multi
 
     bi_ans_bi = KStat_binary(bi_yt[ki], bi_yt[kj], nb_inst)
@@ -143,11 +143,11 @@ def test_kappa_statistic():
 
 
 def test_disagreement():
-    from pyfair.junior.diver_pairwise import \
+    from pyfair.marble.diver_pairwise import \
         disagreement_measure_multiclass as dis_multiclass
-    from pyfair.junior.diver_pairwise import \
+    from pyfair.marble.diver_pairwise import \
         Disagreement_Measure_binary as Disag_binary
-    from pyfair.junior.diver_pairwise import \
+    from pyfair.marble.diver_pairwise import \
         Disagreement_Measure_multi as Disag_multi
 
     bi_ans_bi = Disag_binary(bi_yt[ki], bi_yt[kj], nb_inst)
@@ -168,13 +168,13 @@ def test_disagreement():
 
 
 def test_correlation_coefficient():
-    from pyfair.junior.diver_pairwise import \
+    from pyfair.marble.diver_pairwise import \
         correlation_coefficient_multiclass as cor_multiclass
-    from pyfair.junior.diver_pairwise import \
+    from pyfair.marble.diver_pairwise import \
         Correlation_Coefficient_binary as Corre_binary
-    from pyfair.junior.diver_pairwise import \
+    from pyfair.marble.diver_pairwise import \
         Correlation_Coefficient_multi as Corre_multi
-    from pyfair.junior.diver_pairwise import (
+    from pyfair.marble.diver_pairwise import (
         Q_statistic_multiclass, Q_Statistic_binary,
         Q_Statistic_multi)
 
@@ -210,9 +210,9 @@ def test_correlation_coefficient():
 
 
 def test_double_fault():
-    from pyfair.junior.diver_pairwise import \
+    from pyfair.marble.diver_pairwise import \
         double_fault_measure_multiclass as dbl_multiclass
-    from pyfair.junior.diver_pairwise import \
+    from pyfair.marble.diver_pairwise import \
         Double_Fault_Measure_binary_multi as DoubF_multi
 
     bi_ans_bi = DoubF_multi(bi_yt[ki], bi_yt[kj], bi_y, nb_inst)
@@ -233,7 +233,7 @@ def test_double_fault():
 
 
 def test_KW_variance():
-    from pyfair.junior.diver_nonpairwise import \
+    from pyfair.marble.diver_nonpairwise import \
         Kohavi_Wolpert_variance_multiclass as KWVar_multiclass
     bi_ans = KWVar_multiclass(bi_yt, bi_y, nb_inst, nb_cls)
     tr_ans = KWVar_multiclass(tr_yt, tr_y, nb_inst, nb_cls)
@@ -243,7 +243,7 @@ def test_KW_variance():
 
 
 def test_interrater_agreement():
-    from pyfair.junior.diver_nonpairwise import \
+    from pyfair.marble.diver_nonpairwise import \
         interrater_agreement_multiclass as Inter_multiclass
     bi_ans = Inter_multiclass(bi_yt, bi_y, nb_inst, nb_cls)
     tr_ans = Inter_multiclass(tr_yt, tr_y, nb_inst, nb_cls)
@@ -253,7 +253,7 @@ def test_interrater_agreement():
 
 
 def test_entropy_cc_sk():
-    from pyfair.junior.diver_nonpairwise import (
+    from pyfair.marble.diver_nonpairwise import (
         Entropy_cc_multiclass, Entropy_sk_multiclass)
 
     bi_ans = Entropy_cc_multiclass(bi_yt, bi_y)
@@ -270,7 +270,7 @@ def test_entropy_cc_sk():
 
 
 def test_difficulty():
-    from pyfair.junior.diver_nonpairwise import difficulty_multiclass
+    from pyfair.marble.diver_nonpairwise import difficulty_multiclass
     bi_ans = difficulty_multiclass(bi_yt, bi_y)
     tr_ans = difficulty_multiclass(tr_yt, tr_y)
     mu_ans = difficulty_multiclass(mu_yt, mu_y)
@@ -279,9 +279,9 @@ def test_difficulty():
 
 
 def test_generalized():
-    from pyfair.junior.diver_nonpairwise import \
+    from pyfair.marble.diver_nonpairwise import \
         generalized_diversity_multiclass as GeneD_multiclass
-    from pyfair.junior.diver_nonpairwise import \
+    from pyfair.marble.diver_nonpairwise import \
         Generalized_Diversity_multi as GeneD_multi
 
     bi_ans_re = GeneD_multiclass(bi_yt, bi_y, nb_cls)
@@ -301,7 +301,7 @@ def test_generalized():
 
 
 def test_coincident_failure():
-    from pyfair.junior.diver_nonpairwise import \
+    from pyfair.marble.diver_nonpairwise import \
         coincident_failure_multiclass
     bi_ans = coincident_failure_multiclass(bi_yt, bi_y, nb_cls)
     tr_ans = coincident_failure_multiclass(tr_yt, tr_y, nb_cls)
@@ -316,7 +316,7 @@ def test_coincident_failure():
 
 def test_pairwise_item():
     from pyfair.facil.utils_remark import PAIRWISE
-    from pyfair.junior.diver_pairwise import (
+    from pyfair.marble.diver_pairwise import (
         pairwise_measure_item_multiclass,
         pairwise_measure_item_binary,
         pairwise_measure_item_multi)
@@ -355,7 +355,7 @@ def test_pairwise_item():
 
 def test_pairwise_gather():
     from pyfair.facil.utils_remark import PAIRWISE
-    from pyfair.junior.diver_pairwise import (
+    from pyfair.marble.diver_pairwise import (
         pairwise_measure_gather_multiclass,
         pairwise_measure_whole_binary,
         pairwise_measure_whole_multi)
@@ -393,7 +393,7 @@ def test_pairwise_gather():
 
 def test_nonpairwise():
     from pyfair.facil.utils_remark import NONPAIRWISE
-    from pyfair.junior.diver_nonpairwise import (
+    from pyfair.marble.diver_nonpairwise import (
         nonpairwise_measure_gather_multiclass,
         nonpairwise_measure_item_multiclass)
     for name_div in sorted(NONPAIRWISE.keys()):
@@ -423,16 +423,16 @@ def test_contrastive():
     bi_ha, bi_hb = bi_yt[ki], bi_yt[kj]
     mu_ha, mu_hb = mu_yt[ki], mu_yt[kj]
 
-    from pyfair.senior.ensem_diversity import \
+    from pyfair.granite.ensem_diversity import \
         contrastive_diversity_gather_multiclass as gather_mc
-    from pyfair.senior.ensem_diversity import \
+    from pyfair.granite.ensem_diversity import \
         contrastive_diversity_item_multiclass as item_mc
-    from pyfair.senior.ensem_diversity import \
+    from pyfair.granite.ensem_diversity import \
         contrastive_diversity_by_instance_multiclass as inst_mc
 
-    from pyfair.senior.ensem_diversity import \
+    from pyfair.granite.ensem_diversity import \
         contrastive_diversity_whole_binary as whole_bi
-    from pyfair.senior.ensem_diversity import \
+    from pyfair.granite.ensem_diversity import \
         contrastive_diversity_whole_multi as whole_mu
 
     for name_div in AVAILABLE_NAME_DIVER:

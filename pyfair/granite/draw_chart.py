@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 # from fairml.facils.data_entropy import prob, jointProb
 # from fairml.facils.data_distance import (
-from pyfair.junior.data_distance import (
+from pyfair.marble.data_distance import (
     Wasserstein_dis,
     KL_divergence, Bhattacharyya_dist,  # JS_divergence,
     Hellinger_dist_v2, JS_div,      # Hellinger_dist_v1,
@@ -26,7 +26,7 @@ from pyfair.facil.draw_prelim import (
     _setup_config, _barh_kwargs, _barh_fcolor,
     _setup_figsize, _setup_figshow,  # _sns_line_err_bars,
     _setup_locater, _style_set_fig, _style_set_axis)
-from pyfair.senior.draw_graph import _sns_line_err_bars
+from pyfair.granite.draw_graph import _sns_line_err_bars
 
 
 mpl.use('Agg')  # set the 'backend'

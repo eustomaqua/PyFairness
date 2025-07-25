@@ -13,11 +13,11 @@ from pyfair.facil.utils_const import (
 from pyfair.facil.utils_remark import (
     PAIRWISE, NONPAIRWISE, AVAILABLE_NAME_DIVER)
 
-from pyfair.junior.diver_pairwise import (
+from pyfair.marble.diver_pairwise import (
     pairwise_measure_gather_multiclass,
     pairwise_measure_item_multiclass,
     pairwise_measure_whole_binary, pairwise_measure_whole_multi)
-from pyfair.junior.diver_nonpairwise import (
+from pyfair.marble.diver_nonpairwise import (
     nonpairwise_measure_gather_multiclass,
     nonpairwise_measure_item_multiclass)
 

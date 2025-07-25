@@ -4,7 +4,7 @@
 import numpy as np
 import pandas as pd
 # from fairml.facilc.draw_addtl import (
-from pyfair.senior.draw_addtl import (
+from pyfair.granite.draw_addtl import (
     multiple_lines_with_errorbar, box_plot, scatter_k_cv_with_real,
     boxplot_k_cv_with_real, approximated_dist_comparison,
     multiple_scatter_comparison, scatter_with_marginal_distrib,
@@ -20,7 +20,7 @@ lc_error_bar = multiple_lines_with_errorbar
 
 def excl_excl_test_linechart():
     # from prgm.nucleus.utils_graph import line_chart
-    from pyfair.senior.draw_graph import line_chart
+    from pyfair.granite.draw_graph import line_chart
     nb_thin, nb_lam2 = 5, 7  # 11
     data = np.random.rand(nb_thin, nb_lam2) * .3 + .7
 
@@ -35,7 +35,7 @@ def excl_excl_test_linechart():
 
 def excl_excl_test_multi_line():
     # from prgm.nucleus.utils_graph import multiple_line_chart
-    from pyfair.senior.draw_graph import multiple_line_chart
+    from pyfair.granite.draw_graph import multiple_line_chart
     num, nb_iter, baseline = 10, 5, 4
     X = np.linspace(0, 1, num)  # doc issue  # no issue
     Ys = np.random.rand(num, baseline, nb_iter)
@@ -238,7 +238,7 @@ def generate_dfs(num, bl):
     return df, df_alternative, tag_Ys, picked_keys, col_X, col_Y
 
 
-def excl_test_fairmanf_exp2b():
+def test_fairmanf_exp2b():
     # from prgm.nucleus.oracle_graph import (
     #     line_reg_with_marginal_distr, single_line_reg_with_distr,
     #     scatter_with_marginal_distrib, lineplot_with_uncertainty)
@@ -310,7 +310,7 @@ def excl_test_fairmanf_exp2b():
 # nucleus.utils_graph.py
 
 
-def excl_test_fairmanf_ext_plt3():
+def test_fairmanf_ext_plt3():
     # from prgm.nucleus.oracle_graph import (
     #     single_line_reg_with_distr, multi_lin_reg_with_distr)
     num, bl = 100, 4

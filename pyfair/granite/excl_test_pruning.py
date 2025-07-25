@@ -27,7 +27,7 @@ mu_ha, mu_hb = mu_yt[ki], mu_yt[kj]
 
 
 def test_early_stopping():
-    from pyfair.senior.ensem_pruning import Early_Stopping
+    from pyfair.granite.ensem_pruning import Early_Stopping
     _, tr_P, tr_seq = Early_Stopping(tr_yt, nb_cls, nb_pru)
     _, bi_P, bi_seq = Early_Stopping(bi_yt, nb_cls, nb_pru)
     _, mu_P, mu_seq = Early_Stopping(mu_yt, nb_cls, nb_pru)
@@ -49,7 +49,7 @@ def test_early_stopping():
 
 
 def test_KL_divergence():
-    from pyfair.senior.ensem_pruning import (
+    from pyfair.granite.ensem_pruning import (
         _softmax, _KLD, _KLD_vectors,
         _JU_set_of_vectors, _U_next_idx,
         KL_divergence_Pruning)
@@ -64,7 +64,7 @@ def test_KL_divergence():
     assert all(check_equal(i, 1) for i in mu_ans)
 
     import scipy.stats as stats
-    from pyfair.junior.data_entropy import prob
+    from pyfair.marble.data_entropy import prob
     px, _ = prob(tr_ha)
     py, _ = prob(tr_hb)
     assert check_equal(_KLD(px, py), stats.entropy(px, py))
@@ -90,11 +90,15 @@ def test_KL_divergence():
     assert _KLD_vectors(tr_ha, tr_hb) == _KLD_vectors(bi_ha, bi_hb)
     assert _KLD_vectors(tr_hb, tr_ha) == _KLD_vectors(bi_hb, bi_ha)
     if np.all(np.equal(px, py)) or np.all(np.equal(px, py[::-1])):
-        assert _KLD_vectors(tr_ha, tr_hb) == _KLD_vectors(tr_hb, tr_ha)
-        assert _KLD_vectors(bi_ha, bi_hb) == _KLD_vectors(bi_hb, bi_ha)
+        assert _KLD_vectors(tr_ha, tr_hb) == _KLD_vectors(
+            tr_hb, tr_ha)
+        assert _KLD_vectors(bi_ha, bi_hb) == _KLD_vectors(
+            bi_hb, bi_ha)
     else:
-        assert _KLD_vectors(tr_ha, tr_hb) != _KLD_vectors(tr_hb, tr_ha)
-        assert _KLD_vectors(bi_ha, bi_hb) != _KLD_vectors(bi_hb, bi_ha)
+        assert _KLD_vectors(tr_ha, tr_hb) != _KLD_vectors(
+            tr_hb, tr_ha)
+        assert _KLD_vectors(bi_ha, bi_hb) != _KLD_vectors(
+            bi_hb, bi_ha)
     px, py = prob(mu_ha)[0], prob(mu_hb)[0]
     # assert (_KLD_vectors(mu_ha, mu_hb), _KLD_vectors(mu_hb, mu_ha))
 
@@ -129,7 +133,7 @@ def test_KL_divergence():
 
 
 def test_KL_divergence_modify():
-    from pyfair.senior.ensem_pruning import (
+    from pyfair.granite.ensem_pruning import (
         _KLD_pq, _J, _KL_find_next,
         KL_divergence_Pruning_modify)
     tr_ans = _KLD_pq(tr_ha, tr_hb)
@@ -152,9 +156,12 @@ def test_KL_divergence_modify():
     assert len(set(map(id, [tr_ans, bi_ans, mu_ans]))) <= 3  # == 2
     # might not achieve there: assert tr_ans == bi_ans
 
-    _, tr_P, tr_seq = KL_divergence_Pruning_modify(tr_yt, nb_cls, nb_pru)
-    _, bi_P, bi_seq = KL_divergence_Pruning_modify(bi_yt, nb_cls, nb_pru)
-    _, mu_P, mu_seq = KL_divergence_Pruning_modify(mu_yt, nb_cls, nb_pru)
+    _, tr_P, tr_seq = KL_divergence_Pruning_modify(
+        tr_yt, nb_cls, nb_pru)
+    _, bi_P, bi_seq = KL_divergence_Pruning_modify(
+        bi_yt, nb_cls, nb_pru)
+    _, mu_P, mu_seq = KL_divergence_Pruning_modify(
+        mu_yt, nb_cls, nb_pru)
     assert sum(tr_P) == len(tr_seq) == nb_pru
     assert sum(bi_P) == len(bi_seq) == nb_pru
     assert sum(mu_P) == len(mu_seq) == nb_pru
@@ -166,7 +173,7 @@ def test_KL_divergence_modify():
 
 
 def test_kappa():
-    from pyfair.senior.ensem_pruning import (
+    from pyfair.granite.ensem_pruning import (
         Kappa_Pruning_kuncheva, Kappa_Pruning_zhoubimu)
     _, tr_Pk, tr_seq_k = Kappa_Pruning_kuncheva(
         tr_y, tr_yt, nb_cls, nb_pru)
@@ -201,7 +208,7 @@ def test_kappa():
 
 
 def test_orientation_ordering():
-    from pyfair.senior.ensem_pruning import (
+    from pyfair.granite.ensem_pruning import (
         _angle, _signature_vector, _average_signature_vector,
         _reference_vector, Orientation_Ordering_Pruning)
     tr_ans = _angle(tr_ha, tr_hb)
@@ -264,26 +271,33 @@ def test_orientation_ordering():
 
 
 def test_error_reduce():
-    from pyfair.senior.ensem_pruning import Reduce_Error_Pruning
-    _, tr_P, tr_seq = Reduce_Error_Pruning(tr_y, tr_yt, nb_cls, nb_pru)
-    _, bi_P, bi_seq = Reduce_Error_Pruning(bi_y, bi_yt, nb_cls, nb_pru)
-    _, mu_P, mu_seq = Reduce_Error_Pruning(mu_y, mu_yt, nb_cls, nb_pru)
-    assert sum(tr_P) == len(tr_seq) == sum(bi_P) == len(bi_seq) == nb_pru
+    from pyfair.granite.ensem_pruning import Reduce_Error_Pruning
+    _, tr_P, tr_seq = Reduce_Error_Pruning(
+        tr_y, tr_yt, nb_cls, nb_pru)
+    _, bi_P, bi_seq = Reduce_Error_Pruning(
+        bi_y, bi_yt, nb_cls, nb_pru)
+    _, mu_P, mu_seq = Reduce_Error_Pruning(
+        mu_y, mu_yt, nb_cls, nb_pru)
+    assert sum(tr_P) == len(tr_seq) == sum(
+        bi_P) == len(bi_seq) == nb_pru
     assert sum(mu_P) == len(mu_seq) == nb_pru
-    assert np.all(np.equal(tr_seq, bi_seq)) and np.all(np.equal(tr_P, bi_P))
+    assert np.all(np.equal(tr_seq, bi_seq)) and np.all(
+        np.equal(tr_P, bi_P))
     assert len(set(map(id, [tr_P, bi_P, mu_P]))) == 3
     assert len(set(map(id, [tr_seq, bi_seq, mu_seq]))) == 3
 
 
 def test_complementary():
-    from pyfair.senior.ensem_pruning import \
+    from pyfair.granite.ensem_pruning import \
         Complementarity_Measure_Pruning as CMPruning
     _, tr_P, tr_seq = CMPruning(tr_y, tr_yt, nb_cls, nb_pru)
     _, bi_P, bi_seq = CMPruning(bi_y, bi_yt, nb_cls, nb_pru)
     _, mu_P, mu_seq = CMPruning(mu_y, mu_yt, nb_cls, nb_pru)
-    assert sum(tr_P) == len(tr_seq) == sum(bi_P) == len(bi_seq) == nb_pru
+    assert sum(tr_P) == len(tr_seq) == sum(
+        bi_P) == len(bi_seq) == nb_pru
     assert sum(mu_P) == len(mu_seq) == nb_pru
-    assert np.all(np.equal(tr_seq, bi_seq)) and np.all(np.equal(tr_P, bi_P))
+    assert np.all(np.equal(tr_seq, bi_seq)) and np.all(
+        np.equal(tr_P, bi_P))
     assert len(set(map(id, [tr_P, bi_P, mu_P]))) == 3
     assert len(set(map(id, [tr_seq, bi_seq, mu_seq]))) == 3
 
@@ -298,7 +312,8 @@ def test_complementary():
 
 
 def test_GMA_diversity():
-    from pyfair.senior.ensem_pruning import _GMM_Kappa_sum, GMM_Algorithm
+    from pyfair.granite.ensem_pruning import (
+        _GMM_Kappa_sum, GMM_Algorithm)
     tr_ans = _GMM_Kappa_sum(tr_yt[0], tr_yt[1:], tr_y)
     bi_ans = _GMM_Kappa_sum(bi_yt[0], bi_yt[1:], bi_y)
     mu_ans = _GMM_Kappa_sum(mu_yt[0], mu_yt[1:], mu_y)
@@ -328,7 +343,7 @@ def test_GMA_diversity():
 
 
 def test_LCS_diversity():
-    from pyfair.senior.ensem_pruning import (
+    from pyfair.granite.ensem_pruning import (
         _LocalSearch_kappa_sum,
         _LCS_sub_get_index, _LCS_sub_idx_renew,
         Local_Search)  # ,_LCS_sub_get_index_alt)
@@ -356,7 +371,8 @@ def test_LCS_diversity():
     S_within = np.where(P)[0].tolist()
     S_without = np.where(np.logical_not(P))[0].tolist()
     p, q, T_within, T_without, flag = _LCS_sub_idx_renew(
-        tr_y, np.array(tr_yt), nb_pru, epsilon, S_within, S_without)
+        tr_y, np.array(tr_yt), nb_pru, epsilon,
+        S_within, S_without)
 
     if flag:
         assert p in S_within and p not in T_within
@@ -369,11 +385,13 @@ def test_LCS_diversity():
         assert np.all(np.equal(S_without, T_without))
 
     p, q, R_within, R_without, flag = _LCS_sub_idx_renew(
-        bi_y, np.array(bi_yt), nb_pru, epsilon, S_within, S_without)
+        bi_y, np.array(bi_yt), nb_pru, epsilon,
+        S_within, S_without)
     assert np.all(np.equal(T_within, R_within))
     assert np.all(np.equal(T_without, R_without))
     p, q, R_within, R_without, flag = _LCS_sub_idx_renew(
-        mu_y, np.array(mu_yt), nb_pru, epsilon, S_within, S_without)
+        mu_y, np.array(mu_yt), nb_pru, epsilon,
+        S_within, S_without)
     assert len(R_within) + len(R_without) == nb_cls
 
     tr_yo, tr_P, tr_seq = Local_Search(
@@ -402,7 +420,7 @@ def test_LCS_diversity():
 
 
 def test_DREP_binary():
-    from pyfair.senior.ensem_pruning import (
+    from pyfair.granite.ensem_pruning import (
         _DREP_fxH, _DREP_diff, _DREP_sub_find_idx,
         DREP_Pruning)
     tr_ans = _DREP_fxH(tr_yt)
@@ -446,10 +464,10 @@ def test_DREP_binary():
 
 
 def test_drep_multi_modify():
-    from pyfair.senior.ensem_pruning import (
+    from pyfair.granite.ensem_pruning import (
         _drep_multi_modify_diff,
         _drep_multi_modify_findidx)
-    from pyfair.senior.ensem_pruning import \
+    from pyfair.granite.ensem_pruning import \
         drep_multi_modify_pruning as drep_prune
 
     tr_ans = _drep_multi_modify_diff(tr_ha, tr_hb)
@@ -489,7 +507,7 @@ def test_drep_multi_modify():
     assert np.all(np.equal(tr_P, bi_P))
     assert np.all(np.equal(tr_seq, bi_seq))
 
-    from pyfair.senior.ensem_pruning import DREP_Pruning
+    from pyfair.granite.ensem_pruning import DREP_Pruning
     # Notice that DREP_fxH involves random, so DREP_Pruning results changing
     # therefore the next two assert might not be true
     # but `drep_multi_modify_pruning` doesn't involve random
@@ -506,7 +524,7 @@ def test_drep_multi_modify():
 
 
 def test_PEP_prelim():
-    from pyfair.senior.ensem_pruning import (
+    from pyfair.granite.ensem_pruning import (
         _PEP_Hs_x, _PEP_f_Hs,
         _PEP_diff_hihj, _PEP_err_hi)
     tr_ans = _PEP_diff_hihj(tr_ha, tr_hb)
@@ -523,7 +541,7 @@ def test_PEP_prelim():
     assert all(isinstance(i, float) for i in [tr_ans, bi_ans])
     assert 0 <= tr_ans <= 1
 
-    from pyfair.senior.ensem_pruning import (
+    from pyfair.granite.ensem_pruning import (
         _pep_multi_modify_diff_hihj,
         _pep_multi_modify_err_hi)
     tr_ans = _pep_multi_modify_diff_hihj(tr_ha, tr_hb)
@@ -561,7 +579,7 @@ def test_PEP_prelim():
 
 
 def test_pep_OEP_SEP():
-    from pyfair.senior.ensem_pruning import (
+    from pyfair.granite.ensem_pruning import (
         _PEP_flipping_uniformly, PEP_SEP, PEP_OEP)
     s = np.random.randint(2, size=nb_cls, dtype='bool').tolist()
     sp = _PEP_flipping_uniformly(s)
@@ -600,7 +618,7 @@ def test_pep_OEP_SEP():
 
 
 def test_pep_dominate():
-    from pyfair.senior.ensem_pruning import (
+    from pyfair.granite.ensem_pruning import (
         _PEP_bi_objective,
         _PEP_weakly_dominate, _PEP_dominate)
     s = np.random.randint(2, size=nb_cls).tolist()
@@ -634,7 +652,7 @@ def test_pep_dominate():
 
 
 def test_pep_VDS_PEP():
-    from pyfair.senior.ensem_pruning import _PEP_VDS, PEP_PEP
+    from pyfair.granite.ensem_pruning import _PEP_VDS, PEP_PEP
     s = np.random.randint(2, size=nb_cls, dtype='bool').tolist()
     tr_Q, tr_L = _PEP_VDS(tr_y, tr_yt, nb_cls, s)
     bi_Q, bi_L = _PEP_VDS(tr_y, tr_yt, nb_cls, s)
@@ -664,7 +682,7 @@ def test_pep_VDS_PEP():
 
 
 def test_pep_refine():
-    from pyfair.senior.ensem_pruning import (
+    from pyfair.granite.ensem_pruning import (
         _pep_pep_split_up_nexists,
         _pep_pep_refresh_weakly_domi,
         pep_pep_integrate)
@@ -712,7 +730,7 @@ def test_pep_refine():
 
 
 def test_pep_PEP_modify():
-    from pyfair.senior.ensem_pruning import (
+    from pyfair.granite.ensem_pruning import (
         PEP_PEP_modify,
         # pep_pep_integrate_modify,
         pep_pep_re_modify)
@@ -752,7 +770,7 @@ def test_pep_PEP_modify():
 
 
 def test_contrastive():
-    from pyfair.senior.ensem_pruning import contrastive_pruning_methods
+    from pyfair.granite.ensem_pruning import contrastive_pruning_methods
     from pyfair.facil.utils_remark import AVAILABLE_NAME_PRUNE
 
     epsilon, rho = 1e-3, 0.3
@@ -794,7 +812,7 @@ def test_contrastive():
 
 
 def test_compared_utus():
-    from pyfair.senior.ensem_pruning import \
+    from pyfair.granite.ensem_pruning import \
         contrastive_pruning_according_validation
     from pyfair.facil.utils_remark import AVAILABLE_NAME_PRUNE
     from sklearn import tree
@@ -808,16 +826,16 @@ def test_compared_utus():
 
     for name_pru in AVAILABLE_NAME_PRUNE:
         (opt_coef, opt_clfs, _, _, _, _, _, P, seq,
-         # ys_insp,ys_cast,ys_pred,ut,us,
-         flag) = contrastive_pruning_according_validation(
+         # ys_insp,ys_cast,ys_pred,ut,us,_,_,flag
+         _) = contrastive_pruning_according_validation(
             name_pru, nb_cls, nb_pru, y_val, y_cast, epsilon, rho,
             y_insp, y_pred, coef, clfs)
         assert len(opt_coef) == len(opt_clfs) == sum(P) == len(seq)
         assert 1 <= len(seq) < nb_cls
 
-        (opt_coef, opt_clfs, _, _, _,  # _, ys_insp, ys_pred,ut,us,
-         _, _, P, seq,
-         flag) = contrastive_pruning_according_validation(
+        (opt_coef, opt_clfs, _, _, _, _, _, P, seq,
+         # _, ys_insp, ys_pred,ut,us,_,_,flag
+         _) = contrastive_pruning_according_validation(
             name_pru, nb_cls, nb_pru, y_trn, y_insp, epsilon, rho,
             [], y_pred, coef, clfs)
         # ys_cast = []

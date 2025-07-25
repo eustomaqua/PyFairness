@@ -7,8 +7,8 @@
 
 from copy import deepcopy
 import gc
-import numpy as np
 
+import numpy as np
 from pympler.asizeof import asizeof
 
 gc.enable()

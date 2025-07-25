@@ -2,19 +2,19 @@
 # test_fairness.py
 
 
-# coding: utf-8
 import numpy as np
 import pandas as pd
 
 # from prgm.nucleus.utils_graph import *
 # from fairml.facilc.draw_graph import (
-from pyfair.senior.draw_graph import (
+from pyfair.granite.draw_graph import (
     scatter_and_corr, sns_scatter_corr, Friedman_chart,
     stat_chart_stack, stat_chart_group, visual_confusion_mat,
     bar_chart_with_error, multiple_hist_chart,
     twinx_hist_chart, twinx_bars_chart, line_chart,
     baseline_subchart, histogram_chart, sns_corr_chart)
 # from pyfair.senior.draw_graph import _setup_config, _setup_figshow
+
 
 sz = 21
 X = np.random.randint(100, size=sz).astype('float')
@@ -140,7 +140,7 @@ def test_linechart():
 
 def test_histchart():
     # from prgm.nucleus.utils_graph import _hist_calc_XY
-    from pyfair.senior.draw_graph import _hist_calc_XY
+    from pyfair.granite.draw_graph import _hist_calc_XY
     nb = 50  # nb, st = 50, 100
     figname = 'chart_c4'
 
@@ -148,7 +148,12 @@ def test_histchart():
     # Y = np.random.rand(nb, 4) * 5 + X  # or X.T
     X = np.random.rand(nb) * 170
     Y = np.random.rand(nb, 4) * 35 + np.reshape(-1, 1)
-    _, _, _, ind = _hist_calc_XY(X, Y)  # X_avg,Y_avg,Y_std,
+    X_avg, Y_avg, Y_std, ind = _hist_calc_XY(X, Y)
+    # pdb.set_trace()
+    # assert X.shape[0] == Y_avg.shape[0] == Y_std.shape[0]
+    # assert Y_avg.shape[1] == Y_std.shape[1] == len(ind)
+    assert Y_avg.shape[0] == Y_std.shape[0] == len(ind)
+    assert isinstance(X_avg, float) and X.shape[0] == nb
 
     # histogram_hor(X, Y, figname)
     # histogram_vrt(X, Y, figname)

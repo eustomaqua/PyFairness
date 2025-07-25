@@ -14,9 +14,10 @@ import numpy as np
 # from pyfairness.facil.pkgs_pympler import asizeof
 from pympler.asizeof import asizeof
 
-from pyfair.facil.utils_const import (  # DTY_FLT, DTY_INT,
-    check_zero, judge_transform_need, random_seed_generator)
-from pyfair.facil.utils_remark import NAME_INDIVIDUALS as INDIVIDUALS
+from pyfair.facil.utils_const import (
+    check_zero, judge_transform_need, random_seed_generator,
+    DTY_FLT, DTY_INT,)
+from pyfair.facil.utils_remark import INDIVIDUALS
 
 gc.enable()
 
@@ -64,8 +65,8 @@ def individual(name_cls, wX, wy):
 
 
 def _BaggingSelectTraining(X_trn, y_trn):
-    X_trn = np.array(X_trn, dtype='float')
-    y_trn = np.array(y_trn, dtype='int')
+    X_trn = np.array(X_trn, dtype=DTY_FLT)
+    y_trn = np.array(y_trn, dtype=DTY_INT)
     vY = np.unique(y_trn)
     dY = len(vY)
     stack_X, stack_y = [], []  # temporal
@@ -148,8 +149,8 @@ def _resample(X, y, w):
 
     if len(idx) == 0:
         idx.append(prng.randint(dY))  # len(w)
-    X = np.array(X, dtype='float')
-    y = np.array(y, dtype='int')
+    X = np.array(X, dtype=DTY_FLT)
+    y = np.array(y, dtype=DTY_INT)
     wX = X[idx].tolist()
     wy = y[idx].tolist()
     del cw, value, X, y, rndsed, prng
@@ -159,9 +160,9 @@ def _resample(X, y, w):
 
 
 def _AdaBoostSelectTraining(X_trn, y_trn, weight):
-    X_trn = np.array(X_trn, dtype='float')
-    y_trn = np.array(y_trn, dtype='int')
-    weight = np.array(weight, dtype='float')
+    X_trn = np.array(X_trn, dtype=DTY_FLT)
+    y_trn = np.array(y_trn, dtype=DTY_INT)
+    weight = np.array(weight, dtype=DTY_FLT)
     vY = np.unique(y_trn)
     dY = len(vY)
     stack_X, stack_y, stack_idx = [], [], []  # init
@@ -218,12 +219,12 @@ def AdaBoostEnsembleAlgorithm(X_trn, y_trn, name_cls, nb_cls):
     # Y\in {0,1}  # y_trn=[i*2-1 for i in y_trn]  # translation needed
     # Notice alpha here is relevant to this algorithm named AdaBoost.
     clfs, nb_trn = [], len(y_trn)  # initial
-    weight = np.zeros((nb_cls, nb_trn), dtype='float')
+    weight = np.zeros((nb_cls, nb_trn), dtype=DTY_FLT)  # 'float')
     em = [0.0] * nb_cls
     alpha = [0.0] * nb_cls
     indices = []
 
-    weight[0] = np.ones(nb_trn, dtype='float') / nb_trn
+    weight[0] = np.ones(nb_trn, dtype=DTY_FLT) / nb_trn
     for k in range(nb_cls):
         nb_count = 20
         while nb_count >= 0:
@@ -292,10 +293,10 @@ def BoostingEnsemble_multiclass(X_trn, y_trn, name_cls, nb_cls,
         dY = 2  # \mathcal{Y} = \{-1,+1\}
 
     clfs, nb_trn = [], len(y_trn)  # init started
-    weight = np.zeros((nb_cls, nb_trn), dtype='float')
+    weight = np.zeros((nb_cls, nb_trn), dtype=DTY_FLT)
     em, alpha, indices = [0.] * nb_cls, [0.] * nb_cls, []
     # Initialize the weight distribution # $\mathcal{D}_0$
-    weight[0] = np.ones(nb_trn, dtype='float') / nb_trn
+    weight[0] = np.ones(nb_trn, dtype=DTY_FLT) / nb_trn
     for k in range(nb_cls):
         nb_cnt = 20
         while nb_cnt >= 0:

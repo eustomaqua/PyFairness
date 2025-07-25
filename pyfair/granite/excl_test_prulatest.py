@@ -50,7 +50,7 @@ tr_ycast = (np.array(bi_ycast) * 2 - 1).tolist()
 
 
 def test_MRMR():
-    from pyfair.senior.ensem_prulatest import (
+    from pyfair.granite.ensem_prulatest import (
         _relevancy_score, _complementary_score,
         _MRMR_MI_binary, _MRMR_MI_multiclass,
         _MRMR_MI, _MRMR_subroute, procedure_MRMR)
@@ -123,15 +123,15 @@ def test_MRMR():
 
 
 def test_MRMC():
-    from pyfair.senior.ensem_prulatest import (
+    from pyfair.granite.ensem_prulatest import (
         _relevancy_score,
         _complementary_score,
         _relevance_complementary_score)  # ,
     #    procedure_MRMC_ordered_EP,
     #    procedure_MRMC_EP_with_original_ensemble)
-    from pyfair.senior.ensem_prulatest import \
+    from pyfair.granite.ensem_prulatest import \
         procedure_MRMC_ordered_EP as MRMC_order
-    from pyfair.senior.ensem_prulatest import \
+    from pyfair.granite.ensem_prulatest import \
         procedure_MRMC_EP_with_original_ensemble as MRMC_prun
 
     tr_Rel_Ci, _, _ = _relevancy_score(tr_y, tr_yt)
@@ -189,7 +189,7 @@ def test_MRMC():
 # 3.4.1 Measure the capability of base classifiers
 
 def test_MRMREP_capability():
-    from pyfair.senior.ensem_prulatest import (
+    from pyfair.granite.ensem_prulatest import (
         _judge_double_check_pruned_index,
         _MRMREP_mutual_information_of_whole_subset,
         _MRMREP_F_statistic,
@@ -251,7 +251,7 @@ def test_MRMREP_capability():
 # 3.4.2 Pruning redundant classifiers
 
 def test_MRMREP_redundant():
-    from pyfair.senior.ensem_prulatest import (
+    from pyfair.granite.ensem_prulatest import (
         _MRMREP_Hamming_distance,
         _MRMREP_distance_of_each_pair,
         _MRMREP_target_function_of_second_stage,
@@ -297,7 +297,7 @@ def test_MRMREP_redundant():
 # 3.5 Classifier fusion
 
 def test_MRMREP_fusion():
-    from pyfair.senior.ensem_prulatest import (
+    from pyfair.granite.ensem_prulatest import (
         _subroute_MRMREP_cover, _subroute_MRMREP_untie,
         _subroute_MRMREP_init, _MRMREP_selected_subset,
         MRMREP_Pruning)
@@ -327,11 +327,15 @@ def test_MRMREP_fusion():
     assert 0 <= mu_ci < nb_cls
 
     L, R = 3, 2
-    tr_rank = _MRMREP_selected_subset(tr_y, tr_yt, nb_cls, L, R, alpha)
-    bi_rank = _MRMREP_selected_subset(tr_y, tr_yt, nb_cls, L, R, alpha)
+    tr_rank = _MRMREP_selected_subset(
+        tr_y, tr_yt, nb_cls, L, R, alpha)
+    bi_rank = _MRMREP_selected_subset(
+        tr_y, tr_yt, nb_cls, L, R, alpha)
     assert id(tr_rank) != id(bi_rank)
-    bi_rank = _MRMREP_selected_subset(bi_y, bi_yt, nb_cls, L, R, alpha)
-    mu_rank = _MRMREP_selected_subset(mu_y, mu_yt, nb_cls, L, R, alpha)
+    bi_rank = _MRMREP_selected_subset(
+        bi_y, bi_yt, nb_cls, L, R, alpha)
+    mu_rank = _MRMREP_selected_subset(
+        mu_y, mu_yt, nb_cls, L, R, alpha)
     assert np.all(np.equal(tr_rank, bi_rank))
     assert all(isinstance(i, int) for i in tr_rank)
     assert all(isinstance(i, int) for i in bi_rank)
@@ -358,7 +362,8 @@ def test_MRMREP_fusion():
     assert len(set(tr_rank)) == nb_cls
     assert len(set(bi_rank)) == nb_cls
     assert len(set(mu_rank)) == nb_cls
-    assert sum(tr_P) == len(tr_seq) == sum(bi_P) == len(bi_seq) == nb_pru
+    assert sum(tr_P) == len(tr_seq) == sum(
+        bi_P) == len(bi_seq) == nb_pru
     assert sum(mu_P) == len(mu_seq) == nb_pru
 
 
@@ -368,7 +373,7 @@ def test_MRMREP_fusion():
 
 
 def test_mRMR_Disc():
-    from pyfair.senior.ensem_prulatest import (
+    from pyfair.granite.ensem_prulatest import (
         mRMR_ensemble_pruning, Disc_ensemble_pruning)
     tr_P, tr_seq = mRMR_ensemble_pruning(tr_y, tr_yt, nb_cls, nb_pru)
     bi_P, bi_seq = mRMR_ensemble_pruning(tr_y, tr_yt, nb_cls, nb_pru)
@@ -380,7 +385,8 @@ def test_mRMR_Disc():
     assert np.all(np.equal(tr_P, bi_P))
     assert np.all(np.equal(tr_seq, bi_seq))
 
-    assert sum(tr_P) == len(tr_seq) == sum(bi_P) == len(bi_seq) == nb_pru
+    assert sum(tr_P) == len(tr_seq) == sum(
+        bi_P) == len(bi_seq) == nb_pru
     assert sum(mu_P) == len(mu_seq) == nb_pru
 
     tr_P, tr_seq = Disc_ensemble_pruning(tr_y, tr_yt, nb_cls, nb_pru)
@@ -393,7 +399,8 @@ def test_mRMR_Disc():
     assert np.all(np.equal(tr_P, bi_P))
     assert np.all(np.equal(tr_seq, bi_seq))
 
-    assert sum(tr_P) == len(tr_seq) == sum(bi_P) == len(bi_seq) == nb_pru
+    assert sum(tr_P) == len(tr_seq) == sum(
+        bi_P) == len(bi_seq) == nb_pru
     assert sum(mu_P) == len(mu_seq) == nb_pru
 
 
@@ -402,7 +409,7 @@ def test_mRMR_Disc():
 
 
 def test_twostage_accuracy():
-    from pyfair.senior.ensem_prulatest import (
+    from pyfair.granite.ensem_prulatest import (
         _subroute_TwoStage_AccuracyBased,
         TwoStagePruning_AccuracyBasedPruning)
     tr_ans = _subroute_TwoStage_AccuracyBased(tr_y, tr_yt, OB_i)
@@ -429,7 +436,8 @@ def test_twostage_accuracy():
         mu_y, mu_yt, nb_cls, indices, ta)
     assert np.all(np.equal(tr_P, bi_P))
     assert np.all(np.equal(tr_seq, bi_seq))
-    assert 1 < sum(tr_P) == len(tr_seq) == sum(bi_P) == len(bi_seq) < nb_cls
+    assert 1 < sum(tr_P) == len(tr_seq) == sum(
+        bi_P) == len(bi_seq) < nb_cls
     assert 1 < sum(mu_P) == len(mu_seq) < nb_cls
 
     for ta in np.arange(0, 10, 1):
@@ -441,11 +449,11 @@ def test_twostage_accuracy():
 
 
 def test_twostage_distance():
-    from pyfair.senior.ensem_prulatest import \
+    from pyfair.granite.ensem_prulatest import \
         _subroute_TwoStage_DistanceBased as subr_dist
-    from pyfair.senior.ensem_prulatest import \
+    from pyfair.granite.ensem_prulatest import \
         _subroute_TwoStage_DistanceBased_inst as subr_inst
-    from pyfair.senior.ensem_prulatest import \
+    from pyfair.granite.ensem_prulatest import \
         TwoStagePruning_DistanceBasedPruning as TSP_DBP
 
     tr_ans, tr_res = subr_dist(tr_y, tr_yt, OB_i, tr_ycast)
@@ -496,7 +504,7 @@ def test_twostage_distance():
 
 
 def test_twostage_prelim():
-    from pyfair.senior.ensem_prulatest import (
+    from pyfair.granite.ensem_prulatest import (
         _subroute_TwoStage_OBi,
         _subroute_TwoStage_checkAC,
         _subroute_TwoStage_checkDIS)
@@ -522,7 +530,7 @@ def test_twostage_prelim():
 
 
 def test_two_stage_plus():
-    from pyfair.senior.ensem_prulatest import (
+    from pyfair.granite.ensem_prulatest import (
         TwoStagePruning_APplusDP,
         TwoStagePruning_DPplusAP)
     ta, td = 3, 7  # or 4, 6 # ta, td = 7, 3
@@ -573,7 +581,7 @@ def test_two_stage_plus():
 
 
 def test_twostage_previous():
-    from pyfair.senior.ensem_prulatest import (
+    from pyfair.granite.ensem_prulatest import (
         TwoStagePrev_DistanceBasedPruning,
         TwoStagePreviously_AP_plus_DP,
         TwoStagePreviously_DP_plus_AP)
@@ -632,7 +640,7 @@ def test_twostage_previous():
 
 
 def test_contrastive():
-    from pyfair.senior.ensem_prulatest import contrastive_pruning_lately
+    from pyfair.granite.ensem_prulatest import contrastive_pruning_lately
     from pyfair.facil.utils_remark import LATEST_NAME_PRUNE
     # from copy import deepcopy
     L, R, alpha = 3, 2, 0.5
@@ -675,7 +683,7 @@ def test_contrastive():
 
 
 def test_compared_utus():
-    from pyfair.senior.ensem_prulatest import \
+    from pyfair.granite.ensem_prulatest import \
         contrastive_pruning_lately_validate
     from pyfair.facil.utils_remark import LATEST_NAME_PRUNE
     from sklearn import tree
