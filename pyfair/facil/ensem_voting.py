@@ -28,7 +28,8 @@ gc.enable()
 def plurality_voting(yt):
     vY = np.unique(yt).tolist()
 
-    vote = [np.sum(np.equal(yt, i), axis=0).tolist() for i in vY]
+    vote = [np.sum(np.equal(
+        yt, i), axis=0).tolist() for i in vY]
     loca = np.argmax(vote, axis=0)  # vote.argmax(axis=0)
     fens = [vY[i] for i in loca]
     del vY, vote, loca

@@ -9,7 +9,8 @@ from pyfair.facil.data_split import (
     sklearn_k_fold_cv, sklearn_stratify, manual_repetitive,
     scale_normalize_helper, scale_normalize_data,
     get_splited_set_acdy, sitch_cross_validation,
-    situation_split1, situation_split2, situation_split3)
+    situation_split1, situation_split2, situation_split3,
+    manual_cross_valid)
 
 
 nb_inst, nb_lbl, nb_feat = 21, 3, 5
@@ -46,18 +47,26 @@ def test_sklearn():
 def test_CV():
     si = sitch_cross_validation(nb_cv, y, 'cv2')
     assert all([len(j) + len(k) == nb_inst for j, k in si])
+    # pdb.set_trace()
     si = sitch_cross_validation(nb_cv, y, 'cv3')
     assert all([len(i) + len(j) + len(
         k) == nb_inst for i, j, k in si])
+    # pdb.set_trace()
+    si = manual_cross_valid(5, y)
+    assert len(si) == 5
+    # pdb.set_trace()
 
     pr_trn, pr_tst = .7, .2
-    si = situation_split1(y, pr_trn, None)
+    si = situation_split1(y, pr_trn, None)    # si,=
     assert len(si[0][0]) + len(si[0][1]) == nb_inst
-    si = situation_split1(y, pr_trn, pr_tst)
+    # pdb.set_trace()
+    si = situation_split1(y, pr_trn, pr_tst)  # si,=
     assert sum([len(i) for i in si[0]]) == nb_inst
+    # pdb.set_trace()
 
     si = situation_split2(pr_trn, nb_cv, y)
     assert all([len(j) + len(k) == nb_inst for j, k in si])
+    # pdb.set_trace()
     si = situation_split3(pr_trn, pr_tst, nb_cv, y)
     assert all([len(i) + len(j) + len(
         k) == nb_inst for i, j, k in si])

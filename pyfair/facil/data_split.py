@@ -48,6 +48,7 @@ def sklearn_stratify(num_cv, y, X):
     return split_idx  # element: not np.ndarray
 
 
+# @numba.jit(nopython=True)
 def manual_repetitive(nb_cv, y, gen=False):
     num = len(y)
     if not gen:
@@ -147,7 +148,7 @@ def _sub_sp_2sets(dY, iY, tmp_idx, sY,
     # tmp = (i_trn, i_tst)
     # split_idx.append(tmp)
     # del i_trn, i_tst, tmp
-    return (i_trn, i_tst)
+    return (i_trn, i_tst)  # (deepcopy(i_trn), deepcopy(i_tst))
 
 
 # def _sub_sp_3sets(lY, iY, dY, tmp_idx, nb_cv,
@@ -175,6 +176,7 @@ def _sub_sp_3sets(dY, iY, tmp_idx, sY,
     # split_idx.append(tmp)
     # del i_trn, i_val, i_tst, tmp
     return (i_trn, i_val, i_tst)
+    # return (deepcopy(i_trn), deepcopy(i_val), deepcopy(i_tst))
 
 
 def _sub_sp_alt_2set(dY, tY, sY):
@@ -284,7 +286,19 @@ def sitch_cross_validation(nb_cv, y, split_type='cv3'):
         else:
             tmp = (i_trn, i_val, i_tst)
         split_idx.append(tmp)
-    return split_idx
+
+        # if split_type.endswith("v2"):
+        #     tmp = (deepcopy(i_trn + i_val), deepcopy(i_tst))
+        # else:
+        #     tmp = (deepcopy(
+        #         i_trn), deepcopy(i_val), deepcopy(i_tst))
+        # split_idx.append(deepcopy(tmp))
+    return split_idx  # return deepcopy(split_idx)
+
+
+def manual_cross_valid(nb_cv, y):
+    split_idx = sitch_cross_validation(nb_cv, y)
+    return [[x + y, z] for x, y, z in split_idx]
 
 
 # Split situation 1: one single iteration
@@ -407,9 +421,9 @@ def situation_split2(pr_trn, nb_cv, y_trn):
             np.random.shuffle(i)
         tmp = _sub_sp_2sets(dY, iY, tmp_idx, sY,
                             nb_y, nb_val)
-        split_idx.append(tmp)
+        split_idx.append(tmp)  # deepcopy(tmp))
     del sY, dY, iY, lY, tmp_idx
-    return split_idx
+    return split_idx      # deepcopy(split_idx)
 
 
 # Split situation 3
@@ -477,9 +491,9 @@ def situation_split3(pr_trn, pr_tst, nb_cv, y):
             np.random.shuffle(i)
         tmp = _sub_sp_3sets(dY, iY, tmp_idx, sY,
                             nb_y, nb_tst, nb_val)
-        split_idx.append(tmp)
+        split_idx.append(tmp)  # deepcopy(tmp))
     del sY, dY, iY, tmp_idx
-    return split_idx
+    return split_idx      # deepcopy(split_idx)
 
 
 # =================================

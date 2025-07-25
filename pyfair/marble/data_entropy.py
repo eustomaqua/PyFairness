@@ -57,7 +57,7 @@ def binsMDL(data, nb_bin=5):  # bins5MDL
             pleft += fgap
             pright += fgap
 
-        data[:, j] = trans.copy()  # deepcopy(trans)
+        data[:, j] = deepcopy(trans)  # trans.copy()
         del fmin, fmax, fgap, trans, pleft, pright, idx
     data = np.array(data, dtype=DTY_INT)
     del d, n  # , i, j

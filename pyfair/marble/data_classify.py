@@ -70,30 +70,40 @@ def _BaggingSelectTraining(X_trn, y_trn):
     vY = np.unique(y_trn)
     dY = len(vY)
     stack_X, stack_y = [], []  # temporal
+    idx_stack = []
     rndsed, prng = random_seed_generator()
 
     for k in range(dY):
         idx = (y_trn == vY[k])
         tem_X = X_trn[idx]
         tem_y = y_trn[idx]
-        idx = prng.randint(0, len(tem_y), size=len(tem_y))
+        # idx = prng.randint(0, len(tem_y), size=len(tem_y))
+
+        idx_tmp = np.where(idx)[0]
+        idx = prng.randint(0, len(idx_tmp), size=len(idx_tmp))
+        idx_tmp = idx_tmp[idx]
+
         tem_X = tem_X[idx].tolist()
         tem_y = tem_y[idx].tolist()
         stack_X.append(tem_X)  # deepcopy(tem_X))
         stack_y.append(tem_y)  # deepcopy(tem_y))
+
+        idx_stack.append(idx_tmp)
         del idx, tem_X, tem_y
     del X_trn, y_trn, vY, dY
 
     tem_X = np.concatenate(stack_X, axis=0)
     tem_y = np.concatenate(stack_y, axis=0)
+    idx_tmp = np.concatenate(idx_stack, axis=0)
     idx = list(range(len(tem_y)))
     prng.shuffle(idx)  # np.random
     wX = tem_X[idx].tolist()
     wy = tem_y[idx].tolist()
+    idx_tmp = idx_tmp[idx].tolist()
     del tem_X, tem_y, rndsed, prng
     gc.collect()
     # return deepcopy(wX), deepcopy(wy), deepcopy(idx)
-    return wX, wy, idx
+    return wX, wy, idx_tmp  # wX, wy, idx
 
 
 def BaggingEnsembleAlgorithm(X_trn, y_trn, name_cls, nb_cls):
@@ -175,16 +185,19 @@ def _AdaBoostSelectTraining(X_trn, y_trn, weight):
         tem_w /= check_zero(np.sum(tem_w))
         tem_w = tem_w.tolist()
         wX, wy, tem_idx = _resample(tem_X, tem_y, tem_w)
+
+        idx_tmp = np.where(idx)[0]
+        idx_tmp = idx_tmp[tem_idx]
         stack_X.append(wX)  # deepcopy(wX))
         stack_y.append(wy)  # deepcopy(wy))
-        stack_idx.append(tem_idx)  # deepcopy(tem_idx))
+        # stack_idx.append(tem_idx)  # deepcopy(tem_idx))
+        stack_idx.append(idx_tmp)
         del idx, tem_X, tem_y, tem_w, wX, wy
     del vY, dY
 
     tem_X = np.concatenate(stack_X, axis=0)
     tem_y = np.concatenate(stack_y, axis=0)
     tem_idx = np.concatenate(stack_idx, axis=0)
-
     # rndsed, prng = renew_random_seed_generator()
     rndsed, prng = random_seed_generator()
     # rndsed = renew_fixed_tseed()
@@ -194,7 +207,6 @@ def _AdaBoostSelectTraining(X_trn, y_trn, weight):
     prng.shuffle(idx)
     wX = tem_X[idx].tolist()
     wy = tem_y[idx].tolist()
-
     tem_idx = tem_idx[idx].tolist()
     if len(wX) <= 2:
         sw = np.argsort(weight)[:: -1]
@@ -206,10 +218,10 @@ def _AdaBoostSelectTraining(X_trn, y_trn, weight):
         del sw, si
     # end if for robustness
     del X_trn, y_trn, weight, rndsed, prng
-    del stack_X, stack_y, stack_idx, tem_X, tem_y, tem_idx
+    del stack_X, stack_y, stack_idx, tem_X, tem_y  # ,tem_idx
     gc.collect()
     # return deepcopy(wX), deepcopy(wy), deepcopy(idx)
-    return wX, wy, idx
+    return wX, wy, tem_idx  # return wX, wy, idx
 
 
 # Discarded:
@@ -341,8 +353,8 @@ def BoostingEnsemble_multiclass(X_trn, y_trn, name_cls, nb_cls,
     alpha = [float(i / am) for i in alpha]
     del weight, em, clf, i_tr, zm, am
     gc.collect()
-    # return deepcopy(alpha), deepcopy(clfs), deepcopy(indices)
-    return alpha, clfs, indices
+    return deepcopy(alpha), deepcopy(clfs), deepcopy(indices)
+    # return alpha, clfs, indices
 
 
 # ============================================
@@ -484,8 +496,8 @@ def calc_acc_sing_pl_and_pr(y, yt, coef):
     del coef, yt, y  # ,fcode
     accpr = np.mean(accsg >= np.array(accpl))
     gc.collect()
-    # return deepcopy(accpl), accsg, accpr, fcode
-    return accpl, accsg, float(accpr), fcode
+    return deepcopy(accpl), accsg, accpr, fcode
+    # return accpl, accsg, float(accpr), fcode
 
 
 def original_ensemble_from_train_set(name_ens, name_cls, nb_cls,
