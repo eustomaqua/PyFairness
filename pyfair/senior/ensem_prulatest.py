@@ -1253,7 +1253,8 @@ def _subroute_TwoStage_AccuracyBased(y_trn, y_insp, OB_i):
     return deepcopy(AC_i)
 
 
-def TwoStagePruning_AccuracyBasedPruning(y_trn, y_insp, nb_cls, indices, ta=3):
+def TwoStagePruning_AccuracyBasedPruning(
+        y_trn, y_insp, nb_cls, indices, ta=3):
     # 1. Initialize RM = \emptyset.
     '''
     P = np.zeros(nb_cls, dtype=DTY_BOL)  # RM
@@ -1397,7 +1398,8 @@ def _subroute_TwoStage_DistanceBased(y_trn, y_insp, OB_i, y_cast):
         for i, idx in enumerate(OB_i):
             tem = idx
             if not tem:
-                tem = np.random.randint(nb_trn, size=nb_trn).tolist()
+                tem = np.random.randint(
+                    nb_trn, size=nb_trn).tolist()
                 tem = list(set(range(nb_trn)) - set(tem))
             if tem:
                 tem = yt[:, tem].mean(axis=1).tolist()

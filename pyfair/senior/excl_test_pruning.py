@@ -166,16 +166,25 @@ def test_KL_divergence_modify():
 def test_kappa():
     from pyfair.senior.ensem_pruning import (
         Kappa_Pruning_kuncheva, Kappa_Pruning_zhoubimu)
-    _, tr_Pk, tr_seq_k = Kappa_Pruning_kuncheva(tr_y, tr_yt, nb_cls, nb_pru)
-    _, bi_Pk, bi_seq_k = Kappa_Pruning_kuncheva(bi_y, bi_yt, nb_cls, nb_pru)
-    _, mu_Pk, mu_seq_k = Kappa_Pruning_kuncheva(mu_y, mu_yt, nb_cls, nb_pru)
-    _, tr_Pz, tr_seq_z = Kappa_Pruning_zhoubimu(tr_y, tr_yt, nb_cls, nb_pru)
-    _, bi_Pz, bi_seq_z = Kappa_Pruning_zhoubimu(bi_y, bi_yt, nb_cls, nb_pru)
-    _, mu_Pz, mu_seq_z = Kappa_Pruning_zhoubimu(mu_y, mu_yt, nb_cls, nb_pru)
+    _, tr_Pk, tr_seq_k = Kappa_Pruning_kuncheva(
+        tr_y, tr_yt, nb_cls, nb_pru)
+    _, bi_Pk, bi_seq_k = Kappa_Pruning_kuncheva(
+        bi_y, bi_yt, nb_cls, nb_pru)
+    _, mu_Pk, mu_seq_k = Kappa_Pruning_kuncheva(
+        mu_y, mu_yt, nb_cls, nb_pru)
+    _, tr_Pz, tr_seq_z = Kappa_Pruning_zhoubimu(
+        tr_y, tr_yt, nb_cls, nb_pru)
+    _, bi_Pz, bi_seq_z = Kappa_Pruning_zhoubimu(
+        bi_y, bi_yt, nb_cls, nb_pru)
+    _, mu_Pz, mu_seq_z = Kappa_Pruning_zhoubimu(
+        mu_y, mu_yt, nb_cls, nb_pru)
 
-    assert sum(tr_Pk) == len(tr_seq_k) == sum(tr_Pz) == len(tr_seq_z) == nb_pru
-    assert sum(bi_Pk) == len(bi_seq_k) == sum(bi_Pz) == len(bi_seq_z) == nb_pru
-    assert sum(mu_Pk) == len(mu_seq_k) == sum(mu_Pz) == len(mu_seq_z) == nb_pru
+    assert sum(tr_Pk) == len(
+        tr_seq_k) == sum(tr_Pz) == len(tr_seq_z) == nb_pru
+    assert sum(bi_Pk) == len(
+        bi_seq_k) == sum(bi_Pz) == len(bi_seq_z) == nb_pru
+    assert sum(mu_Pk) == len(
+        mu_seq_k) == sum(mu_Pz) == len(mu_seq_z) == nb_pru
     assert np.all(np.equal(tr_seq_k, bi_seq_k))
     assert np.all(np.equal(tr_seq_z, bi_seq_z))
 
@@ -229,17 +238,22 @@ def test_orientation_ordering():
     assert np.abs(mu_res) <= np.pi
     assert tr_res == bi_res
 
-    tr_yo, tr_P, tr_seq, tr_fg = Orientation_Ordering_Pruning(tr_y, tr_yt)
-    bi_yo, bi_P, bi_seq, bi_fg = Orientation_Ordering_Pruning(bi_y, bi_yt)
-    mu_yo, mu_P, mu_seq, mu_fg = Orientation_Ordering_Pruning(mu_y, mu_yt)
-    assert 1 <= sum(tr_P) == len(tr_seq) == sum(bi_P) == len(bi_seq) < nb_cls
+    tr_yo, tr_P, tr_seq, tr_fg = Orientation_Ordering_Pruning(
+        tr_y, tr_yt)
+    bi_yo, bi_P, bi_seq, bi_fg = Orientation_Ordering_Pruning(
+        bi_y, bi_yt)
+    mu_yo, mu_P, mu_seq, mu_fg = Orientation_Ordering_Pruning(
+        mu_y, mu_yt)
+    assert 1 <= sum(tr_P) == len(
+        tr_seq) == sum(bi_P) == len(bi_seq) < nb_cls
     assert 1 <= sum(mu_P) == len(mu_seq) < nb_cls
-    assert np.all(np.equal(tr_P, bi_P)) and np.all(
-        np.equal(tr_seq, bi_seq))
+    assert np.all(np.equal(tr_P, bi_P))
+    assert np.all(np.equal(tr_seq, bi_seq))
     assert len(set(map(id, [tr_yo, bi_yo, mu_yo]))) == 3
     assert len(set(map(id, [tr_P, bi_P, mu_P]))) == 3
     assert len(set(map(id, [tr_seq, bi_seq, mu_seq]))) == 3
-    assert -np.pi <= tr_fg == bi_fg <= np.pi and np.abs(mu_fg) <= np.pi
+    assert -np.pi <= tr_fg == bi_fg <= np.pi
+    assert np.abs(mu_fg) <= np.pi
     assert 0 <= tr_fg <= bi_fg <= np.pi and 0 <= mu_fg <= np.pi
 
 

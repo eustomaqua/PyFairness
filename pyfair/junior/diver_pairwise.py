@@ -11,6 +11,7 @@ from pyfair.facil.utils_const import (
     check_zero, judge_transform_need, DTY_INT)
 from pyfair.facil.metric_cont import (
     contingency_tab_bi, contg_tab_mu_type3, contg_tab_mu_type1)
+from pyfair.facil.utils_remark import PAIRWISE
 
 
 # ==================================
