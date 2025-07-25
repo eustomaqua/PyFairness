@@ -2,7 +2,7 @@
 
 
 import numpy as np
-# import pdb
+import pdb
 from pyfairness.facil.utils_const import synthetic_dat
 
 from pyfairness.facil.data_split import (
@@ -13,7 +13,7 @@ from pyfairness.facil.data_split import (
 
 
 nb_inst, nb_lbl, nb_feat = 21, 3, 5
-nb_cv, k = 2, 1  # or 2,3,5
+nb_cv, k = 5, 1  # or 2,3,5
 X, y = synthetic_dat(nb_lbl, nb_inst, nb_feat)
 
 
@@ -61,5 +61,6 @@ def test_CV():
     si = situation_split3(pr_trn, pr_tst, nb_cv, y)
     assert all([len(i) + len(j) + len(
         k) == nb_inst for i, j, k in si])
+
     # pdb.set_trace()
     return

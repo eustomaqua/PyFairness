@@ -311,8 +311,8 @@ def BoostingEnsemble_multiclass(X_trn, y_trn, name_cls, nb_cls,
             i_tr = np.not_equal(inspect, y_trn)  # inspect != y_trn
             em[k] = np.sum(weight[k] * i_tr)
             # If $\epsilon_t > 0.5$, the break
-            ''' if (em[k] >= 0.) and (em[k] <= 0.5):
-                break '''
+            # if (em[k] >= 0.) and (em[k] <= 0.5):
+            #     break
             if 0. <= em[k] <= 0.5:
                 break
 
@@ -327,8 +327,8 @@ def BoostingEnsemble_multiclass(X_trn, y_trn, name_cls, nb_cls,
             check_zero((1. - em[k]) / check_zero(em[k])))
         if name_ens == 'SAMME':
             alpha[k] += np.log(dY - 1)
-        ''' if np.isnan(alpha[k]):
-            alpha[k] = 0.  # for robustness '''
+        # if np.isnan(alpha[k]):
+        #     alpha[k] = 0.  # for robustness
         alpha[k] = float(np.nan_to_num(alpha[k]))
 
         # Update the distribution, where Z_t is a normalization factor
@@ -357,30 +357,28 @@ def BoostingEnsemble_multiclass(X_trn, y_trn, name_cls, nb_cls,
 # from sklearn import neural_network  # MLPClassifier
 #
 
-'''
-Classification
-    sklearn.naive_bayes.MultinomialNB
-    sklearn.naive_bayes.BernoulliNB
-    sklearn.linear_model.Perceptron
-    sklearn.linear_model.SGDClassifier
-    sklearn.linear_model.PassiveAggressiveClassifier
-    sklearn.neural_network.MLPClassifier
-Regression
-    sklearn.linear_model.SGDRegressor
-    sklearn.linear_model.PassiveAggressiveRegressor
-    sklearn.neural_network.MLPRegressor
-Clustering
-    sklearn.cluster.MiniBatchKMeans
-    sklearn.cluster.Birch
-Decomposition / feature Extraction
-    sklearn.decomposition.MiniBatchDictionaryLearning
-    sklearn.decomposition.IncrementalPCA
-    sklearn.decomposition.LatentDirichletAllocation
-Preprocessing
-    sklearn.preprocessing.StandardScaler
-    sklearn.preprocessing.MinMaxScaler
-    sklearn.preprocessing.MaxAbsScaler
-'''
+# Classification
+#     sklearn.naive_bayes.MultinomialNB
+#     sklearn.naive_bayes.BernoulliNB
+#     sklearn.linear_model.Perceptron
+#     sklearn.linear_model.SGDClassifier
+#     sklearn.linear_model.PassiveAggressiveClassifier
+#     sklearn.neural_network.MLPClassifier
+# Regression
+#     sklearn.linear_model.SGDRegressor
+#     sklearn.linear_model.PassiveAggressiveRegressor
+#     sklearn.neural_network.MLPRegressor
+# Clustering
+#     sklearn.cluster.MiniBatchKMeans
+#     sklearn.cluster.Birch
+# Decomposition / feature Extraction
+#     sklearn.decomposition.MiniBatchDictionaryLearning
+#     sklearn.decomposition.IncrementalPCA
+#     sklearn.decomposition.LatentDirichletAllocation
+# Preprocessing
+#     sklearn.preprocessing.StandardScaler
+#     sklearn.preprocessing.MinMaxScaler
+#     sklearn.preprocessing.MaxAbsScaler
 
 
 # ----------------------------------

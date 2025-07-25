@@ -5,7 +5,7 @@ import numpy as np
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn import tree
-import pdb
+# import pdb
 
 from pyfairness.ensemble.data_classify import (
     BaggingEnsembleAlgorithm, AdaBoostEnsembleAlgorithm,
@@ -52,8 +52,7 @@ def test_bagging():
 
 
 def test_adaboost():
-    from pyfairness.ensemble.data_classify import (
-        _resample, AdaBoostEnsembleAlgorithm)
+    from pyfairness.ensemble.data_classify import _resample
 
     wX, wy, ti = _resample(X_trn, y_trn_tmp, w_trn)
     assert 1 <= len(np.unique(wy)) <= nb_lbl
@@ -75,8 +74,7 @@ def test_adaboost():
 
 def test_boosting():
     from pyfairness.ensemble.data_classify import (
-        _resample, _AdaBoostSelectTraining,
-        BoostingEnsemble_multiclass)
+        _resample, _AdaBoostSelectTraining)
 
     wX, wy, ti = _resample(X_trn, y_trn, w_trn)
     assert 1 <= len(np.unique(wy)) <= len(set(y_trn))
