@@ -8,6 +8,12 @@ from pyfair.facil.utils_timer import (
 
 from pyfair.facil.ensem_voting import (
     plurality_voting, majority_voting, weighted_voting)
+from pyfair.facil.metric_cont import (
+    contingency_tab_bi, contg_tab_mu_type3, contg_tab_mu_merge,
+    contg_tab_mu_type2, contg_tab_mu_type1)
+from pyfair.facil.data_split import (
+    sklearn_k_fold_cv, sklearn_stratify, manual_cross_valid,
+    manual_repetitive, scale_normalize_helper, scale_normalize_data)
 
 
 __all__ = [
@@ -22,4 +28,17 @@ __all__ = [
     'fantasy_durat',
     'elegant_durat',
     'elegant_dated',
+
+    'manual_cross_valid',
+    'manual_repetitive',
+    'scale_normalize_helper',
+    'scale_normalize_data',
+    'sklearn_k_fold_cv',
+    'sklearn_stratify',
+
+    'contingency_tab_bi',
+    'contg_tab_mu_type3',
+    'contg_tab_mu_merge',
+    'contg_tab_mu_type2',
+    'contg_tab_mu_type1',
 ]

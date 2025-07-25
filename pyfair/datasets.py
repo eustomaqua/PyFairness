@@ -1,10 +1,22 @@
 # coding: utf-8
 
+
 import os
 import os.path as osp
 # import numpy as np
 import pandas as pd
 from pyfair.facil.utils_saver import elegant_print
+
+
+__all__ = [
+    'Ricci', 'German', 'Adult', 'PropublicaRecidivism',
+    'PropublicaViolentRecidivism', 'DATASETS',
+    'DATASET_NAMES',  # 'prepare_data',
+    'process_above', 'process_below', 'preprocess',
+
+    'RAW_EXPT_DIR', 'AVAILABLE_FAIR_DATASET',
+    'make_sensitive_attrs_binary', 'make_class_attr_num',
+]
 
 
 # ===========================
