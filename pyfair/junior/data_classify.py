@@ -14,11 +14,9 @@ import numpy as np
 # from pyfairness.facil.pkgs_pympler import asizeof
 from pympler.asizeof import asizeof
 
-from pyfairness.facil.utils_const import (
-    check_zero, judge_transform_need,
-    random_seed_generator)  # DTY_FLT, DTY_INT,
-from pyfairness.facil.utils_remark import \
-    NAME_INDIVIDUALS as INDIVIDUALS
+from pyfair.facil.utils_const import (  # DTY_FLT, DTY_INT,
+    check_zero, judge_transform_need, random_seed_generator)
+from pyfair.facil.utils_remark import NAME_INDIVIDUALS as INDIVIDUALS
 
 gc.enable()
 

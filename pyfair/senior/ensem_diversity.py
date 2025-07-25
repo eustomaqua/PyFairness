@@ -6,36 +6,25 @@
 
 
 from copy import deepcopy
+import numpy as np
 
-
-from pyfairness.facil.utils_const import (
-    check_zero, DTY_FLT, DTY_INT, judge_transform_need)
-from pyfairness.facil.utils_remark import (
+from pyfair.facil.utils_const import (
+    check_zero, judge_transform_need, DTY_INT)
+from pyfair.facil.utils_remark import (
     PAIRWISE, NONPAIRWISE, AVAILABLE_NAME_DIVER)
+
+from pyfair.junior.diver_pairwise import (
+    pairwise_measure_gather_multiclass,
+    pairwise_measure_item_multiclass,
+    pairwise_measure_whole_binary, pairwise_measure_whole_multi)
+from pyfair.junior.diver_nonpairwise import (
+    nonpairwise_measure_gather_multiclass,
+    nonpairwise_measure_item_multiclass)
 
 
 # ==================================
 #  General
 # ==================================
-
-
-"""
-# ----------------------------------
-# OEP, SEP
-# ----------------------------------
-#
-# generate $\mathbf{s'}$ by flipping each bit of $\mathbf{s}$
-# with prob.$\frac{1}{n}$
-#
-def _PEP_flipping_uniformly(s):
-    n = len(s)
-    pr = np.random.uniform(size=n)  # \in [0, 1]
-    pr = (pr < 1. / n)  # <=
-    # s', sprime
-    sp = [1 - s[i] if pr[i] else s[i] for i in range(n)]
-    del n, pr
-    return deepcopy(sp)
-"""
 
 
 # ----------------------------------
@@ -50,7 +39,6 @@ def _PEP_flipping_uniformly(s):
 # Data Set  :  \mathcal{D} = \{(\mathbf{x}_i, y_i)\}_{i=1}^m
 # Classifier:  \mathcal{H} = \{h_j\}_{j=1}^n
 #
-
 
 """
 def contingency_table_binary(hi, hj):
@@ -205,7 +193,7 @@ def div_inst_item_cont_tab(ha, hb, vY, dY, change="mu"):
 def div_inst_item_cont_tab(ha, hb, vY, dY, change="mu"):
     assert change in ('tr', 'bi', 'mu'), "ValueError, check `change`."
     if (change == 'mu') or (dY >= 3):
-        Cij = np.zeros(shape=(dY, dY), dtype=DTY_INT)
+        Cij = np.zeros(shape=(dY, dY), dtype=DTY_INT)  # 'int')
         for i in range(dY):
             for j in range(dY):
                 Cij[i, j] = np.sum(

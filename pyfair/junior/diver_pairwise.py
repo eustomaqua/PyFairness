@@ -7,9 +7,9 @@
 
 import numpy as np
 
-from pyfairness.facil.utils_const import(
-    check_zero, judge_transform_need)
-from pyfairness.facil.metric_cont import (
+from pyfair.facil.utils_const import (
+    check_zero, judge_transform_need, DTY_INT)
+from pyfair.facil.metric_cont import (
     contingency_tab_bi, contg_tab_mu_type3, contg_tab_mu_type1)
 
 
@@ -54,8 +54,8 @@ def contingency_table_binary(hi, hj):  # list
     if -1 not in set(hi + hj):  # [0,1], not [-1,1]
         hi = [i * 2 - 1 for i in hi]
         hj = [i * 2 - 1 for i in hj]
-    hi = np.array(hi, dtype='int')
-    hj = np.array(hj, dtype='int')
+    hi = np.array(hi, dtype=DTY_INT)  # 'int')
+    hj = np.array(hj, dtype=DTY_INT)  # 'int')
     a, c, b, d = contingency_tab_bi(hi, hj, pos=1)
     return a, b, c, d
 

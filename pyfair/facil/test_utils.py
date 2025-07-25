@@ -1,8 +1,9 @@
 # coding: utf-8
+# pyfairness.plain.
 
 
 def test_saver():
-    from pyfairness.facil.utils_saver import (
+    from pyfair.facil.utils_saver import (
         get_elogger, rm_ehandler, console_out,
         elegant_print)
 
@@ -18,7 +19,7 @@ def test_saver():
 
 
 def test_timer():
-    from pyfairness.facil.utils_timer import (
+    from pyfair.facil.utils_timer import (
         fantasy_durat, elegant_durat, elegant_dated,
         fantasy_durat_major)
     import time
@@ -43,7 +44,7 @@ def test_timer():
 
 
 def test_const():
-    from pyfairness.facil.utils_const import (
+    from pyfair.facil.utils_const import (
         CONST_ZERO, CONST_DIFF, check_zero, check_equal,
         check_signed_zero, unique_column, judge_transform_need,
         judge_mathcal_Y, np_sum, np_prod)  # ,# renew_rand_seed,
@@ -92,9 +93,9 @@ def test_const():
 
 
 def test_simulator():
-    from pyfairness.facil.utils_const import (
+    from pyfair.facil.utils_const import (
         synthetic_lbl, synthetic_dat, synthetic_set, synthetic_clf)
-    from pyfairness.facil.utils_const import \
+    from pyfair.facil.utils_const import \
         random_seed_generator as renew_rand_seed
     import numpy as np
 

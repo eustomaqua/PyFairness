@@ -7,8 +7,8 @@
 
 import numpy as np
 
-from pyfairness.facil.utils_const import (
-    check_zero, judge_transform_need)
+from pyfair.facil.utils_const import (
+    check_zero, judge_transform_need, DTY_FLT)
 
 
 # ==================================
@@ -132,7 +132,7 @@ def interrater_agreement_multiclass(yt, y, m, nb_cls):
 def Entropy_cc_multiclass(yt, y):
     vY = np.concatenate([[y], yt]).reshape(-1)
     vY, _ = judge_transform_need(vY)
-    ans = np.zeros_like(y, dtype='float')
+    ans = np.zeros_like(y, dtype=DTY_FLT)  # 'float')
     for i in vY:
         P_y_xk = np.mean(np.equal(yt, i), axis=0)  # np.sum(..)/nb_cls
         tem = list(map(check_zero, P_y_xk))

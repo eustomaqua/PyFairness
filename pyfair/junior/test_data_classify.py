@@ -7,10 +7,10 @@ from sklearn.model_selection import train_test_split
 from sklearn import tree
 # import pdb
 
-from pyfairness.ensemble.data_classify import (
+from pyfair.junior.data_classify import (
     BaggingEnsembleAlgorithm, AdaBoostEnsembleAlgorithm,
     BoostingEnsemble_multiclass, calc_acc_sing_pl_and_pr)
-from pyfairness.facil.utils_const import check_zero
+from pyfair.facil.utils_const import check_zero
 
 
 data = datasets.load_iris()
@@ -30,8 +30,7 @@ w_trn = w_trn.tolist()
 
 
 def test_bagging():
-    from pyfairness.ensemble.data_classify \
-        import _BaggingSelectTraining
+    from pyfair.junior.data_classify import _BaggingSelectTraining
     wX, wy, ti = _BaggingSelectTraining(X_trn, y_trn)
     assert all(np.unique(y_trn) == np.unique(wy))
     assert len(ti) == nb_trn == len(wX)
@@ -52,7 +51,7 @@ def test_bagging():
 
 
 def test_adaboost():
-    from pyfairness.ensemble.data_classify import _resample
+    from pyfair.junior.data_classify import _resample
 
     wX, wy, ti = _resample(X_trn, y_trn_tmp, w_trn)
     assert 1 <= len(np.unique(wy)) <= nb_lbl
@@ -73,7 +72,7 @@ def test_adaboost():
 
 
 def test_boosting():
-    from pyfairness.ensemble.data_classify import (
+    from pyfair.junior.data_classify import (
         _resample, _AdaBoostSelectTraining)
 
     wX, wy, ti = _resample(X_trn, y_trn, w_trn)

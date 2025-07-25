@@ -3,9 +3,9 @@
 
 import numpy as np
 # import pdb
-from pyfairness.facil.utils_const import synthetic_dat
+from pyfair.facil.utils_const import synthetic_dat
 
-from pyfairness.facil.data_split import (
+from pyfair.facil.data_split import (
     sklearn_k_fold_cv, sklearn_stratify, manual_repetitive,
     scale_normalize_helper, scale_normalize_data,
     get_splited_set_acdy, sitch_cross_validation,
@@ -13,7 +13,7 @@ from pyfairness.facil.data_split import (
 
 
 nb_inst, nb_lbl, nb_feat = 21, 3, 5
-nb_cv, k = 5, 1  # or 2,3,5
+nb_cv, k = 2, 1  # or 2,3,5
 X, y = synthetic_dat(nb_lbl, nb_inst, nb_feat)
 
 
