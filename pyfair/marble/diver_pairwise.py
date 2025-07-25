@@ -26,23 +26,23 @@ from pyfair.facil.utils_remark import PAIRWISE
 # ----------------------------------
 # Pairwise Measures
 # ----------------------------------
-'''
-contingency_table_binary
-    |         | hi = +1 | hi = -1 |
-    | hj = +1 |    a    |    c    |
-    | hj = -1 |    b    |    d    |
-
-contingency_table_multi
-    |               | hb= c_0 | hb= c_1 | hb= c_{n_c-1} |
-    | ha= c_0       |  C_{00} |  C_{01} |  C_{0?}       |
-    | ha= c_1       |  C_{10} |  C_{11} |  C_{1?}       |
-    | ha= c_{n_c-1} |  C_{?0} |  C_{?1} |  C_{??}       |
-
-contingency_table_multiclass
-    |         | hb == y | hb != y |
-    | ha == y |    a    |    c    |
-    | ha != y |    b    |    d    |
-'''
+# '''
+# contingency_table_binary
+#     |         | hi = +1 | hi = -1 |
+#     | hj = +1 |    a    |    c    |
+#     | hj = -1 |    b    |    d    |
+#
+# contingency_table_multi
+#     |               | hb= c_0 | hb= c_1 | hb= c_{n_c-1} |
+#     | ha= c_0       |  C_{00} |  C_{01} |  C_{0?}       |
+#     | ha= c_1       |  C_{10} |  C_{11} |  C_{1?}       |
+#     | ha= c_{n_c-1} |  C_{?0} |  C_{?1} |  C_{??}       |
+#
+# contingency_table_multiclass
+#     |         | hb == y | hb != y |
+#     | ha == y |    a    |    c    |
+#     | ha != y |    b    |    d    |
+# '''
 
 
 def contingency_table_binary(hi, hj):  # list

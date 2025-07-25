@@ -79,20 +79,20 @@ def contg_tab_mu_merge(Cij, vY, pos=1):
     return tp, fp, fn, tn
 
 
-'''
-Machine learning, Zhi-Hua Zhou
-|          | hi = pos | hi = neg |
-| hj = pos |  a       |  c       |
-| hj = neg |  b       |  d       |
-i.e.,
-|          | hj = pos | hj = neg |
-| hi = pos |  a       |  b       |
-| hi = neg |  c       |  d       |
+# '''
+# Machine learning, Zhi-Hua Zhou
+# |          | hi = pos | hi = neg |
+# | hj = pos |  a       |  c       |
+# | hj = neg |  b       |  d       |
+# i.e.,
+# |          | hj = pos | hj = neg |
+# | hi = pos |  a       |  b       |
+# | hi = neg |  c       |  d       |
 
-contg_tab_multi_type3()
-contg_tab_multi_merge()
-加起来就是 contingency_zh()
-'''
+# contg_tab_multi_type3()
+# contg_tab_multi_merge()
+# 加起来就是 contingency_zh()
+# '''
 
 
 contg_tab_mu_type2 = contingency_tab_bi

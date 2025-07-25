@@ -314,9 +314,9 @@ def test_fairmanf_ext_plt3():
     # from prgm.nucleus.oracle_graph import (
     #     single_line_reg_with_distr, multi_lin_reg_with_distr)
     num, bl = 100, 4
-    df, _, tag_Ys, picked_keys, col_X, col_Y = generate_dfs(num, bl)
+    df, _, tag_Ys, picked_keys, _, _ = generate_dfs(num, bl)
     assert isinstance(tag_Ys, list) and len(tag_Ys) == 3
-    assert len(picked_keys) == 3
+    assert len(picked_keys) == 3  # _,_: col_X,col_Y
 
     tX = df['acc'].values.astype('float')
     tY = df['fair'].values.astype('float')
@@ -342,10 +342,14 @@ def test_fairmanf_ext_plt3():
     # multi_lin_reg_with_distr(tXs, tYs, snspec='sty3a', figname='chart_md3a')
     # multi_lin_reg_with_distr(tXs, tYs, snspec='sty3b', figname='chart_md3b')
     tZs = [['GM1', 'GM2'], 'GM3']
-    multi_lin_reg_with_distr(tXs, tYs, tZs, snspec='sty6', figname='chart_md6')
-    multi_lin_reg_with_distr(tXs, tYs, tZs, snspec='sty4', figname='chart_md4')
-    multi_lin_reg_with_distr(tXs, tYs, tZs, snspec='sty3a', figname='chart_md3a')
-    multi_lin_reg_with_distr(tXs, tYs, tZs, snspec='sty3b', figname='chart_md3b')
+    multi_lin_reg_with_distr(
+        tXs, tYs, tZs, snspec='sty6', figname='chart_md6')
+    multi_lin_reg_with_distr(
+        tXs, tYs, tZs, snspec='sty4', figname='chart_md4')
+    multi_lin_reg_with_distr(
+        tXs, tYs, tZs, snspec='sty3a', figname='chart_md3a')
+    multi_lin_reg_with_distr(
+        tXs, tYs, tZs, snspec='sty3b', figname='chart_md3b')
 
     # pdb.set_trace()
     return

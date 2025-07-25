@@ -42,9 +42,11 @@ def test_subsubsec_241():
     assert 'H0' in mark and 0 <= tau_b <= 1
     # assert mark.endswith('H0') and 0 <= tau_b <= 1
 
-    mark, tau_t, mu, s2 = t_test(errs, k, .3, 0.05)
-    mark, tau_t, mu, s2 = t_test(errs, k, .4, 0.05)
-    mark, tau_t, mu, s2 = t_test(errs, k, .4, 0.10)
+    _, tau_t, mu, s2 = t_test(errs, k, .3, 0.05)
+    _, tau_t, mu, s2 = t_test(errs, k, .4, 0.05)
+    _, tau_t, mu, s2 = t_test(errs, k, .4, 0.10)
+    # assert 'H0' in mark  # _:mark
+    assert isinstance(mu, float)
 
     for alpha in [.05, .1]:
         mark, tau_t, mu, s2 = t_test(errs, k, .18, alpha)
@@ -86,6 +88,7 @@ def test_subsubsec_243():
     for alpha in [.05, .1]:
         mark, tau_t = McNemar_test(ha, hb, y, alpha=alpha)
         assert 0 <= tau_t  # <= 1
+        assert mark[:6] in ('Accept', 'Reject')  # ' H0'
 
 
 '''
@@ -128,9 +131,11 @@ def test_subsubsec_244():
 
         mark, tau_F, tau_chi2 = Friedman_test(idx_bar, .05)
         CD = Nememyi_posthoc_test(idx_bar, .05)
+        assert len(CD) == 2
 
         mark, tau_F, tau_chi2 = Friedman_test(idx_bar, .1)
         CD, q_alpha = Nememyi_posthoc_test(idx_bar, .1)
+        assert isinstance(CD, float) and isinstance(q_alpha, float)
 
 
 def test_paired_t():

@@ -334,10 +334,10 @@ def _Friedman_plt(fig, k, ep1, ep2, anotCD, CD, offset):
         plt.text(xt[-3] + .2, k - 1.3, r'CD = {:.4f}'.format(CD))
         axs.set_xlim(np.floor(xt[0]), np.ceil(xt[-1]) + 1.2)
     # plt.plot([ep2[k - 2], ep2[k - 2]], [-1.2, k + 1], 'r--', lw=1)
-    '''
-    plt.plot([ep1[k - 1], ep1[k - 1]], [-1.2, k + 1], 'r--', lw=1)
-    plt.plot([ep2[k - 1], ep2[k - 1]], [-1.2, k + 1], 'r--', lw=1)
-    '''
+    # '''
+    # plt.plot([ep1[k - 1], ep1[k - 1]], [-1.2, k + 1], 'r--', lw=1)
+    # plt.plot([ep2[k - 1], ep2[k - 1]], [-1.2, k + 1], 'r--', lw=1)
+    # '''
     if offset in [-1, -2]:
         plt.plot([ep1[k + offset], ] * 2, [-1.2, k + 1],
                  'r--', lw=1)

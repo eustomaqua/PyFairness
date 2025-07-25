@@ -28,12 +28,12 @@ def test_multi_scatter():
     Ys = np.random.rand(4, sz).transpose() * 100
     Ys = Ys.T
 
-    '''
-    multi_scatter_hor(X, Ys, annots, annotZs, figname + '1',
-                      figsize, identity, base, locate)
-    multi_scatter_vrt(X, Ys, annots, annotZs, figname + '2',
-                      figsize, identity, base, locate)
-    '''
+    # '''
+    # multi_scatter_hor(X, Ys, annots, annotZs, figname + '1',
+    #                   figsize, identity, base, locate)
+    # multi_scatter_vrt(X, Ys, annots, annotZs, figname + '2',
+    #                   figsize, identity, base, locate)
+    # '''
 
     # identity = False
     multiple_scatter_chart(

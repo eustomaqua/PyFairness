@@ -471,11 +471,11 @@ def Friedman_test(idx_bar, alpha=.05):
     # mu = (k + 1.) / 2
     # sig2 = (k**2 - 1.) / 12
 
-    '''
-    tau_chi2 = [(i - (k + 1) / 2)**2 for i in r_i]
-    tau_chi2 = sum(tau_chi2) * (12 * N) * (k - 1)
-    tau_chi2 = tau_chi2 / k / check_zero(k**2 - 1)
-    '''
+    # '''
+    # tau_chi2 = [(i - (k + 1) / 2)**2 for i in r_i]
+    # tau_chi2 = sum(tau_chi2) * (12 * N) * (k - 1)
+    # tau_chi2 = tau_chi2 / k / check_zero(k**2 - 1)
+    # '''
 
     tau_chi2 = sum([i**2 for i in r_i])
     RHS = k * (k + 1)**2 / 4

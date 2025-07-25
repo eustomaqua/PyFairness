@@ -16,8 +16,10 @@ __all__ = [
     'majority_voting',
 
     'elegant_print',
+    'get_elogger',
+
     'fantasy_timer',
+    'fantasy_durat',
     'elegant_durat',
     'elegant_dated',
-    'get_elogger',
 ]

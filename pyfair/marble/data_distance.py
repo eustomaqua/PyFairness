@@ -50,11 +50,11 @@ def f_divergence(p, q):
 
     ans = 0.
     for i, j in zip(p, q):
-        '''
-        tmp = check_zero(j)
-        tmp = check_zero(i / tmp)
-        # tmp = check_zero(i / j)
-        '''
+        # '''
+        # tmp = check_zero(j)
+        # tmp = check_zero(i / tmp)
+        # # tmp = check_zero(i / j)
+        # '''
         tmp = i / check_zero(j)
         ans += j * _f_div(tmp)
     return float(ans)

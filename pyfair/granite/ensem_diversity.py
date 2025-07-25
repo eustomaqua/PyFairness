@@ -245,31 +245,31 @@ def div_inst_item_mubi(name_div, h, ha, hb, vY, dY):
     Cij = div_inst_item_cont_tab(ha, hb, vY, dY, change="mu")
     m = 1  # m = len(h)
 
-    '''
-    if name_div == "QStat":
-        axd = np.prod([Cij[i][i] for i in range(dY)])
-        bxc = np.prod([Cij[i][dY - 1 - i] for i in range(dY)])
-        return (axd - bxc) / check_zero(axd + bxc)
-    elif name_div == "KStat":
-        Theta_1 = np.sum([Cij[i, i] for i in range(dY)]) / float(m)
-        Theta_2 = np.sum(Cij, axis=1) * np.sum(Cij, axis=0)
-        Theta_2 = np.sum(Theta_2) / float(m ** 2)
-        return (Theta_1 - Theta_2) / check_zero(1. - Theta_2)
-    elif name_div == "Disag":
-        # return np.sum(np.not_equal(ha, hb)) / float(a + b + c + d)
-        return np.sum(np.not_equal(ha, hb)) / float(m)
-    elif name_div == "Corre":
-        axd = np.prod([Cij[i, i] for i in range(dY)])
-        bxc = np.prod([Cij[i, dY - 1 - i] for i in range(dY)])
-        denominator = np.multiply(
-            np.sum(Cij, axis=1), np.sum(Cij, axis=0))
-        denominator = np.sqrt(np.prod(denominator))
-        # denominator = np.sqrt(np_prod(denominator.tolist()))
-        return (axd - bxc) / check_zero(denominator)
-    elif name_div == "DoubF":
-        e = np.sum(np.not_equal(ha, h) & np.not_equal(hb, h))
-        return float(e) / m
-    '''
+    # '''
+    # if name_div == "QStat":
+    #     axd = np.prod([Cij[i][i] for i in range(dY)])
+    #     bxc = np.prod([Cij[i][dY - 1 - i] for i in range(dY)])
+    #     return (axd - bxc) / check_zero(axd + bxc)
+    # elif name_div == "KStat":
+    #     Theta_1 = np.sum([Cij[i, i] for i in range(dY)]) / float(m)
+    #     Theta_2 = np.sum(Cij, axis=1) * np.sum(Cij, axis=0)
+    #     Theta_2 = np.sum(Theta_2) / float(m ** 2)
+    #     return (Theta_1 - Theta_2) / check_zero(1. - Theta_2)
+    # elif name_div == "Disag":
+    #     # return np.sum(np.not_equal(ha, hb)) / float(a + b + c + d)
+    #     return np.sum(np.not_equal(ha, hb)) / float(m)
+    # elif name_div == "Corre":
+    #     axd = np.prod([Cij[i, i] for i in range(dY)])
+    #     bxc = np.prod([Cij[i, dY - 1 - i] for i in range(dY)])
+    #     denominator = np.multiply(
+    #         np.sum(Cij, axis=1), np.sum(Cij, axis=0))
+    #     denominator = np.sqrt(np.prod(denominator))
+    #     # denominator = np.sqrt(np_prod(denominator.tolist()))
+    #     return (axd - bxc) / check_zero(denominator)
+    # elif name_div == "DoubF":
+    #     e = np.sum(np.not_equal(ha, h) & np.not_equal(hb, h))
+    #     return float(e) / m
+    # '''
 
     Cij_ixi = [Cij[i, i] for i in range(dY)]  # np.diag(Cij)
     Cij_minus = [Cij[i, dY - 1 - i] for i in range(dY)]

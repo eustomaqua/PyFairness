@@ -736,15 +736,15 @@ def _MRMREP_target_function_of_second_stage(yt, S):
 # According to the MRMR, the final target function is as follows:
 #       max \phi(D, R),  \phi = D - R
 #
-"""
-def MRMREP_final_target_function(y, yt, S, WD=None, alpha=0.5, hyperparam='2'):
-    D = MRMREP_capability_of_classifiers(y, yt, S, alpha)
-    if WD is None:
-        R = MRMREP_target_function_of_second_stage(yt, S, hyperparam)
-    else:
-        R = MRMREP_second_objective_based_distance_WD(WD, S)
-    return D - R
-"""
+# """
+# def MRMREP_final_target_function(y, yt, S, WD=None, alpha=0.5, hyperparam='2'):
+#     D = MRMREP_capability_of_classifiers(y, yt, S, alpha)
+#     if WD is None:
+#         R = MRMREP_target_function_of_second_stage(yt, S, hyperparam)
+#     else:
+#         R = MRMREP_second_objective_based_distance_WD(WD, S)
+#     return D - R
+# """
 
 # D \in [0, 1] since I,F are normalized into [0, 1]
 # R \in [0, nb_y * nb_S * (nb_S - 1)] / nb_S**2
@@ -1280,19 +1280,19 @@ def TwoStagePruning_AccuracyBasedPruning(
     # 5. for i\in {1,2,...,ES} do:
     # 6.     if AC_i >= T:
     # 7.         RM = RM \cup {m_i}
-    '''
-    for i in range(nb_cls):
-        if AC_i[i] >= T:
-            P[i] = True
-            seq.append(i)
-    '''
+    # '''
+    # for i in range(nb_cls):
+    #     if AC_i[i] >= T:
+    #         P[i] = True
+    #         seq.append(i)
+    # '''
     #   #
     # 8. The outcome PB(x) of a test sample x predicted by
     #    the pruned ensemble PB is given as follows:
     #        PB(x) = majority class in {bm(x) | bm\in RM}
-    '''
-    return P.tolist(), deepcopy(seq)  # list
-    '''
+    # '''
+    # return P.tolist(), deepcopy(seq)  # list
+    # '''
     #   #
     P = np.array(AC_i) >= T
     seq = np.where(P)[0].tolist()

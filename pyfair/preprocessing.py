@@ -50,14 +50,14 @@ def adverse_perturb(dataset, processed_data, ratio=.64):
 
         for j, sa, pv, un in zip(range(
                 dim), sens_attrs, priv_value, unpriv_dict):
-            '''
-            if not prng[j]:
-                continue
-            if disturbed_data.iloc[i][sa] != pv:
-                disturbed_data.loc[ti, sa] = pv
-            else:
-                disturbed_data.loc[ti, sa] = np.random.choice(un)
-            '''
+            # '''
+            # if not prng[j]:
+            #     continue
+            # if disturbed_data.iloc[i][sa] != pv:
+            #     disturbed_data.loc[ti, sa] = pv
+            # else:
+            #     disturbed_data.loc[ti, sa] = np.random.choice(un)
+            # '''
             if prng[j] and disturbed_data.iloc[i][sa] != pv:
                 disturbed_data.loc[ti, sa] = pv
             elif prng[j]:  # disturbed_data.iloc[i][sa]==pv

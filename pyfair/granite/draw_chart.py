@@ -316,38 +316,38 @@ def analogous_confusion_extended(Mat_A, Mat_B, key_A, key_B,
     return
 
 
-'''
-def analogous_confusion_extended(Mat_A, Mat_B, key_A, key_B,
-                                 figname, cm=None, figsize='L-NT',
-                                 cmap_name="Blues_r", rotate=5):
-    cmap = plt.get_cmap(cmap_name)
-    num_za, num_zb = len(key_A), len(key_B)
-    if cm is None:
-        cm = np.zeros((num_za, num_zb))
-        for i in range(num_za):
-            for j in range(num_zb):
-                cm[i, j] = np.corrcoef(Mat_B[j], Mat_A[i])[1, 0]
-    fig, ax = plt.subplots(figsize=(8, 6))
-    if figsize == 'extra':
-        del fig, ax
-        fig, ax = plt.subplots(figsize=_setup_config[figsize])
-    plt.imshow(cm, interpolation='nearest', cmap=cmap)
-    num_shrink = float(num_za) / float(num_zb) + .01
-    plt.colorbar(ax=ax, shrink=num_shrink)  # .8)
-
-    # _style_set_axis(ax, invt=True)
-    tick_mk_a = np.arange(num_za)
-    tick_mk_b = np.arange(num_zb)
-    plt.xticks(tick_mk_b, key_B, rotation=rotate)
-    plt.yticks(tick_mk_a, key_A)
-    for i, j in itertools.product(range(num_za), range(num_zb)):
-        plt.text(j, i, "{:.3f}".format(
-            cm[i, j]), horizontalalignment="center",
-            color="k", size="small")
-    _style_set_fig(fig, siz=_setup_config[figsize])
-    _setup_figshow(fig, figname)
-    return
-'''
+# '''
+# def analogous_confusion_extended(Mat_A, Mat_B, key_A, key_B,
+#                                  figname, cm=None, figsize='L-NT',
+#                                  cmap_name="Blues_r", rotate=5):
+#     cmap = plt.get_cmap(cmap_name)
+#     num_za, num_zb = len(key_A), len(key_B)
+#     if cm is None:
+#         cm = np.zeros((num_za, num_zb))
+#         for i in range(num_za):
+#             for j in range(num_zb):
+#                 cm[i, j] = np.corrcoef(Mat_B[j], Mat_A[i])[1, 0]
+#     fig, ax = plt.subplots(figsize=(8, 6))
+#     if figsize == 'extra':
+#         del fig, ax
+#         fig, ax = plt.subplots(figsize=_setup_config[figsize])
+#     plt.imshow(cm, interpolation='nearest', cmap=cmap)
+#     num_shrink = float(num_za) / float(num_zb) + .01
+#     plt.colorbar(ax=ax, shrink=num_shrink)  # .8)
+#
+#     # _style_set_axis(ax, invt=True)
+#     tick_mk_a = np.arange(num_za)
+#     tick_mk_b = np.arange(num_zb)
+#     plt.xticks(tick_mk_b, key_B, rotation=rotate)
+#     plt.yticks(tick_mk_a, key_A)
+#     for i, j in itertools.product(range(num_za), range(num_zb)):
+#         plt.text(j, i, "{:.3f}".format(
+#             cm[i, j]), horizontalalignment="center",
+#             color="k", size="small")
+#     _style_set_fig(fig, siz=_setup_config[figsize])
+#     _setup_figshow(fig, figname)
+#     return
+# '''
 
 
 # def _alter_sub_Pearson_cor(x, ys, annotZs):

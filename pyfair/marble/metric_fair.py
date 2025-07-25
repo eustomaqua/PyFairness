@@ -106,44 +106,44 @@ def marginalised_pd_mat(y, hx, pos=1, idx_priv=tuple()):
     return g1_Cij, g0_Cij, gones_Cm, gzero_Cm  # np.ndarray
 
 
-'''
-def marginalised_split_up(y, hx, priv=1, sen=list()):
-    gones_y_ = [i for i, j in zip(y, sen) if j == priv]
-    gzero_y_ = [i for i, j in zip(y, sen) if j != priv]
-    gones_hx = [i for i, j in zip(hx, sen) if j == priv]
-    gzero_hx = [i for i, j in zip(hx, sen) if j != priv]
-    return gones_y_, gzero_y_, gones_hx, gzero_hx
+# '''
+# def marginalised_split_up(y, hx, priv=1, sen=list()):
+#     gones_y_ = [i for i, j in zip(y, sen) if j == priv]
+#     gzero_y_ = [i for i, j in zip(y, sen) if j != priv]
+#     gones_hx = [i for i, j in zip(hx, sen) if j == priv]
+#     gzero_hx = [i for i, j in zip(hx, sen) if j != priv]
+#     return gones_y_, gzero_y_, gones_hx, gzero_hx
+#
+#
+# def marginalised_matrixes(y, hx, pos=1, priv=1, sens=list()):
+#     """ y, hx: list, shape=(N,), true label and prediction
+#     pos : which label is viewed as positive, might be multi-class.
+#     sens: which group these instances are from, including one priv-
+#           ileged group and one/multiple marginalised group.
+#           or list of boolean (as elements)
+#     priv: which one indicates the privileged group.
+#     """
+#     vY, _ = judge_transform_need(y + hx)
+#     dY = len(vY)
+#
+#     gones_y_, gzero_y_, gones_hx, gzero_hx \
+#         = marginalised_split_up(y, hx, priv, sens)
+#     g1_Cij = marginalised_contingency(gones_y_, gones_hx, vY, dY)
+#     g0_Cij = marginalised_contingency(gzero_y_, gzero_hx, vY, dY)
+#
+#     loca = vY.index(pos)  # [[TP,FN],[FP,TN]]
+#     gones_Cm = marginalised_confusion(g1_Cij, loca)
+#     gzero_Cm = marginalised_confusion(g0_Cij, loca)
+#     return g1_Cij, g0_Cij, gones_Cm, gzero_Cm  # np.ndarray
+# '''
 
 
-def marginalised_matrixes(y, hx, pos=1, priv=1, sens=list()):
-    """ y, hx: list, shape=(N,), true label and prediction
-    pos : which label is viewed as positive, might be multi-class.
-    sens: which group these instances are from, including one priv-
-          ileged group and one/multiple marginalised group.
-          or list of boolean (as elements)
-    priv: which one indicates the privileged group.
-    """
-    vY, _ = judge_transform_need(y + hx)
-    dY = len(vY)
-
-    gones_y_, gzero_y_, gones_hx, gzero_hx \
-        = marginalised_split_up(y, hx, priv, sens)
-    g1_Cij = marginalised_contingency(gones_y_, gones_hx, vY, dY)
-    g0_Cij = marginalised_contingency(gzero_y_, gzero_hx, vY, dY)
-
-    loca = vY.index(pos)  # [[TP,FN],[FP,TN]]
-    gones_Cm = marginalised_confusion(g1_Cij, loca)
-    gzero_Cm = marginalised_confusion(g0_Cij, loca)
-    return g1_Cij, g0_Cij, gones_Cm, gzero_Cm  # np.ndarray
-'''
-
-
-# Group fairness measures
-''' Cm
-|        | hx= pos | hx= neg |
-| y= pos |    TP   |    FN   |
-| y= neg |    FP   |    TN   |
-'''
+# # Group fairness measures
+# ''' Cm
+# |        | hx= pos | hx= neg |
+# | y= pos |    TP   |    FN   |
+# | y= neg |    FP   |    TN   |
+# '''
 
 
 # 1) Demographic parity

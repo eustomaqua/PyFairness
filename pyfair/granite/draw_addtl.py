@@ -359,12 +359,12 @@ def multiple_scatter_comparison(X, Yss, zs, picked_keys,
     for i in range(nb_att):
         kws = {'color': cs[i % cl], 'lw': 1}
         ax.plot([tx_min, tx_max], [tz_avg[i], tz_avg[i]], **kws)
-        '''
-        ax.fill_between([tx_min, tx_max],
-                    [tz_avg[i] - tz_std[i]] * 2,
-                    [tz_avg[i] + tz_std[i]] * 2,
-                    alpha=.15, facecolor=cs[i % cl])
-        '''
+        # '''
+        # ax.fill_between([tx_min, tx_max],
+        #             [tz_avg[i] - tz_std[i]] * 2,
+        #             [tz_avg[i] + tz_std[i]] * 2,
+        #             alpha=.15, facecolor=cs[i % cl])
+        # '''
 
     ax.ticklabel_format(style='sci', scilimits=(-1, 2), axis='y')
     plt.legend(loc=PLT_LOCATION, frameon=PLT_FRAMEBOX)
