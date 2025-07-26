@@ -217,4 +217,6 @@ def test_approx_dist():
     compare_approx(3, m1, m2)
     compare_multiver(2, m1, m2)
     compare_multiver(3, m1, m2)
+
+    weight_generator(n_d=5)
     return

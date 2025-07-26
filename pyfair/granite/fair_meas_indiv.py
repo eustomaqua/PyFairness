@@ -10,17 +10,20 @@ from pyfair.facil.utils_timer import fantasy_timer
 from pyfair.facil.utils_const import check_zero
 from pyfair.marble.metric_fair import _elem
 
-from hfm.dist_drt import DirectDist_bin as DistDirect_bin
-from hfm.dist_drt import DirectDist_nonbin as DistDirect_nonbin
-from hfm.dist_drt import DirectDist_multiver as DistDirect_multivar
+from pyfair.dr_hfm.dist_drt import (
+    DirectDist_bin, DirectDist_nonbin, DirectDist_multiver)
+from pyfair.dr_hfm.dist_est_nonbin import (
+    ApproxDist_nonbin_mpver, ExtendDist_multiver_mp)
+from pyfair.dr_hfm.dist_est_bin import ApproxDist_bin
+
 # from hfm.dist_drt import DistDirect_mediator
 # from hfm.hfm_df import bias_degree_bin as fair_degree_v3
 # from hfm.hfm_df import bias_degree_nonbin as fair_degree_v4
 # from hfm.hfm_df import bias_degree as fair_degree
 # from hfm.dist_est_nonbin import AcceleDist_nonbin as DistAccele
-from hfm.dist_est_nonbin import ApproxDist_nonbin_mpver as DistApprox
-from hfm.dist_est_nonbin import ExtendDist_multiver_mp as DistExtend
-from hfm.dist_est_bin import ApproxDist_bin
+
+DistApprox = ApproxDist_nonbin_mpver
+del ApproxDist_nonbin_mpver
 
 
 # =====================================
@@ -199,24 +202,27 @@ class prop_L_loss(_elem):
 class DistDirect(_elem):
     @staticmethod
     def bin(X_nA_y, idx_Si):
-        return DistDirect_bin(X_nA_y, idx_Si)
+        # return DistDirect_bin(X_nA_y, idx_Si)
+        return DirectDist_bin(X_nA_y, idx_Si)
 
     @staticmethod
     def nonbin(X_nA_y, idx_Sjs):
-        return DistDirect_nonbin(X_nA_y, idx_Sjs)
+        # return DistDirect_nonbin(X_nA_y, idx_Sjs)
+        return DirectDist_nonbin(X_nA_y, idx_Sjs)
 
     @staticmethod
     def multivar(X_nA_y, idx_As_Sj):
-        return DistDirect_multivar(X_nA_y, idx_As_Sj)
+        # return DistDirect_multivar(X_nA_y, idx_As_Sj)
+        return DirectDist_multiver(X_nA_y, idx_As_Sj)
 
 
 class HFM_Approx_bin(_elem):
     @staticmethod
     def bin(X_nA_y, A_j, idx_Sj, m1, m2):
-        '''
-        Si_c = ~idx_Sj  # idx_Sj: i.e. indices of non_sa
-        return ApproxDist_bin(X_nA_y, A_j, Si_c, idx_Sj, m1, m2)
-        '''
+        # '''
+        # Si_c = ~idx_Sj  # idx_Sj: i.e. indices of non_sa
+        # return ApproxDist_bin(X_nA_y, A_j, Si_c, idx_Sj, m1, m2)
+        # '''
         return ApproxDist_bin(X_nA_y, A_j, idx_Sj, m1, m2)
 
 
@@ -234,7 +240,9 @@ class HFM_DistApprox(_elem):
 
     @staticmethod
     def multivar(X_nA_y, A, m1, m2, n_e=3, pool=None):
-        return DistExtend(X_nA_y, A, m1, m2, n_e, pool)
+        # return DistExtend(X_nA_y, A, m1, m2, n_e, pool)
+        return ExtendDist_multiver_mp(
+            X_nA_y, A, m1, m2, n_e, pool)
 
 
 # -------------------------------------
