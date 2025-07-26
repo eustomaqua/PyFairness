@@ -34,7 +34,7 @@ def local_root_path():
 def local_data_path():
     home = local_root_path()
     # path = osp.join(home, 'data')
-    path = osp.join(home, 'fairml', 'data')
+    path = osp.join(home, 'pyfair', 'data')
     return path
 
 

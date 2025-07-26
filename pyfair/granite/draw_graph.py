@@ -708,14 +708,14 @@ def visual_confusion_mat(y, hx, label_vals,
                                   range(cm.shape[1])):
         tmp = "white" if cm[i, j] > thresh else "black"
 
-        '''
-        if normalize:
-            plt.text(j, i, "{:0.4f}".format(cm[i, j]),
-                     horizontalalignment="center", color=tmp)
-        else:
-            plt.text(j, i, "{:,}".format(cm[i, j]),
-                     horizontalalignment="center", color=tmp)
-        '''
+        # '''
+        # if normalize:
+        #     plt.text(j, i, "{:0.4f}".format(cm[i, j]),
+        #              horizontalalignment="center", color=tmp)
+        # else:
+        #     plt.text(j, i, "{:,}".format(cm[i, j]),
+        #              horizontalalignment="center", color=tmp)
+        # '''
 
         tmp_annot = "{:0.4f}".format(cm[
             i, j]) if normalize else "{:,}".format(cm[i, j])

@@ -234,27 +234,27 @@ def zero_division(dividend, divisor):
     return dividend / divisor
 
 
-'''
-marginalised groups
-|      | h(xneg,gzero)=1 | h(xneg,gzero)=0 |
-| y= 1 |    TP_{gzero}   |    FN_{gzero}   |
-| y= 0 |    FP_{gzero}   |    TN_{gzero}   |
-privileged group
-|      | h(xneg,gones)=1 | h(xneg,gones)=0 |
-| y= 1 |    TP_{gones}   |    FN_{gones}   |
-| y= 0 |    FP_{gones}   |    TN_{gones}   |
+# '''
+# marginalised groups
+# |      | h(xneg,gzero)=1 | h(xneg,gzero)=0 |
+# | y= 1 |    TP_{gzero}   |    FN_{gzero}   |
+# | y= 0 |    FP_{gzero}   |    TN_{gzero}   |
+# privileged group
+# |      | h(xneg,gones)=1 | h(xneg,gones)=0 |
+# | y= 1 |    TP_{gones}   |    FN_{gones}   |
+# | y= 0 |    FP_{gones}   |    TN_{gones}   |
 
-instance (xneg,xpos) --> (xneg,xqtb)
-        xpos might be `gzero` or `gones`
+# instance (xneg,xpos) --> (xneg,xqtb)
+#         xpos might be `gzero` or `gones`
 
-C_{ij}
-|     | hx=0 | hx=1 | ... | hx=? |
-| y=0 | C_00 | C_01 | ... | C_0* |
-| y=1 | C_10 | C_11 |     | C_1* |
-| ... | ...  | ...  |     | ...  |
-| y=? | C_*0 | C_*1 | ... | C_*? |
-'''
-# y, hx: list of scalars (as elements)
+# C_{ij}
+# |     | hx=0 | hx=1 | ... | hx=? |
+# | y=0 | C_00 | C_01 | ... | C_0* |
+# | y=1 | C_10 | C_11 |     | C_1* |
+# | ... | ...  | ...  |     | ...  |
+# | y=? | C_*0 | C_*1 | ... | C_*? |
+# '''
+# # y, hx: list of scalars (as elements)
 
 
 def marginalised_np_mat(y, y_hat, pos_label=1,
@@ -311,13 +311,13 @@ def marginalised_np_gen(y, y_hat, A, priv_val=1,
     return gs_Cm, vA, idx, ex
 
 
-# Group fairness (measures)
-''' Cm
-|        | hx= pos | hx= neg |
-| y= pos |    TP   |    FN   |
-| y= neg |    FP   |    TN   |
-'''
-# return tp, fp, fn, tn
+# # Group fairness (measures)
+# ''' Cm
+# |        | hx= pos | hx= neg |
+# | y= pos |    TP   |    FN   |
+# | y= neg |    FP   |    TN   |
+# '''
+# # return tp, fp, fn, tn
 
 
 # 1) demographic parity

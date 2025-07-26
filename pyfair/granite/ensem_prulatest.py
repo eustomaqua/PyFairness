@@ -1415,12 +1415,12 @@ def _subroute_TwoStage_DistanceBased(y_trn, y_insp, OB_i, y_cast):
     for Ci_val in C_i:  # shape=(nb_cls,)
         ai_val = np.array([Ci_val]).T  # shape=(nb_cls,1)
         di_val = np.sqrt(np.sum((ys - ai_val)**2, axis=0))
-        # di_val = np.mean(di_val, axis=1)  # shape=(nb_cls,)
-        '''
-        di_val = (ys - ai_val)**2  # shape=(nb_cls, nb_val)
-        di_val = np.sum(di_val, axis=0)  # shape=(nb_val,)
-        di_val = np.sqrt(di_val)  # shape=(nb_val,)
-        '''
+        # # di_val = np.mean(di_val, axis=1)  # shape=(nb_cls,)
+        # '''
+        # di_val = (ys - ai_val)**2  # shape=(nb_cls, nb_val)
+        # di_val = np.sum(di_val, axis=0)  # shape=(nb_val,)
+        # di_val = np.sqrt(di_val)  # shape=(nb_val,)
+        # '''
         di_val = np.mean(di_val)  # scalar
         d_i.append(di_val)  # np.float64
     # d_i: shape= (nb_cls,)

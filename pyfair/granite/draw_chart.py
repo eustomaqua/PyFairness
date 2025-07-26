@@ -372,14 +372,14 @@ def _alternative_multi_scatter_hor(X, Ys, sens,
                            figsize=_multi_figsize[sa_len])
     for k, (x, ys, sa) in enumerate(zip(X, Ys, sens)):
 
-        '''
-        # Correlation & Regression
-        Rs = [np.corrcoef(x, y)[1, 0] for y in ys]
-        key = ["Correlation = {:.4f} ({:s})".format(
-            r, Z) for r, Z in zip(Rs, annotZs)]
-        regr = [np.polyfit(x, y, deg=1) for y in ys]
-        estimated = [np.polyval(r, x) for r in regr]
-        '''
+        # '''
+        # # Correlation & Regression
+        # Rs = [np.corrcoef(x, y)[1, 0] for y in ys]
+        # key = ["Correlation = {:.4f} ({:s})".format(
+        #     r, Z) for r, Z in zip(Rs, annotZs)]
+        # regr = [np.polyfit(x, y, deg=1) for y in ys]
+        # estimated = [np.polyval(r, x) for r in regr]
+        # '''
         # key, estimated = _alter_sub_Pearson_cor(x, ys, annotZs)
         key, estimated = _sub_spread_COR([x] * num_z, ys, annotZs)
 

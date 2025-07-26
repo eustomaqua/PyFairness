@@ -906,16 +906,16 @@ def _uncertainty_read_in(dfs_pl, col_X, col_Y, num_gap=1000,
     for df in dfs_pl:  # for i, df in enumerate(dfs_pl):
         Ys = []
         for alpha in X:
-            '''
-            if (alpha_loc == 'b4') and (not alpha_rev):
-                tmp = df[col_X] * alpha + (1. - alpha) * df[col_Y]
-            elif (alpha_loc == 'af') and (not alpha_rev):
-                tmp = df[col_X] * (1. - alpha) + alpha * df[col_Y]
-            elif (alpha_loc == 'b4') and alpha_rev:  # reverse
-                tmp = (1 - df[col_X]) * alpha + (1. - alpha) * df[col_Y]
-            elif (alpha_loc == 'af') and alpha_rev:  # reverse
-                tmp = (1 - df[col_X]) * (1. - alpha) + alpha * df[col_Y]
-            '''
+            # '''
+            # if (alpha_loc == 'b4') and (not alpha_rev):
+            #     tmp = df[col_X] * alpha + (1. - alpha) * df[col_Y]
+            # elif (alpha_loc == 'af') and (not alpha_rev):
+            #     tmp = df[col_X] * (1. - alpha) + alpha * df[col_Y]
+            # elif (alpha_loc == 'b4') and alpha_rev:  # reverse
+            #     tmp = (1 - df[col_X]) * alpha + (1. - alpha) * df[col_Y]
+            # elif (alpha_loc == 'af') and alpha_rev:  # reverse
+            #     tmp = (1 - df[col_X]) * (1. - alpha) + alpha * df[col_Y]
+            # '''
 
             # assert alpha_loc in ('b4', 'af')
             if (not alpha_rev) and (alpha_loc == 'b4'):
