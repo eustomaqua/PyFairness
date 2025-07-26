@@ -28,8 +28,10 @@ def test_preprocessing():
         adversarial, transform_X_and_y, transform_unpriv_tag)
     from pyfair.preprocessing_hfm import (
         binarized_data_set, transform_X_A_and_y,
-        transform_unpriv_tag_prime, renewed_prep_and_adversarial,
-        renewed_transform_X_A_and_y, check_marginalised_indices)
+        # transform_unpriv_tag_prime, renewed_prep_and_adversarial,
+        # renewed_transform_X_A_and_y, check_marginalised_indices)
+        renewed_prep_and_adversarial, renewed_transform_X_A_and_y,
+        check_marginalised_indices)
 
     for dt in DATASETS[1: 2]:
         df = dt.load_raw_dataset()
@@ -61,7 +63,8 @@ def test_preprocessing():
         dist_dt_bin = binarized_data_set(dist_dt)
         X, A, y, new_attr = transform_X_A_and_y(dt, proc_dt_bin)
         _, Ap, _, _ = transform_X_A_and_y(dt, dist_dt_bin)
-        nsa_bin, idx_jt = transform_unpriv_tag_prime(dt, df, 'both')
+        # nsa_bin, idx_jt = transform_unpriv_tag_prime(dt, df, 'both')
+        nsa_bin, idx_jt = transform_unpriv_tag(dt, df, 'both')
         assert len(A) == len(Ap) == len(X) == len(y)
         assert (not new_attr) or isinstance(new_attr, str)
         assert (non_sa[0] == nsa_bin[0]).all()      # idx_non_sa#1

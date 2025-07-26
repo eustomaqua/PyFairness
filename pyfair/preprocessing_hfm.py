@@ -15,7 +15,8 @@ from pyfair.preprocessing_dr import adverse_perturb
 
 __all__ = [
     'binarized_data_set', 'transform_X_A_and_y',
-    'transform_unpriv_tag_prime', 'transform_disturb_prime',
+    # 'transform_unpriv_tag_prime',
+    'transform_disturb_prime',
     'normalise_disturb_prime', 'normalise_disturb_whole',
 
     'renewed_transform_disturb', 'renewed_normalise_disturb',
@@ -63,49 +64,49 @@ def transform_X_A_and_y(dataset, processed_binsensitive):
     return X, A, y, new_attr_name
 
 
-def transform_unpriv_tag_prime(dataset, processed_original,
-                               joint=('and', 'or', 'both')):
-    assert joint in ['and', 'or', 'both'], "Improper joint-parameter"
-    belongs_priv = dataset.find_where_belongs(processed_original)
-
-    # if len(belongs_priv) > 1 and joint == 'and':
-    #     belongs_priv_with_joint = np.logical_and(
-    #         belongs_priv[0],
-    #         belongs_priv[1]).astype(DTY_BOL).tolist()
-    # elif len(belongs_priv) > 1 and joint == 'or':
-    #     belongs_priv_with_joint = np.logical_or(
-    #         belongs_priv[0],
-    #         belongs_priv[1]).astype(DTY_BOL).tolist()
-    # elif len(belongs_priv) > 1 and joint == 'both':
-    #     belongs_priv_with_joint = [
-    #         np.logical_and(belongs_priv[
-    #             0], belongs_priv[1]).astype(DTY_BOL),
-    #         np.logical_or(belongs_priv[
-    #             0], belongs_priv[1]).astype(DTY_BOL),
-    #     ]
-    # else:
-    #     belongs_priv_with_joint = []
-
-    if len(belongs_priv) == 1:  # not >1
-        belongs_priv_with_joint = []
-        return belongs_priv, belongs_priv_with_joint
-    # else:  # if len(belongs_priv) > 1:
-    if joint == 'and':
-        belongs_priv_with_joint = np.logical_and(
-            belongs_priv[0],
-            belongs_priv[1]).astype(DTY_BOL).tolist()
-    elif joint == 'or':
-        belongs_priv_with_joint = np.logical_or(
-            belongs_priv[0],
-            belongs_priv[1]).astype(DTY_BOL).tolist()
-    elif joint == 'both':
-        belongs_priv_with_joint = [
-            np.logical_and(belongs_priv[
-                0], belongs_priv[1]).astype(DTY_BOL),
-            np.logical_or(belongs_priv[
-                0], belongs_priv[1]).astype(DTY_BOL),
-        ]
-    return belongs_priv, belongs_priv_with_joint
+# def transform_unpriv_tag_prime(dataset, processed_original,
+#                                joint=('and', 'or', 'both')):
+#     assert joint in ['and', 'or', 'both'], "Improper joint-parameter"
+#     belongs_priv = dataset.find_where_belongs(processed_original)
+#
+#     # if len(belongs_priv) > 1 and joint == 'and':
+#     #     belongs_priv_with_joint = np.logical_and(
+#     #         belongs_priv[0],
+#     #         belongs_priv[1]).astype(DTY_BOL).tolist()
+#     # elif len(belongs_priv) > 1 and joint == 'or':
+#     #     belongs_priv_with_joint = np.logical_or(
+#     #         belongs_priv[0],
+#     #         belongs_priv[1]).astype(DTY_BOL).tolist()
+#     # elif len(belongs_priv) > 1 and joint == 'both':
+#     #     belongs_priv_with_joint = [
+#     #         np.logical_and(belongs_priv[
+#     #             0], belongs_priv[1]).astype(DTY_BOL),
+#     #         np.logical_or(belongs_priv[
+#     #             0], belongs_priv[1]).astype(DTY_BOL),
+#     #     ]
+#     # else:
+#     #     belongs_priv_with_joint = []
+#
+#     if len(belongs_priv) == 1:  # not >1
+#         belongs_priv_with_joint = []
+#         return belongs_priv, belongs_priv_with_joint
+#     # else:  # if len(belongs_priv) > 1:
+#     if joint == 'and':
+#         belongs_priv_with_joint = np.logical_and(
+#             belongs_priv[0],
+#             belongs_priv[1]).astype(DTY_BOL).tolist()
+#     elif joint == 'or':
+#         belongs_priv_with_joint = np.logical_or(
+#             belongs_priv[0],
+#             belongs_priv[1]).astype(DTY_BOL).tolist()
+#     elif joint == 'both':
+#         belongs_priv_with_joint = [
+#             np.logical_and(belongs_priv[
+#                 0], belongs_priv[1]).astype(DTY_BOL),
+#             np.logical_or(belongs_priv[
+#                 0], belongs_priv[1]).astype(DTY_BOL),
+#         ]
+#     return belongs_priv, belongs_priv_with_joint
 
 
 def transform_disturb_prime(X, A, y, index, belongs_priv,

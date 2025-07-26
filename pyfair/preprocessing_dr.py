@@ -122,29 +122,57 @@ def transform_X_and_y(dataset, processed_binsensitive):
     return X, y
 
 
-def transform_unpriv_tag(dataset, processed_data):
-    # belongs_priv, belongs_priv_with_joint = find_group(
-    #     dataset, processed_data)
+# def transform_unpriv_tag(dataset, processed_data):
+#     # belongs_priv, belongs_priv_with_joint = find_group(
+#     #     dataset, processed_data)
+#
+#     belongs_priv = dataset.find_where_belongs(processed_data)
+#     if len(belongs_priv) > 1:
+#         # belongs_priv_with_joint = np.logical_and(
+#         # "" "
+#         # belongs_priv_with_joint = np.logical_or(
+#         #     belongs_priv[0], belongs_priv[1]
+#         # ).astype('bool').tolist()  # DTY_INT
+#         # # First submission (have modified)
+#         # "" "
+#
+#         belongs_priv_with_joint = np.logical_and(
+#             belongs_priv[0], belongs_priv[1]
+#         ).astype(DTY_BOL).tolist()  # DTY_INT
+#
+#     else:
+#         belongs_priv_with_joint = []
+#
+#     # belongs_priv = [i.astype(DTY_INT) for i in belongs_priv]
+#     # belongs_priv = [i.astype(DTY_BOL) for i in belongs_priv]
+#     return belongs_priv, belongs_priv_with_joint
 
+
+def transform_unpriv_tag(dataset, processed_data,
+                         joint='and'):
+    assert joint in (
+        'and', 'or', 'both'), "Improper joint-parameter"
     belongs_priv = dataset.find_where_belongs(processed_data)
-    if len(belongs_priv) > 1:
-        # belongs_priv_with_joint = np.logical_and(
-        # "" "
-        # belongs_priv_with_joint = np.logical_or(
-        #     belongs_priv[0], belongs_priv[1]
-        # ).astype('bool').tolist()  # DTY_INT
-        # # First submission (have modified)
-        # "" "
-
-        belongs_priv_with_joint = np.logical_and(
-            belongs_priv[0], belongs_priv[1]
-        ).astype(DTY_BOL).tolist()  # DTY_INT
-
-    else:
+    if len(belongs_priv) <= 1:  # not >1
         belongs_priv_with_joint = []
+        return belongs_priv, belongs_priv_with_joint
 
-    # belongs_priv = [i.astype(DTY_INT) for i in belongs_priv]
-    # belongs_priv = [i.astype(DTY_BOL) for i in belongs_priv]
+    # else:   # if len(belongs_priv) > 1:
+    if joint == 'and':
+        belongs_priv_with_joint = np.logical_and(
+            belongs_priv[0],
+            belongs_priv[1]).astype(DTY_BOL).tolist()
+    elif joint == 'or':
+        belongs_priv_with_joint = np.logical_or(
+            belongs_priv[0],
+            belongs_priv[1]).astype(DTY_BOL).tolist()
+    elif joint == 'both':
+        belongs_priv_with_joint = [
+            np.logical_and(belongs_priv[
+                0], belongs_priv[1]).astype(DTY_BOL),
+            np.logical_or(belongs_priv[
+                0], belongs_priv[1]).astype(DTY_BOL),
+        ]
     return belongs_priv, belongs_priv_with_joint
 
 

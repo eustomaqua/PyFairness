@@ -154,17 +154,17 @@ Executing via Docker
 .. code-block:: console
   
   $ docker ps -a
-  $ docker cp /home/yijun/<folder> <container-id>:/root/  # copy to docker
+  $ docker cp /home/yijun/<folder> <container-id>:/home/  # copy to docker
   
   $ docker restart <container-id>
   $ docker exec -it <container-id> /bin/bash
-  (base) # cd root/FairML
+  (base) # cd home/FairML                                 # cd root/FairML
   (base) # conda activate fmpar
   (fmpar) # ....
   (fmpar) # conda deactivate
   (base) # exit
   
-  $ docker cp <container-id>:/root/<folder> /home/yijun/  # copy from docker
+  $ docker cp <container-id>:/home/<folder> /home/yijun/  # copy from docker
   $ docker stop <container-id>
 
 

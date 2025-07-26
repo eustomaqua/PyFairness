@@ -7,11 +7,12 @@
 
 import numpy as np
 from pathos import multiprocessing as pp
-# import pdb
+import pdb
+
 
 from pyfair.dr_hfm.dist_est_bin import (
     weight_generator, AcceleDist_bin, ApproxDist_bin,
-    ApproxDist_bin_revised)  # projector,
+    projector, ApproxDist_bin_revised)
 from pyfair.dr_hfm.dist_est_nonbin import (
     orthogonal_weight, AcceleDist_nonbin, ApproxDist_nonbin,
     ApproxDist_nonbin_mpver)  # , ExtendDist_multiver_mp)
@@ -19,6 +20,13 @@ from pyfair.dr_hfm.dist_est_nonbin import (
 from pyfair.dr_hfm.dist_drt import (
     DirectDist_bin, DirectDist_nonbin, DirectDist_multiver)
 from pyfair.dr_hfm.dist_drt_test import no_less_than_check
+
+
+from pyfair.dr_hfm.dist_est_bin import (
+    AcceleDist_bin_alter, ApproxDist_bin_alter,
+    sub_accelerator_smaler, subalt_accel_smaler,
+    sub_accelerator_larger, subalt_accel_larger)
+from pyfair.dr_hfm.dist_drt import DistDirect_Euclidean
 
 
 def generate_dat(n, nd, na, nai, nc=2):
@@ -218,5 +226,92 @@ def test_approx_dist():
     compare_multiver(2, m1, m2)
     compare_multiver(3, m1, m2)
 
-    weight_generator(n_d=5)
+    return
+
+
+# def subcomp_alternative(
+#         X_nA_y, A_j, idx_S0, idx_S1, m1, m2, vec_w):
+#     from pyfair.dr_hfm.dist_est_bin import (
+#         sub_accelerator_smaler, subalt_accel_smaler,
+#         sub_accelerator_larger, subalt_accel_larger,)
+#
+#     proj = [projector(ele, vec_w) for ele in X_nA_y]
+#     idx_y_fx = np.argsort(proj)
+#     pdb.set_trace()
+#     return
+
+
+def compare_alternative(nai, m1, m2):
+    n, nd, na = 30, 4, 2
+    X_nA_y, A, indices, vec_w = generate_dat(n, nd, na, nai)
+    W = weight_generator(n_d=5)
+    assert W.shape[0] == 5 + 1
+
+    k = 0
+    A_j = A[:, k]
+    idx_S1 = A_j == 1
+    idx_S0 = ~idx_S1
+
+    tmp_1 = AcceleDist_bin(X_nA_y, A_j, idx_S0, idx_S1, m2, vec_w)
+    tmp_3 = AcceleDist_bin_alter(X_nA_y, idx_S0, idx_S1, m2, vec_w)
+    ans_1 = DirectDist_bin(X_nA_y, idx_S1)
+    res_1 = ApproxDist_bin(X_nA_y, A_j, idx_S1, m1, m2)
+    res_2 = ApproxDist_bin_revised(X_nA_y, A_j, idx_S1, m1, m2)
+    res_3 = ApproxDist_bin_alter(X_nA_y, idx_S1, m1, m2)
+
+    res_1, _ = res_1
+    res_2, _ = res_2
+    res_4, _ = res_3
+    tmp_1, _ = tmp_1
+    tmp_3, _ = tmp_3
+    ans_1, _ = ans_1
+
+    # def subcomp_alternative(X_nA_y, A_j, idx_S0, idx_S1,
+    #                         idx_y_fx, ik, m2):
+    def subcomp_alternative(idx_y_fx, ik):
+        ans_js = sub_accelerator_smaler(
+            X_nA_y, A_j, idx_S0, idx_S1, idx_y_fx, ik, m2)
+        ans_jr = sub_accelerator_larger(
+            X_nA_y, A_j, idx_S0, idx_S1, idx_y_fx, ik, m2)
+        res_js, _ = subalt_accel_smaler(
+            X_nA_y, idx_S0, idx_S1, idx_y_fx, ik, m2)
+        res_jr, _ = subalt_accel_larger(
+            X_nA_y, idx_S0, idx_S1, idx_y_fx, ik, m2)
+        # return ans_js, ans_jr, res_js, res_jr
+        return ans_js, res_js, ans_jr, res_jr
+
+    # def subcomp_subaccel(idx_y_fx, ik):
+    #     from pyfair.dr_hfm.dist_est_bin import set_belonging
+    #     i_anchor = idx_y_fx[ik]
+    #     X_yfx_anchor = X_nA_y[i_anchor]
+    #     return min(min_js, min_jr), min_js_list, min_jr_list
+
+    if res_4[0] < ans_1[0]:
+        # nai=2|3 都有可能出现
+        # subcomp_alternative(X_nA_y, A_j, idx_S0, idx_S1, m1, m2, vec_w)
+        proj = [projector(ele, vec_w) for ele in X_nA_y]
+        idx_y_fx = np.argsort(proj)
+        # intermediate = subcomp_alternative(
+        #     X_nA_y, A_j, idx_S0, idx_S1, idx_y_fx, 0, m2)
+        intermediate = subcomp_alternative(idx_y_fx, 0)
+        intermediate = subcomp_subaccel(idx_y_fx, 1)
+        pdb.set_trace()
+
+    no_less_than_check(res_1, ans_1[0])
+    for i in [0, 1]:  # max,avg
+        no_less_than_check(res_2[i], ans_1[i])
+        no_less_than_check(res_4[i], ans_1[i])
+        # res_4:
+        # (6.469993525578606 >= 6.826606523423045 or False)
+        # (7.182977542299324 >= 7.502924673636918 or False)
+    no_less_than_check(tmp_1[0], ans_1[0])
+    no_less_than_check(tmp_3[0], ans_1[0])
+    return
+
+
+def test_alternative_bin():
+    # from pyfair.dr_hfm.dist_est_bin import (
+    #     AcceleDist_bin_alter, ApproxDist_bin_alter)
+    m1, m2 = 3, 5
+    compare_alternative(2, m1, m2)
     return

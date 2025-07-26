@@ -420,7 +420,7 @@ def perturb_pandas_ver(X, sen_att, priv_val, ratio=.5):
 #         return X
 #     dim = np.shape(X)
 #     X = np.array(X)
-
+#
 #     for i in range(dim[0]):
 #         Ti = X[i]
 #         Tq = 1 - Ti
@@ -429,7 +429,7 @@ def perturb_pandas_ver(X, sen_att, priv_val, ratio=.5):
 #         Tk = np.logical_and(Tk, sen)
 #         T = [q if k else j for j, q, k in zip(Ti, Tq, Tk)]
 #         X[i] = T
-
+#
 #     return X.tolist()
 #
 #
@@ -468,7 +468,7 @@ def weighted_vote_subscript_rho(y, yt, weight):
         coef * np.equal(yt, i), axis=0) for i in vY]
     loca = np.array(weig).argmax(axis=0)  # location
 
-    return [vY[i] for i in loca]  # i.e., fens
+    return [vY[i] for i in loca]        # i.e., fens
 
 
 # =====================================

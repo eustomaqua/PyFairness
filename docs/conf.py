@@ -30,18 +30,15 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 # html_theme = 'conestack'
-# html_theme = 'piccolo_theme'
 # html_theme = 'python_docs_theme'
 # html_theme = 'readable'
 # html_theme_path = [sphinx_readable_theme.get_html_theme_path()]
 # html_theme = 'sphinx_pdj_theme'
 # html_theme_path = [sphinx_pdj_theme.get_html_theme_path()]
-# html_theme = 'furo'
 # html_theme = 'karma_sphinx_theme'
 # extensions.append("sphinx_wagtail_theme")
 # html_theme = 'sphinx_wagtail_theme'
-# html_theme = 'nature'
-html_theme = 'sphinxdoc'
+html_theme = 'sphinxdoc'    # 'nature'
 # html_theme = 'solar_theme'
 # html_theme_path = [solar_theme.theme_path]
 # html_theme = 'sphinx_nefertiti'

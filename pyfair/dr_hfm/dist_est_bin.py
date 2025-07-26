@@ -48,7 +48,7 @@ def set_belonging(idx_S0, idx_S1, i_anchor, idx_j):
     return False
 
 
-# @numba.jit(nopython=True)
+@numba.jit(nopython=True)
 def sub_accelerator_smaler(X_yfx, A, idx_S0, idx_S1, idx_y_fx,
                            i, m2):
     i_anchor = idx_y_fx[i]  # anchor's location after projection
@@ -75,7 +75,7 @@ def sub_accelerator_smaler(X_yfx, A, idx_S0, idx_S1, idx_y_fx,
         num_j += 1
         j -= 1
     # Find the minimum among them, recorded as d_min^s
-    del A_anchor
+    # del A_anchor
     return min_js
 
 
@@ -191,29 +191,125 @@ def ApproxDist_bin_revised(X_and_yddot, A, idx_S1, m1, m2):
 
 @fantasy_timer
 def ApproxDist_bin(X_nA_y, A_j, non_sa, m1, m2):
-    idx_sa = ~non_sa  # idx_S0 = ~idx_S1
+    idx_sa = ~non_sa       # idx_S0 = ~idx_S1
     n_d = X_nA_y.shape[1]  # n,n_d= X_nA_y.shape
     d_max = []
-    for _ in range(m1):  # for k in
+    for _ in range(m1):    # for k in
         vec_w = weight_generator(n_d - 1)
         tmp, _ = AcceleDist_bin(
             X_nA_y, A_j, idx_sa, non_sa, m2, vec_w)
         d_max.append(tmp[0])
-    return min(d_max)  # float
+    return min(d_max)      # float
 
 
 @fantasy_timer
 def ApproxDist_bin_revised(X_nA_y, A_j, non_sa, m1, m2):
-    idx_sa = ~non_sa  # idx_S0 = ~idx_S1
+    idx_sa = ~non_sa       # idx_S0 = ~idx_S1
     n, n_d = X_nA_y.shape
     d_max, d_avg = [], []
-    for _ in range(m1):  # for k in
+    for _ in range(m1):    # for k in
         vec_w = weight_generator(n_d - 1)
         tmp, _ = AcceleDist_bin(
             X_nA_y, A_j, idx_sa, non_sa, m2, vec_w)
         d_max.append(tmp[0])
         d_avg.append(tmp[1])
-    # return min(d_max)  # float
+    # return min(d_max)    # float
+    return min(d_max), min(d_avg) / float(n)
+
+
+# ------------------------------------------
+#
+# ------------------------------------------
+# Alternative forms:
+#   AcceleDist_bin, ApproxDist_bin
+
+
+@numba.jit(nopython=True)
+def subalt_accel_smaler(X_yfx, idx_S0, idx_S1, idx_y_fx,
+                        i, m2, i_anchor, X_yfx_anchor):
+    # Compute the distance d(anchor,\cdot) for at most m2 nearby
+    # data points that meets a!=ai and g()<=g(xi,yi;w)
+    j, num_j, tmp_list = i - 1, 0, []  # No comparison with anchor
+    min_js = float(np.finfo(np.float32).max)  # or min_js_list
+    while num_j < m2:
+        if j < 0:
+            break
+        idx_j = idx_y_fx[j]
+        if set_belonging(idx_S0, idx_S1, i_anchor, idx_j):
+            j -= 1
+            continue
+        curr = DistDirect_Euclidean(X_yfx_anchor, X_yfx[idx_j])
+        if curr < min_js:
+            min_js = curr
+            tmp_list.append(curr)    # min_js_list.append(curr)
+        num_j += 1
+        j -= 1
+    # Find the minimum among them, recorded as d_min^s
+    return min_js, tmp_list
+
+
+@numba.jit(nopython=True)
+def subalt_accel_larger(X_yfx, idx_S0, idx_S1, idx_y_fx,
+                        i, m2, i_anchor, X_yfx_anchor):
+    # Compute the distances d(anchor,\cdot) for at most m2 nearby
+    # data points that meets a!=ai and g()>=g(xi,yi;w)
+    j, num_j, tmp_list = i + 1, 0, []  # No comparison with anchor
+    min_jr = float(np.finfo(np.float32).max)  # or min_jr_list
+    n = len(X_yfx)
+    while num_j < m2:
+        if j >= n:
+            break
+        idx_j = idx_y_fx[j]
+        if set_belonging(idx_S0, idx_S1, i_anchor, idx_j):
+            j += 1
+            continue
+        curr = DistDirect_Euclidean(X_yfx_anchor, X_yfx[idx_j])
+        if curr < min_jr:
+            min_jr = curr
+            tmp_list.append(min_jr)  # min_jr_list.append(min_jr)
+        num_j += 1
+        j += 1
+    # Find the minimum among them, recorded as d_min^r
+    return min_jr, tmp_list
+
+
+@fantasy_timer
+def AcceleDist_bin_alter(X_and_yddot, idx_S0, idx_S1, m2, vec_w):
+    # Project data points onto a one-dimensional space
+    proj = [projector(ele, vec_w) for ele in X_and_yddot]
+    idx_y_fx = np.argsort(proj)
+    n = X_and_yddot.shape[0]       # number of instances
+    d_min = []
+    for i in range(n):
+        i_anchor = idx_y_fx[i]  # anchor's location aft projection
+        X_yfx_anchor = X_and_yddot[i_anchor]
+        # Set the anchor data point (xi,yi) in this round
+        min_js, _ = subalt_accel_smaler(
+            X_and_yddot, idx_S0, idx_S1, idx_y_fx, i, m2,
+            i_anchor, X_yfx_anchor)
+        min_jr, _ = subalt_accel_larger(
+            X_and_yddot, idx_S0, idx_S1, idx_y_fx, i, m2,
+            i_anchor, X_yfx_anchor)
+        tmp = min(min_js, min_jr)  # finally,
+        d_min.append(tmp)
+    return max(d_min), sum(d_min)  # ,d_min  # return max(d_min)
+
+
+@fantasy_timer
+def ApproxDist_bin_alter(X_nA_y, Aj_nsa, m1, m2):
+    idx_S0 = ~Aj_nsa       # Aj_nsa i.e. idx_S1
+    n, n_d = X_nA_y.shape  # n_d = X_nA_y.shape[1]
+    d_max, d_avg = [], []  # d_max = []
+    for _ in range(m1):    # for k in
+        vec_w = weight_generator(n_d - 1)
+        tmp, _ = AcceleDist_bin_alter(
+            X_nA_y, idx_S0, Aj_nsa, m2, vec_w)
+        # tmp, _ = AcceleDist_bin(
+        #     X_nA_y, Aj_nsa.astype('int'),
+        #     idx_S0, Aj_nsa, m2, vec_w)
+        d_max.append(tmp[0])
+        d_avg.append(tmp[1])
+    # return min(d_max)    # float
     return min(d_max), min(d_avg) / float(n)
 
 
