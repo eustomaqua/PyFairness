@@ -18,8 +18,10 @@ y_hat, hx_qtb = synthetic_clf(y_trn, 2, err=.2, prng=None)
 z_hat, hz_qtb = synthetic_clf(y_trn, 2, err=.3, prng=None)
 
 
-def excl_test_my_DR():
-    from fairml.discriminative_risk import (
+def test_my_DR():
+    # def excl_test_my_DR():
+    # from fairml.discriminative_risk import (
+    from pyfair.dr_hfm.discriminative_risk import (
         hat_L_fair, hat_L_loss, tandem_fair, tandem_loss,
         hat_L_objt, tandem_objt,
         cal_L_obj_v1, cal_L_obj_v2,  # L_fair_MV_rho, L_loss_MV_rho,

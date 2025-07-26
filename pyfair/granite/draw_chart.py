@@ -420,14 +420,14 @@ def _alternative_multi_scatter_vrt(X, Ys, sens,
                            figsize=_multi_figsize[sa_len])
     for k, (x, ys, sa) in enumerate(zip(X, Ys, sens)):
 
-        '''
-        # Correlation & Regression
-        Rs = [np.corrcoef(y, x)[1, 0] for y in ys]
-        key = ["Correlation = {:.4f} ({:s})".format(
-            r, Z) for r, Z in zip(Rs, annotZs)]
-        regr = [np.polyfit(y, x, deg=1) for y in ys]
-        estimated = [np.polyval(r, y) for r, y in zip(regr, ys)]
-        '''
+        # '''
+        # # Correlation & Regression
+        # Rs = [np.corrcoef(y, x)[1, 0] for y in ys]
+        # key = ["Correlation = {:.4f} ({:s})".format(
+        #     r, Z) for r, Z in zip(Rs, annotZs)]
+        # regr = [np.polyfit(y, x, deg=1) for y in ys]
+        # estimated = [np.polyval(r, y) for r, y in zip(regr, ys)]
+        # '''
         key, estimated = _sub_spread_COR(ys, [x] * num_z, annotZs)
 
         for i in range(num_z):

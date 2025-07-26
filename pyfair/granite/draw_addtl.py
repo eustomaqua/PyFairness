@@ -1002,17 +1002,17 @@ def _uncertainty_plotting(X, Ys, picked_keys, annotY=None, ddof=0,
     ax.set_xlabel(r'$\alpha$')
     annotY = _sub_unc_text(annotY, alpha_loc)
 
-    '''
-    assert alpha_loc in ('b4', 'af')
-    if (annotY is None) and (alpha_loc == 'b4'):
-        annotY = r'$\alpha·$ performance $+(1-\alpha)·$ fairness'
-    elif annotY is None:  # and (alpha_loc == 'af'):
-        annotY = r'$(1-\alpha)·$ performance $+\alpha·$ fairness'
-    elif alpha_loc == 'b4':
-        annotY = r'$\alpha·${} $+($1$-\alpha)·$ fairness'.format(annotY)
-    else:  # alpha_loc == 'af':
-        annotY = r'$($1$-\alpha)·${} $+\alpha·$ fairness'.format(annotY)
-    '''
+    # '''
+    # assert alpha_loc in ('b4', 'af')
+    # if (annotY is None) and (alpha_loc == 'b4'):
+    #     annotY = r'$\alpha·$ performance $+(1-\alpha)·$ fairness'
+    # elif annotY is None:  # and (alpha_loc == 'af'):
+    #     annotY = r'$(1-\alpha)·$ performance $+\alpha·$ fairness'
+    # elif alpha_loc == 'b4':
+    #     annotY = r'$\alpha·${} $+($1$-\alpha)·$ fairness'.format(annotY)
+    # else:  # alpha_loc == 'af':
+    #     annotY = r'$($1$-\alpha)·${} $+\alpha·$ fairness'.format(annotY)
+    # '''
     ax.set_ylabel(annotY, fontsize=9)
     ax.autoscale_view()
     fig = _setup_figsize(fig, figsize)
@@ -1065,13 +1065,13 @@ def _subproc_pl_lin_reg(ax4, X, Y, Z, annotZ, snspec, clr='navy',
     key = 'Correlation = %.4f' % R
     regr = np.polyfit(X, Y, deg=1)
     estimated = np.polyval(regr, X)
-    # Z = sorted(X)
-    '''
-    if not reverse:
-        key = '{} {}'.format(key, Z)  # Z, key)
-    elif reverse:
-        key = '{:9s} {}'.format(Z, key)
-    '''
+    # # Z = sorted(X)
+    # '''
+    # if not reverse:
+    #     key = '{} {}'.format(key, Z)  # Z, key)
+    # elif reverse:
+    #     key = '{:9s} {}'.format(Z, key)
+    # '''
     key = '{} {}'.format(key, Z) if (
         not reverse) else '{:9s} {}'.format(Z, key)
 

@@ -1458,19 +1458,19 @@ def TwoStagePruning_DistanceBasedPruning(y_trn, y_insp, nb_cls, indices, td,
     # 6. for i \in {1,2,...,ES} do:
     # 7.     if d_i <= T:
     # 8.         RM = RM \cup {m_i}
-    '''
-    for i in range(nb_cls):
-        if d_i[i] <= T:
-            P[i] = True
-            seq.append(i)
-    '''
+    # '''
+    # for i in range(nb_cls):
+    #     if d_i[i] <= T:
+    #         P[i] = True
+    #         seq.append(i)
+    # '''
     #   #   #
     # 9. The outcome PB(x) of a test sample x predicted by the
     #    pruned ensemble PB is given as follows:
     #        PB(x) = majority class in {bm(x) | bm \in RM}
-    '''
-    return P.tolist(), deepcopy(seq)
-    '''
+    # '''
+    # return P.tolist(), deepcopy(seq)
+    # '''
     #   #   #
     P = np.array(d_i) <= T
     seq = np.where(P)[0].tolist()

@@ -1,7 +1,7 @@
 # coding: utf-8
 
-from copy import deepcopy
-import pdb
+# from copy import deepcopy
+# import pdb
 
 
 def excl_test_datasets():
@@ -96,5 +96,13 @@ def test_preprocessing():
         assert X1.shape == X2.shape
         assert A1.shape == A2.shape
 
+        # tmp = re_dft[0]['perturbation_tim_elapsed']
+        mrg_grp = re_dft[0]['marginalised_groups']
+        sen_att_indices = check_marginalised_indices(
+            df, priv_nam,  # dt.sensitive_attrs,
+            dt.get_privileged_group(''), mrg_grp)
+        assert len(sen_att_indices) == len(mrg_grp) == 2
         # pdb.set_trace()
+        assert len(sen_att_indices[0]) == len(mrg_grp[0]) + 1
+        assert len(sen_att_indices[1]) == len(mrg_grp[1]) + 1
     return
