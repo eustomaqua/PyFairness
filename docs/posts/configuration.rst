@@ -9,7 +9,7 @@ Set up the environment
 ..   :linenos:
 
 
-We developed `FairML <https://github.com/eustomaqua/FairML>`_, `ApproxBias <https://github.com/eustomaqua/ApproxBias>`_, and `PyFairness <https://github.com/eustomaqua/PyFairness>`_ with ``Python 3.8`` and released the code to help you reproduce our work. Note that the experimental parts must be run on the ``Ubuntu`` operating system due to FairGBM (one baseline method that we used for comparison).
+We developed `ApproxBias <https://github.com/eustomaqua/ApproxBias>`_, `FairML <https://github.com/eustomaqua/FairML>`_, and `PyFairness <https://github.com/eustomaqua/PyFairness>`_ with ``Python 3.8`` and released the code to help you reproduce our work. Note that the experimental parts must be run on the ``Ubuntu`` operating system due to FairGBM (one baseline method that we used for comparison).
 
 
 Initialization
@@ -105,6 +105,44 @@ Configuration on the server
   [qgl539@hendrixgpu04fl Singdocker]$ exit
   [qgl539@hendrixgate03fl ~]$ exit
   logout
+
+
+Remote connection via SSH
+----------------------------------
+
+.. Permission, access, SSH into a remote server
+.. https://docs.github.com/en/authentication/troubleshooting-ssh/error-permission-denied-publickey
+.. https://www.digitalocean.com/community/tutorials/how-to-use-ssh-to-connect-to-a-remote-server
+
+.. code-block:: console
+
+  $ cd ~/.ssh && ls
+  $
+  $ ssh-keygen -t ed25519 -C "yjbian92@gmail.com"
+
+  Enter file in which to save the key (/root/.ssh/id_ed25519):
+  Enter passphrase (empty for no passphrase):
+  Enter same passphrase again:
+  
+  $ cat id_ed25519.pub
+  $
+  $ vim ~/.ssh/config
+
+  Host nscc
+      HostName  aspire2a.nus.edu.sg
+      User      yjbian
+      Port      22  # 8080
+      IdentityFile  ~/.ssh/id_rsa
+
+  Host hendrix
+      HostName  hendrixgate  # 03fl
+      User      qgl539
+      StrictHostKeyChecking  no
+      CheckHostIP            no
+      UserKnownHostsFile=/dev/null
+
+  $ # cat known_hosts
+
 
 
 Implementation
