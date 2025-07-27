@@ -43,7 +43,7 @@ If you would like to install `PyFairness <https://github.com/eustomaqua/PyFairne
   $ pip install -e ./PyFairness
   $ # pip uninstall pyfair
   $
-  $ mv ./PyFairness/pyfair ./     # cp -r <folder> ./
+  $ cp -r ./PyFairness/pyfair ./    # mv <folder> ./
   $ yes | rm -r PyFairness
   $ # rm -r pyfair
 

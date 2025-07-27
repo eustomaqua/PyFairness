@@ -13,9 +13,9 @@ from pyfair.marble.metric_fair import _elem
 
 from pyfair.dr_hfm.dist_drt import (
     DirectDist_bin, DirectDist_nonbin, DirectDist_multiver)
-from pyfair.dr_hfm.dist_est_nonbin import (
-    ApproxDist_nonbin_mpver, ExtendDist_multiver_mp)
-from pyfair.dr_hfm.dist_est_bin import ApproxDist_bin
+# from pyfair.dr_hfm.dist_est_nonbin import (
+#     ApproxDist_nonbin_mpver, ExtendDist_multiver_mp)
+# from pyfair.dr_hfm.dist_est_bin import ApproxDist_bin
 
 # from hfm.dist_drt import DistDirect_mediator
 # from hfm.hfm_df import bias_degree_bin as fair_degree_v3
@@ -23,8 +23,8 @@ from pyfair.dr_hfm.dist_est_bin import ApproxDist_bin
 # from hfm.hfm_df import bias_degree as fair_degree
 # from hfm.dist_est_nonbin import AcceleDist_nonbin as DistAccele
 
-DistApprox = ApproxDist_nonbin_mpver
-del ApproxDist_nonbin_mpver
+# DistApprox = ApproxDist_nonbin_mpver
+# del ApproxDist_nonbin_mpver
 
 
 # =====================================

@@ -4,7 +4,7 @@
 See:
 https://packaging.python.org/guides/distributing-packages-using-setuptools/
 https://github.com/pypa/sampleproject
-https://github.com/eustomaqua/PyEnsemble
+https://github.com/eustomaqua/PyFairness
 """
 
 # Always prefer setuptools over distutils
@@ -30,9 +30,9 @@ setup(
     # package, this name will be registered for you. It will determine how
     # users can install this project, e.g.:
     #
-    # $ pip install pyensemble
+    # $ pip install pyfairness
     #
-    # And where it will live on PyPI: https://pypi.org/project/pyensemble/
+    # And where it will live on PyPI: https://pypi.org/project/pyfairness/
     #
     # There are some restrictions on what makes a valid project name
     # specification here:
@@ -45,7 +45,7 @@ setup(
     # For a discussion on single-sourcing the version across setup.py and the
     # project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.1.1',  # Required
+    version='0.2.1',  # Required
 
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
@@ -158,13 +158,14 @@ setup(
         'pympler',
         'numba',
         'pandas',
+        'openpyxl',
     ],  # Optional
 
     # List additional groups of dependencies here (e.g., development
     # dependencies). Users will be able to install these using the "extras"
     # syntax, for example:
     #
-    #   $ pip install pyensemble[dev]
+    #   $ pip install pyfairness[dev]
     #
     # Similar to `install_requires` above, these must be valid existing
     # projects.
@@ -193,7 +194,8 @@ setup(
     # http://docs.python.org/3.4/distutils/setupscript.html#installing-additional-files
     #
     # In this case, 'data_file' will be installed into '<sys.prefix>/my_data'
-    data_files=[('my_data', ['pyfair/data/'])],  # Optional
+    # data_files=[('my_data', ['pyfair/data/'])],  # Optional
+    data_files=[('my_data', ['data/'])],
 
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
