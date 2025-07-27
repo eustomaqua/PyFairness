@@ -1,4 +1,8 @@
 # coding: utf-8
+#
+# TARGET:
+#   Oracle bounds regarding fairness for weighted voting
+#
 
 
 import matplotlib as mpl

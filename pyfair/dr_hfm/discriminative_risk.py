@@ -7,6 +7,7 @@
 
 import numpy as np
 # import numba
+# import copy
 
 
 # =====================================
@@ -358,7 +359,7 @@ def perturb_numpy_ver(X, sen_att, priv_val, ratio=.5):
         if pv in sa_list:
             sa_list.remove(pv)
 
-    X_qtb = X.copy()
+    X_qtb = X.copy()  # X_qtb = copy.deepcopy(X)
     num, dim = len(X_qtb), len(sen_att)
 
     for i in range(num):
@@ -390,11 +391,11 @@ def perturb_pandas_ver(X, sen_att, priv_val, ratio=.5):
             sa_list.remove(pv)
 
     X_qtb = X.copy()
-    '''
-    num, dim = len(X_qtb), len(sen_att)
-    if dim > 1:
-        new_attr_name = '-'.join(sen_att)
-    '''
+    # '''
+    # num, dim = len(X_qtb), len(sen_att)
+    # if dim > 1:
+    #     new_attr_name = '-'.join(sen_att)
+    # '''
     dim = len(sen_att)
 
     for i, ti in enumerate(X.index):

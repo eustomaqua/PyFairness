@@ -10,7 +10,7 @@ from pyfair.marble.metric_fair import (  # hfm.metrics.fair_grp_ext
     marginalised_np_mat, unpriv_manual, unpriv_unaware,
     unpriv_group_one, unpriv_group_two, unpriv_group_thr,
     zero_division, calc_fair_group, StatsParity_sing,
-    extGrp1_DP_sing, extGrp2_EO_sing, extGrp3_PQP_sing)
+    extGrp1_DP_sing, extGrp2_EO_sing, extGrp3_PQP_sing, alterGrps_sing)
 # from experiment.utils.fair_rev_group import (
 #     UD_grp1_DP, UD_grp2_EO, UD_grp3_PQP)
 # from hfm.utils.simulator import synthetic_clf, synthetic_set
@@ -18,16 +18,15 @@ from pyfair.marble.metric_fair import (  # hfm.metrics.fair_grp_ext
 
 
 import numpy as np
-# import pdb
+import pdb
 # import lightgbm
 
 from pyfair.facil.utils_const import check_equal
-from pyfair.marble.metric_fair import (
-    marginalised_np_mat, marginalised_np_gen)  # addtl,addl
-
+# from pyfair.marble.metric_fair import (
+#     marginalised_np_mat, marginalised_np_gen)  # addtl,addl
 from pyfair.granite.fair_meas_indiv import (
-    GEI_Theil, prop_L_fair, prop_L_loss, DistDirect)
-
+    GEI_Theil,  # prop_L_fair, prop_L_loss,
+    DistDirect)  # HFM_Approx_bin, HFM_DistApprox)
 from pyfair.granite.fair_meas_group import (
     UD_grp1_DP, UD_grp1_DisI, UD_grp1_DisT,
     UD_grp2_EO, UD_grp2_EOdd, UD_grp2_PEq,
@@ -58,6 +57,8 @@ pos, priv_val = 1, 1,
 A_i, priv_idx = A[:, 1], A[:, 1] == 1
 vals_in_Ai = list(set(A_i))
 A1_bin, val_A1 = A_bin[:, 1], [1, 0]
+
+hfm_idx_nsa_bin = [idx_Ai_Sjs[1][0], ~idx_Ai_Sjs[1][0]]
 
 
 """
@@ -104,6 +105,11 @@ def test_metric_grp1():
     m1 = UD_grp1_DP.bival(y, y_hat, priv_idx, pos)
     m2 = UD_grp1_DP.mu_sp(y, y_hat, A_i, priv_val, pos)
     m3 = UD_grp1_DP.mu_cx(y, y_hat, A_i, priv_val, pos)
+    # assert m1[0][0] == m2[0] < m3[0][0]  # fp =
+    tm1, _ = extGrp1_DP_sing(y, y_hat, hfm_idx_nsa_bin, pos)
+    tm2, _ = extGrp1_DP_sing(y, y_hat, idx_Ai_Sjs[1], pos)
+    tm3, _ = alterGrps_sing(tm2[-1], idx_Ai_Sjs[1])
+    assert tm1[0] <= tm2[0] < tm3[0]
 
     m4 = UD_grp1_DP.yev_sp(y, y_hat, A_i, vals_in_Ai, pos)
     m5 = UD_grp1_DP.yev_cx(y, y_hat, A_i, vals_in_Ai, pos)
@@ -147,6 +153,11 @@ def test_metric_grp2():
     m1 = UD_grp2_EO.bival(y, y_hat, priv_idx, pos)
     m2 = UD_grp2_EO.mu_sp(y, y_hat, A_i, priv_val, pos)
     m3 = UD_grp2_EO.mu_cx(y, y_hat, A_i, priv_val, pos)
+    # assert m1[0][0] == m2[0] < m3[0][0]  # fp =
+    tm1, _ = extGrp2_EO_sing(y, y_hat, hfm_idx_nsa_bin, pos)
+    tm2, _ = extGrp2_EO_sing(y, y_hat, idx_Ai_Sjs[1], pos)
+    tm3, _ = alterGrps_sing(tm2[-1], idx_Ai_Sjs[1])
+    assert tm1[0] <= tm2[0] < tm3[0]
 
     m4 = UD_grp2_EO.yev_sp(y, y_hat, A_i, vals_in_Ai, pos)
     m5 = UD_grp2_EO.yev_cx(y, y_hat, A_i, vals_in_Ai, pos)
@@ -190,6 +201,14 @@ def test_metric_grp3():
     m1 = UD_grp3_PQP.bival(y, y_hat, priv_idx, pos)
     m2 = UD_grp3_PQP.mu_sp(y, y_hat, A_i, priv_val, pos)
     m3 = UD_grp3_PQP.mu_cx(y, y_hat, A_i, priv_val, pos)
+    # assert m1[0][0] == m2[0] < m3[0][0]  # fp =
+    # tm1, _ = extGrp3_PQP_sing(y, y_hat, [
+    #     idx_Ai_Sjs[1][0], ~idx_Ai_Sjs[1][0]], pos)
+    tm1, _ = extGrp3_PQP_sing(y, y_hat, hfm_idx_nsa_bin, pos)
+    tm2, _ = extGrp3_PQP_sing(y, y_hat, idx_Ai_Sjs[1], pos)
+    tm3, _ = alterGrps_sing(tm2[-1], idx_Ai_Sjs[1])
+    # assert tm1[0][0] < tm2[0][0] < tm3[0]
+    assert tm1[0] <= tm2[0] < tm3[0]
 
     m4 = UD_grp3_PQP.yev_sp(y, y_hat, A_i, vals_in_Ai, pos)
     # assert check_equal(m1[0], [m2[0], m3[0][0], m4[0][3][0]])
@@ -222,7 +241,35 @@ def test_metric_indv():
     assert check_equal(m1[0][0], [m2[0], m3[0], m7[0], m8[0]])
     assert check_equal(m2[0], m3[0])
 
-    # pdb.set_trace()
+    t1, _ = GEI_Theil.get_GEI(y, y_hat, alpha=.5)
+    t2, _ = GEI_Theil.get_Theil(y, y_hat)
+    assert 0 <= t1 <= 1 and 0. <= t2 <= 1.
+    X_nA_y = np.concatenate([
+        np.random.randint(2, size=n).reshape(-1, 1).astype('float'),
+        np.random.rand(n, 3), ], axis=1)
+    t1, _ = DistDirect.bin(X_nA_y, idx_Ai_Sjs[1][0])  # hfm_idx_nsa_bin[0])
+    # t2 = DistDirect.bin(X_nA_y, idx_Ai_Sjs[1][0])  #,idx_Ai_Sjs[1]) #A_i)
+    t3, _ = DistDirect.nonbin(X_nA_y, hfm_idx_nsa_bin)
+    t4, _ = DistDirect.nonbin(X_nA_y, idx_Ai_Sjs[1])
+    t5, _ = DistDirect.multivar(X_nA_y, [hfm_idx_nsa_bin])
+    t6, _ = DistDirect.multivar(X_nA_y, [idx_Ai_Sjs[1]])
+    assert check_equal(t1, t3) and check_equal(t1, t5[:-1])
+    assert check_equal(t4, t6[:-1])
+
+    # m1, m2 = 3, 5
+    # tm1, _ = HFM_Approx_bin.bin(X_nA_y, A_i, idx_Ai_Sjs[1][0], m1, m2)
+    # tm2, _ = HFM_DistApprox.nonbin(  # .bin(
+    #     X_nA_y, idx_Ai_Sjs[1][0].astype('int'), m1, m2)
+    # tm3, _ = HFM_DistApprox.nonbin(X_nA_y, A_i, m1, m2)
+    # tm4, _ = HFM_DistApprox.multivar(X_nA_y, A_i.reshape(-1, 1), m1, m2)
+    # tm5, _ = HFM_DistApprox.multivar(
+    #     X_nA_y, idx_Ai_Sjs[1][0].astype('int').reshape(-1, 1), m1, m2)
+    # assert tm1 >= t1[0]
+    # assert tm2[0] >= t3[0] and tm2[1] >= t3[1]
+    # assert tm3[0] >= t4[0] and tm3[1] >= t4[1]
+    # assert tm4[0] >= t6[0] and tm4[1] >= t6[1]
+    # assert tm5[0] >= t5[0] and tm5[1] >= t5[1]
+    # # pdb.set_trace()
     return
 
 

@@ -36,16 +36,15 @@ If you would like to install `PyFairness <https://github.com/eustomaqua/PyFairne
 
 .. code-block:: console
   
+  $ # Two ways to install (& uninstall) PyFairness
   $ git clone git@github.com:eustomaqua/PyFairness.git
   $
   $ pip install -r PyFairness/reqs_py311.txt
   $ pip install -e ./PyFairness
-  $ pip uninstall pyfair
+  $ # pip uninstall pyfair
   $
-  $ # mv ./PyFairness/pyfair ./
-  $ cp -r ./PyFairness/pyfair ./
-  $ rm -r pyfair
-  $
+  $ mv ./PyFairness/pyfair ./     # cp -r <folder> ./
   $ yes | rm -r PyFairness
+  $ # rm -r pyfair
 
 

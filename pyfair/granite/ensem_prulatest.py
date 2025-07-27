@@ -1398,8 +1398,7 @@ def _subroute_TwoStage_DistanceBased(y_trn, y_insp, OB_i, y_cast):
         for i, idx in enumerate(OB_i):
             tem = idx
             if not tem:
-                tem = np.random.randint(
-                    nb_trn, size=nb_trn).tolist()
+                tem = np.random.randint(nb_trn, size=nb_trn).tolist()
                 tem = list(set(range(nb_trn)) - set(tem))
             if tem:
                 tem = yt[:, tem].mean(axis=1).tolist()
@@ -1589,9 +1588,8 @@ def TwoStagePruning_DPplusAP(y_trn, y_insp, nb_cls, indices,
 # Original Version in the paper
 
 
-def TwoStagePrev_DistanceBasedPruning(
-        y_trn, y_insp, nb_cls, indices,
-        td, X_trn, X_val):
+def TwoStagePrev_DistanceBasedPruning(y_trn, y_insp, nb_cls, indices,
+                                      td, X_trn, X_val):
     OB_i = _subroute_TwoStage_OBi(y_trn, indices)
     _, DIS_i = _subroute_TwoStage_DistanceBased_inst(X_trn, X_val, OB_i)
     td = _subroute_TwoStage_checkDIS(td)
@@ -1601,9 +1599,8 @@ def TwoStagePrev_DistanceBasedPruning(
     return P.tolist(), seq
 
 
-def TwoStagePreviously_AP_plus_DP(
-        y_trn, y_insp, nb_cls, indices,
-        ta, td, X_trn, X_val):
+def TwoStagePreviously_AP_plus_DP(y_trn, y_insp, nb_cls, indices,
+                                  ta, td, X_trn, X_val):
     # 1. Accuracy-based
     OB_i = _subroute_TwoStage_OBi(y_trn, indices)
     AC_i = _subroute_TwoStage_AccuracyBased(y_trn, y_insp, OB_i)

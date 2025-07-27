@@ -159,34 +159,34 @@ def weight_generator(n_d):
     return vec_w
 
 
-"""
-@fantasy_timer
-def ApproxDist_bin(X_and_yddot, A, idx_S1, m1, m2):
-    idx_S0 = ~idx_S1
-    n_d = X_and_yddot.shape[1]  # n,n_d= X_and_yddot.shape
-    d_max = []
-    for _ in range(m1):  # for k in
-        vec_w = weight_generator(n_d - 1)
-        tmp, _ = AcceleDist_bin(
-            X_and_yddot, A, idx_S0, idx_S1, m2, vec_w)
-        d_max.append(tmp[0])
-    return min(d_max)  # float
+# """
+# @fantasy_timer
+# def ApproxDist_bin(X_and_yddot, A, idx_S1, m1, m2):
+#     idx_S0 = ~idx_S1
+#     n_d = X_and_yddot.shape[1]  # n,n_d= X_and_yddot.shape
+#     d_max = []
+#     for _ in range(m1):  # for k in
+#         vec_w = weight_generator(n_d - 1)
+#         tmp, _ = AcceleDist_bin(
+#             X_and_yddot, A, idx_S0, idx_S1, m2, vec_w)
+#         d_max.append(tmp[0])
+#     return min(d_max)  # float
 
 
-@fantasy_timer
-def ApproxDist_bin_revised(X_and_yddot, A, idx_S1, m1, m2):
-    idx_S0 = ~idx_S1
-    n, n_d = X_and_yddot.shape
-    d_max, d_avg = [], []
-    for _ in range(m1):  # for k in
-        vec_w = weight_generator(n_d - 1)
-        tmp, _ = AcceleDist_bin(
-            X_and_yddot, A, idx_S0, idx_S1, m2, vec_w)
-        d_max.append(tmp[0])
-        d_avg.append(tmp[1])
-    # return min(d_max)  # float
-    return min(d_max), min(d_avg) / float(n)
-"""
+# @fantasy_timer
+# def ApproxDist_bin_revised(X_and_yddot, A, idx_S1, m1, m2):
+#     idx_S0 = ~idx_S1
+#     n, n_d = X_and_yddot.shape
+#     d_max, d_avg = [], []
+#     for _ in range(m1):  # for k in
+#         vec_w = weight_generator(n_d - 1)
+#         tmp, _ = AcceleDist_bin(
+#             X_and_yddot, A, idx_S0, idx_S1, m2, vec_w)
+#         d_max.append(tmp[0])
+#         d_avg.append(tmp[1])
+#     # return min(d_max)  # float
+#     return min(d_max), min(d_avg) / float(n)
+# """
 
 
 # @fantasy_timer

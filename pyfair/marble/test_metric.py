@@ -2,7 +2,7 @@
 
 import sklearn.metrics as metrics
 import numpy as np
-import pdb
+# import pdb
 from pyfair.facil.utils_const import (
     check_equal, judge_transform_need,
     synthetic_dat, synthetic_clf, synthetic_set)
@@ -233,12 +233,47 @@ def test_group_fair():
         unpriv_group_one, unpriv_group_two, unpriv_group_thr,
         marginalised_np_mat, unpriv_unaware, unpriv_manual,
         calc_fair_group, StatsParity_sing,  # StatsParity_mult,
-        zero_division,  # alterGrps_sing, alterGroups_pl,
-        extGrp1_DP_sing,  # extGrp2_EO_sing, extGrp3_PQP_sing,
+        zero_division, alterGrps_sing,  # alterGroups_pl,
+        extGrp1_DP_sing, extGrp2_EO_sing, extGrp3_PQP_sing,
         # extGrp1_DP_pl, extGrp2_EO_pl, extGrp3_PQP_pl,
         DPext_alterSP,  # extDP_SPalter,
         marginalised_pd_mat, prev_unpriv_manual, prev_unpriv_unaware,
         prev_unpriv_grp_one, prev_unpriv_grp_two, prev_unpriv_grp_thr)
+
+    def sub_extra(prev, z, ht, pos, Sjs_bin, Sjs_non):
+        res_bi, _ = StatsParity_sing(ht, Sjs_bin, pos)
+        res_mu, _ = StatsParity_sing(ht, Sjs_non, pos)
+        tmp_bi, _ = DPext_alterSP(z, ht, Sjs_bin, pos)
+        tmp_mu, _ = DPext_alterSP(z, ht, Sjs_non, pos)
+        assert check_equal(prev[0], [  # tmp_mu[-1][0],
+            tmp_bi[0], tmp_bi[1], tmp_bi[-1][0], tmp_mu[-1][0], ])
+
+        ans_1b, _ = extGrp1_DP_sing(z, ht, Sjs_bin, pos)
+        ans_1m, _ = extGrp1_DP_sing(z, ht, Sjs_non, pos)
+        ans_2b, _ = extGrp2_EO_sing(z, ht, Sjs_bin, pos)
+        ans_2m, _ = extGrp2_EO_sing(z, ht, Sjs_non, pos)
+        ans_3b, _ = extGrp3_PQP_sing(z, ht, Sjs_bin, pos)
+        ans_3m, _ = extGrp3_PQP_sing(z, ht, Sjs_non, pos)
+        ans_1b_alt, _ = alterGrps_sing(ans_1b[-1], Sjs_bin)
+        ans_1m_alt, _ = alterGrps_sing(ans_1m[-1], Sjs_non)
+        ans_2b_alt, _ = alterGrps_sing(ans_2b[-1], Sjs_bin)
+        ans_2m_alt, _ = alterGrps_sing(ans_2m[-1], Sjs_non)
+        ans_3b_alt, _ = alterGrps_sing(ans_3b[-1], Sjs_bin)
+        ans_3m_alt, _ = alterGrps_sing(ans_3m[-1], Sjs_non)
+
+        assert ans_1b_alt[0] == ans_1b_alt[1] == prev[0]
+        assert ans_2b_alt[0] == ans_2b_alt[1] == prev[1]
+        assert ans_3b_alt[0] == ans_3b_alt[1] == prev[2]
+        assert ans_1m_alt[0] > ans_1m_alt[1] > prev[0]
+        assert ans_2m_alt[0] > ans_2m_alt[1] > prev[1]
+        assert ans_3m_alt[0] > ans_3m_alt[1] > prev[2]
+        assert ans_1m[0] > prev[0] > ans_1b[0]
+        fp2 = ans_2m[0] > prev[1] > ans_2b[0]
+        fp3 = ans_3m[0] > prev[2] > ans_3b[0]
+        # if not fp2 or not fp3:  # not (fp2 and fp3):
+        #     pdb.set_trace()
+        assert fp2  # assert ans_2m[0] > ans_2b[0]
+        assert fp3  # assert ans_3m[0] > ans_3b[0]
 
     def subroutine(y, hx, pos, A_j, Sjs_bin, Sjs_non):
         vY, _ = judge_transform_need(y)  # ,dY
@@ -274,7 +309,14 @@ def test_group_fair():
         tmp_2 = DPext_alterSP(z, ht, Sjs_non, pos)[0]
         assert check_equal(ans, [
             tmp_2[-1][0], tmp_1[-1][0], tmp_1[0], tmp_1[1], ])
+
         # pdb.set_trace()
+        prev = [calc_fair_group(*just_one),
+                calc_fair_group(*just_two),
+                calc_fair_group(*just_thr),
+                calc_fair_group(*just_zero),
+                calc_fair_group(*just_four)]
+        sub_extra(prev, z, ht, pos, Sjs_bin, Sjs_non)
     # subroutine(y_bin, ht_bin[0], 1, idx_priv)
     # subroutine(y_non, ht_non[0], 1, idx_priv)
     subroutine(y_bin, ht_bin[0], 1, A_j, Sjs_bin, Sjs_non)

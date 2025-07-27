@@ -1791,11 +1791,9 @@ def contrastive_pruning_methods(name_pru, nb_cls, nb_pru,
     assert name_pru in AVAILABLE_NAME_PRUNE
 
     if name_pru == "ES":
-        ys_cast, P, seq = Early_Stopping(
-            y_cast, nb_cls, nb_pru)
+        ys_cast, P, seq = Early_Stopping(y_cast, nb_cls, nb_pru)
     elif name_pru == "KL":
-        ys_cast, P, seq = KL_divergence_Pruning(
-            y_cast, nb_cls, nb_pru)
+        ys_cast, P, seq = KL_divergence_Pruning(y_cast, nb_cls, nb_pru)
     elif name_pru == "KL+":
         ys_cast, P, seq = KL_divergence_Pruning_modify(
             y_cast, nb_cls, nb_pru)

@@ -378,7 +378,8 @@ def DPext_alterSP(y, hx, idx_Sjs, pos_label=1):
     # item = [np.mean(hx[idx] == pos_label) for idx in idx_Sjs]
     # item = np.nan_to_num(item).tolist()  # Don't use list()
     item = [hx[idx] == pos_label for idx in idx_Sjs]
-    item = [0. if i.shape[0] == 0 else np.mean(i) for i in item]
+    # item = [0. if i.shape[0] == 0 else np.mean(i) for i in item]
+    item = [0. if not i.shape[0] else float(np.mean(i)) for i in item]
 
     n_aj = len(idx_Sjs)
     intermediate = []
@@ -497,44 +498,44 @@ def alterGrps_sing(alternative, idx_Sjs):
     return max(renewal), sum(renewal) / n_aj_prime
 
 
-def alterGroups_pl(half_alter, idx_Ai_Sjs, n_a):
-    half_alter = [alterGrps_sing(alt, idx_Sjs)[
-        0] for alt, idx_Sjs in zip(half_alter, idx_Ai_Sjs)]
-    half_pl_max, half_pl_avg = zip(*half_alter)
-    return max(half_pl_max), sum(half_pl_avg) / n_a
-
-
-@fantasy_timer
-def extGrp1_DP_pl(y, hx, idx_Ai_Sjs, pos=1, alter=False):
-    half_mid = [extGrp1_DP_sing(
-        y, hx, idx_Sjs, pos)[0] for idx_Sjs in idx_Ai_Sjs]
-    half_pl_max, half_pl_avg, half_alter = zip(*half_mid)
-    n_a = len(idx_Ai_Sjs)
-    if not alter:
-        return max(half_pl_max), sum(half_pl_avg) / n_a
-    return alterGroups_pl(half_alter, idx_Ai_Sjs, n_a)
-
-
-@fantasy_timer
-def extGrp2_EO_pl(y, hx, idx_Ai_Sjs, pos=1, alter=False):
-    half_mid = [extGrp2_EO_sing(
-        y, hx, idx_Sjs, pos)[0] for idx_Sjs in idx_Ai_Sjs]
-    half_pl_max, half_pl_avg, half_alter = zip(*half_mid)
-    n_a = len(idx_Ai_Sjs)
-    if not alter:
-        return max(half_pl_max), sum(half_pl_avg) / n_a
-    return alterGroups_pl(half_alter, idx_Ai_Sjs, n_a)
-
-
-@fantasy_timer
-def extGrp3_PQP_pl(y, hx, idx_Ai_Sjs, pos=1, alter=False):
-    half_mid = [extGrp3_PQP_sing(
-        y, hx, idx_Sjs, pos)[0] for idx_Sjs in idx_Ai_Sjs]
-    half_pl_max, half_pl_avg, half_alter = zip(*half_mid)
-    n_a = len(idx_Ai_Sjs)
-    if not alter:
-        return max(half_pl_max), sum(half_pl_avg) / n_a
-    return alterGroups_pl(half_alter, idx_Ai_Sjs, n_a)
+# def alterGroups_pl(half_alter, idx_Ai_Sjs, n_a):
+#     half_alter = [alterGrps_sing(alt, idx_Sjs)[
+#         0] for alt, idx_Sjs in zip(half_alter, idx_Ai_Sjs)]
+#     half_pl_max, half_pl_avg = zip(*half_alter)
+#     return max(half_pl_max), sum(half_pl_avg) / n_a
+#
+#
+# @fantasy_timer
+# def extGrp1_DP_pl(y, hx, idx_Ai_Sjs, pos=1, alter=False):
+#     half_mid = [extGrp1_DP_sing(
+#         y, hx, idx_Sjs, pos)[0] for idx_Sjs in idx_Ai_Sjs]
+#     half_pl_max, half_pl_avg, half_alter = zip(*half_mid)
+#     n_a = len(idx_Ai_Sjs)
+#     if not alter:
+#         return max(half_pl_max), sum(half_pl_avg) / n_a
+#     return alterGroups_pl(half_alter, idx_Ai_Sjs, n_a)
+#
+#
+# @fantasy_timer
+# def extGrp2_EO_pl(y, hx, idx_Ai_Sjs, pos=1, alter=False):
+#     half_mid = [extGrp2_EO_sing(
+#         y, hx, idx_Sjs, pos)[0] for idx_Sjs in idx_Ai_Sjs]
+#     half_pl_max, half_pl_avg, half_alter = zip(*half_mid)
+#     n_a = len(idx_Ai_Sjs)
+#     if not alter:
+#         return max(half_pl_max), sum(half_pl_avg) / n_a
+#     return alterGroups_pl(half_alter, idx_Ai_Sjs, n_a)
+#
+#
+# @fantasy_timer
+# def extGrp3_PQP_pl(y, hx, idx_Ai_Sjs, pos=1, alter=False):
+#     half_mid = [extGrp3_PQP_sing(
+#         y, hx, idx_Sjs, pos)[0] for idx_Sjs in idx_Ai_Sjs]
+#     half_pl_max, half_pl_avg, half_alter = zip(*half_mid)
+#     n_a = len(idx_Ai_Sjs)
+#     if not alter:
+#         return max(half_pl_max), sum(half_pl_avg) / n_a
+#     return alterGroups_pl(half_alter, idx_Ai_Sjs, n_a)
 
 
 # -------------------------------------

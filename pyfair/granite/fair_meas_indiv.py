@@ -50,7 +50,9 @@ class GEI_Theil(_elem):
         bi, mu, _ = cls._benefits(y, y_hat)
         numerator = (bi / mu) ** alpha - 1
         denominator = len(y) * alpha * (alpha - 1)
-        return np.sum(numerator) / denominator
+        # return np.sum(numerator) / denominator
+        ans = np.sum(numerator) / denominator
+        return float(ans)
 
     @classmethod
     @fantasy_timer
@@ -62,7 +64,9 @@ class GEI_Theil(_elem):
         tmp_2 = np.log(tmp_2)
         tmp = tmp_1 * tmp_2
         del tmp_1, tmp_2
-        return np.sum(tmp) / float(n)
+        # return np.sum(tmp) / float(n)
+        ans = np.sum(tmp) / float(n)
+        return float(ans)
 
 
 # -------------------------------------
@@ -217,33 +221,33 @@ class DistDirect(_elem):
         return DirectDist_multiver(X_nA_y, idx_As_Sj)
 
 
-class HFM_Approx_bin(_elem):
-    @staticmethod
-    def bin(X_nA_y, A_j, idx_Sj, m1, m2):
-        # '''
-        # Si_c = ~idx_Sj  # idx_Sj: i.e. indices of non_sa
-        # return ApproxDist_bin(X_nA_y, A_j, Si_c, idx_Sj, m1, m2)
-        # '''
-        return ApproxDist_bin(X_nA_y, A_j, idx_Sj, m1, m2)
-
-
-class HFM_DistApprox(_elem):
-    @staticmethod
-    def bin(X_nA_y, A_j, m1, m2, n_e=3, pool=None):
-        # B_j = A_j.copy()
-        # B_j[B_j != 1] = 0  # privileged_val = 1
-        # return DistApprox(X_nA_y, B_j, m1, m2, n_e, pool)
-        return DistApprox(X_nA_y, A_j, m1, m2, n_e, pool)
-
-    @staticmethod
-    def nonbin(X_nA_y, A_j, m1, m2, n_e=3, pool=None):
-        return DistApprox(X_nA_y, A_j, m1, m2, n_e, pool)
-
-    @staticmethod
-    def multivar(X_nA_y, A, m1, m2, n_e=3, pool=None):
-        # return DistExtend(X_nA_y, A, m1, m2, n_e, pool)
-        return ExtendDist_multiver_mp(
-            X_nA_y, A, m1, m2, n_e, pool)
+# class HFM_Approx_bin(_elem):
+#     @staticmethod
+#     def bin(X_nA_y, A_j, idx_Sj, m1, m2):
+#         # '''
+#         # Si_c = ~idx_Sj  # idx_Sj: i.e. indices of non_sa
+#         # return ApproxDist_bin(X_nA_y, A_j, Si_c, idx_Sj, m1, m2)
+#         # '''
+#         return ApproxDist_bin(X_nA_y, A_j, idx_Sj, m1, m2)
+#
+#
+# class HFM_DistApprox(_elem):
+#     @staticmethod
+#     def bin(X_nA_y, A_j, m1, m2, n_e=3, pool=None):
+#         # B_j = A_j.copy()
+#         # B_j[B_j != 1] = 0  # privileged_val = 1
+#         # return DistApprox(X_nA_y, B_j, m1, m2, n_e, pool)
+#         return DistApprox(X_nA_y, A_j, m1, m2, n_e, pool)
+#
+#     @staticmethod
+#     def nonbin(X_nA_y, A_j, m1, m2, n_e=3, pool=None):
+#         return DistApprox(X_nA_y, A_j, m1, m2, n_e, pool)
+#
+#     @staticmethod
+#     def multivar(X_nA_y, A, m1, m2, n_e=3, pool=None):
+#         # return DistExtend(X_nA_y, A, m1, m2, n_e, pool)
+#         return ExtendDist_multiver_mp(
+#             X_nA_y, A, m1, m2, n_e, pool)
 
 
 # -------------------------------------

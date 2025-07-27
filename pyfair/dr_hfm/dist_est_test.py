@@ -26,7 +26,7 @@ from pyfair.dr_hfm.dist_est_bin import (
     AcceleDist_bin_alter, ApproxDist_bin_alter,
     sub_accelerator_smaler, subalt_accel_smaler,
     sub_accelerator_larger, subalt_accel_larger)
-from pyfair.dr_hfm.dist_drt import DistDirect_Euclidean
+# from pyfair.dr_hfm.dist_drt import DistDirect_Euclidean
 
 
 def generate_dat(n, nd, na, nai, nc=2):
@@ -294,7 +294,7 @@ def compare_alternative(nai, m1, m2):
         # intermediate = subcomp_alternative(
         #     X_nA_y, A_j, idx_S0, idx_S1, idx_y_fx, 0, m2)
         intermediate = subcomp_alternative(idx_y_fx, 0)
-        intermediate = subcomp_subaccel(idx_y_fx, 1)
+        # intermediate = subcomp_subaccel(idx_y_fx, 1)
         pdb.set_trace()
 
     no_less_than_check(res_1, ans_1[0])
