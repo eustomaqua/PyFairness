@@ -6,7 +6,7 @@ import time
 import pandas as pd
 import numpy as np
 
-from pyfair.facil.utils_const import DTY_BOL
+# from pyfair.facil.utils_const import DTY_BOL
 from pyfair.datasets import (
     process_above, make_class_attr_num,
     make_sensitive_attrs_binary)
@@ -165,6 +165,12 @@ def normalise_disturb_whole(scaler, X_trn, A_trn):
     return scaler, X_trn, A_trn
 
 
+# Seperate/divide datasets
+#
+# with only one sensitive attribute
+#      multiple sensitive attributes
+
+
 # def sens_attr_divided_set(A, new_attr_name=None):
 #     # `param` A (sens_attr): pd.DataFrame
 #     # `param` new_attr_name: str
@@ -210,7 +216,7 @@ def make_bool_feat_numerical(dataframe, boolean_feats=None):
     # dataframe should be `processed_numerical`
     newframe = dataframe.copy()
     for attr in boolean_feats:
-        if newframe[attr].dtype == DTY_BOL:  # 'bool':
+        if newframe[attr].dtype == 'bool':  # DTY_BOL:
             newframe[attr] = newframe[attr].replace({True: 1})
             newframe[attr] = newframe[attr].replace({False: 0})
     return newframe
@@ -396,11 +402,9 @@ def renewed_prep_and_adversarial(dataset, data_frame, ratio=.7,
     belongs_priv = dataset.find_where_belongs(processed_data)
     if len(belongs_priv) > 1:
         belongs_priv_with_joint = [
-            np.logical_and(belongs_priv[0],
-                           belongs_priv[1]).astype(DTY_BOL),
-            np.logical_or(belongs_priv[0],
-                          belongs_priv[1]).astype(DTY_BOL),
-        ]
+            np.logical_and(belongs_priv[0], belongs_priv[1]),
+            np.logical_or(belongs_priv[0], belongs_priv[1]),
+        ]  # .astype(DTY_BOL)
         belongs_priv.extend(belongs_priv_with_joint)
     marginalised_groups = preproc_mu['marginalised_groups']
     # pdb.set_trace()

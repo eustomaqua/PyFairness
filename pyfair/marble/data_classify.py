@@ -71,8 +71,8 @@ def _BaggingSelectTraining(X_trn, y_trn):
     dY = len(vY)
     stack_X, stack_y = [], []  # temporal
     idx_stack = []
-    rndsed, prng = random_seed_generator()
 
+    rndsed, prng = random_seed_generator()
     for k in range(dY):
         idx = (y_trn == vY[k])
         tem_X = X_trn[idx]
@@ -117,7 +117,7 @@ def BaggingEnsembleAlgorithm(X_trn, y_trn, name_cls, nb_cls):
         clfs.append(deepcopy(clf))
         del wX, wy, clf
         gc.collect()
-    coef = [1. / nb_cls] * nb_cls
+    coef = [1. / nb_cls] * nb_cls  # np.array(coef, dtype=DTY_FLT)
     # return deepcopy(coef), deepcopy(clfs), deepcopy(indices)
     return coef, clfs, indices
 
@@ -198,6 +198,7 @@ def _AdaBoostSelectTraining(X_trn, y_trn, weight):
     tem_X = np.concatenate(stack_X, axis=0)
     tem_y = np.concatenate(stack_y, axis=0)
     tem_idx = np.concatenate(stack_idx, axis=0)
+
     # rndsed, prng = renew_random_seed_generator()
     rndsed, prng = random_seed_generator()
     # rndsed = renew_fixed_tseed()
@@ -207,6 +208,7 @@ def _AdaBoostSelectTraining(X_trn, y_trn, weight):
     prng.shuffle(idx)
     wX = tem_X[idx].tolist()
     wy = tem_y[idx].tolist()
+
     tem_idx = tem_idx[idx].tolist()
     if len(wX) <= 2:
         sw = np.argsort(weight)[:: -1]
@@ -334,8 +336,8 @@ def BoostingEnsemble_multiclass(X_trn, y_trn, name_cls, nb_cls,
         del nb_cnt
         clfs.append(deepcopy(clf))
         # Determine the weight of $h_t$
-        alpha[k] = 0.5 * np.log(
-            check_zero((1. - em[k]) / check_zero(em[k])))
+        alpha[k] = 0.5 * np.log(check_zero(
+            (1. - em[k]) / check_zero(em[k])))
         if name_ens == 'SAMME':
             alpha[k] += np.log(dY - 1)
         # if np.isnan(alpha[k]):
@@ -368,6 +370,7 @@ def BoostingEnsemble_multiclass(X_trn, y_trn, name_cls, nb_cls,
 # from sklearn import neural_network  # MLPClassifier
 #
 
+# '''
 # Classification
 #     sklearn.naive_bayes.MultinomialNB
 #     sklearn.naive_bayes.BernoulliNB
@@ -390,6 +393,7 @@ def BoostingEnsemble_multiclass(X_trn, y_trn, name_cls, nb_cls,
 #     sklearn.preprocessing.StandardScaler
 #     sklearn.preprocessing.MinMaxScaler
 #     sklearn.preprocessing.MaxAbsScaler
+# '''
 
 
 # ----------------------------------
@@ -417,6 +421,7 @@ def EnsembleAlgorithm(name_ens, name_cls, nb_cls, X_trn, y_trn):
     return coef, clfs, indices
 
 
+# """
 # # calculate accuracies of base/weak/individual classifiers
 # # option: or
 # #   CalcBaseAccuracies(clfs, X_tst, y_tst)
@@ -456,6 +461,7 @@ def EnsembleAlgorithm(name_ens, name_cls, nb_cls, X_trn, y_trn):
 #   del coef, yt, y, fcode
 #   gc.collect()
 #   return accsg
+# """
 
 
 # ----------------------------------

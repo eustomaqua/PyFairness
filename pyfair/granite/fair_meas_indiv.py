@@ -1,4 +1,5 @@
 # coding: utf-8
+# hfm.experiment/utils/fair_rev_indiv.py
 #
 # Aim to provide:
 #   Discrimination/ fairness metrics

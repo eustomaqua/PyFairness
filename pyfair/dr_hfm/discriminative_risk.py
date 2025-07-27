@@ -2,7 +2,7 @@
 # Author: Yijun
 #
 # TARGET:
-#   Oracle bounds concerning fairness for majority voting
+#   Oracle bounds concerning fairness for weighted voting
 
 
 import numpy as np

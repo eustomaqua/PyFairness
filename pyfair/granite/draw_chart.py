@@ -293,15 +293,23 @@ def _ext_confus_cm(cm, cmap, figsize):
     return fig, ax
 
 
-def analogous_confusion_extended(Mat_A, Mat_B, key_A, key_B,
-                                 figname, figsize='L-NT',
-                                 cmap_name="Blues_r", rotate=5):
-    num_za, num_zb = len(key_A), len(key_B)
-    # if cm is None:
+def _alt_confus_cm_asym(Mat_A, Mat_B):
+    num_za = int(Mat_A.shape[0])
+    num_zb = int(Mat_B.shape[0])
     cm = np.zeros((num_za, num_zb))
     for i in range(num_za):
         for j in range(num_zb):
             cm[i, j] = np.corrcoef(Mat_B[j], Mat_A[i])[1, 0]
+    return cm
+
+
+def analogous_confusion_extended(Mat_A, Mat_B, key_A, key_B,
+                                 figname, cm=None, figsize='L-NT',
+                                 cmap_name="Blues_r", rotate=5):
+    num_za, num_zb = len(key_A), len(key_B)
+    if cm is None:
+        cm = _alt_confus_cm_asym(Mat_A, Mat_B)
+
     # cmap = plt.get_cmap(cmap_name)
     cmap = plt.colormaps.get_cmap(cmap_name)
     fig, _ = _ext_confus_cm(cm, cmap, figsize)

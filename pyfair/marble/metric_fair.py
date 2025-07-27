@@ -1,8 +1,8 @@
 # coding: utf-8
-# metrics_fair.py#
 #
 # TARGET:
-#   Oracle bounds concerning fairness for majority voting
+#   Oracle bounds regarding fairness for weighted vote
+#   fairness in manifolds and its extension
 
 
 import numpy as np
@@ -22,6 +22,7 @@ from pyfair.facil.metric_cont import contingency_tab_bi
 
 # -------------------------------------
 # Oracle bounds (previous version)
+# hfm/metrics/fairness_gr(ou)p.py
 
 
 # # Contingency table
@@ -113,6 +114,7 @@ def marginalised_pd_mat(y, hx, pos=1, idx_priv=tuple()):
 #     gones_hx = [i for i, j in zip(hx, sen) if j == priv]
 #     gzero_hx = [i for i, j in zip(hx, sen) if j != priv]
 #     return gones_y_, gzero_y_, gones_hx, gzero_hx
+#     # return gones_y_,gones_hx,gzero_y_,gzero_hx  # sens
 #
 #
 # def marginalised_matrixes(y, hx, pos=1, priv=1, sens=list()):
@@ -135,14 +137,6 @@ def marginalised_pd_mat(y, hx, pos=1, idx_priv=tuple()):
 #     gones_Cm = marginalised_confusion(g1_Cij, loca)
 #     gzero_Cm = marginalised_confusion(g0_Cij, loca)
 #     return g1_Cij, g0_Cij, gones_Cm, gzero_Cm  # np.ndarray
-# '''
-
-
-# # Group fairness measures
-# ''' Cm
-# |        | hx= pos | hx= neg |
-# | y= pos |    TP   |    FN   |
-# | y= neg |    FP   |    TN   |
 # '''
 
 
@@ -185,6 +179,7 @@ def prev_unpriv_grp_thr(gones_Cm, gzero_Cm):
 
 # Assume different groups have the same potential
 # aka. (TP+FN)/N = P[y=1]
+
 def prev_unpriv_unaware(gones_Cm, gzero_Cm):
     # aka. prerequisite
     N1 = np.sum(gones_Cm)
@@ -196,8 +191,14 @@ def prev_unpriv_unaware(gones_Cm, gzero_Cm):
     return float(g1), float(g0)
 
 
+# 在无意识前提下，分类
+# aka. (TP+FP)/N = P[h(x)=1]
+# def unpriv_prereq(gones_Cm, gzero_Cm):
+
+
 # Self-defined using accuracy
 # aka. (TP+TN)/N = P[h(x)=y]
+
 def prev_unpriv_manual(gones_Cm, gzero_Cm):
     N1 = np.sum(gones_Cm)
     N0 = np.sum(gzero_Cm)
@@ -214,6 +215,7 @@ def prev_unpriv_manual(gones_Cm, gzero_Cm):
 
 # -------------------------------------
 # Fairness research & oracle bounds
+# hfm/metrics/fair_grp_ext.py
 
 
 class _elem:
@@ -232,29 +234,6 @@ def zero_division(dividend, divisor):
     elif divisor == 0:
         return 10.  # return 1.
     return dividend / divisor
-
-
-# '''
-# marginalised groups
-# |      | h(xneg,gzero)=1 | h(xneg,gzero)=0 |
-# | y= 1 |    TP_{gzero}   |    FN_{gzero}   |
-# | y= 0 |    FP_{gzero}   |    TN_{gzero}   |
-# privileged group
-# |      | h(xneg,gones)=1 | h(xneg,gones)=0 |
-# | y= 1 |    TP_{gones}   |    FN_{gones}   |
-# | y= 0 |    FP_{gones}   |    TN_{gones}   |
-
-# instance (xneg,xpos) --> (xneg,xqtb)
-#         xpos might be `gzero` or `gones`
-
-# C_{ij}
-# |     | hx=0 | hx=1 | ... | hx=? |
-# | y=0 | C_00 | C_01 | ... | C_0* |
-# | y=1 | C_10 | C_11 |     | C_1* |
-# | ... | ...  | ...  |     | ...  |
-# | y=? | C_*0 | C_*1 | ... | C_*? |
-# '''
-# # y, hx: list of scalars (as elements)
 
 
 def marginalised_np_mat(y, y_hat, pos_label=1,
@@ -378,6 +357,7 @@ def unpriv_unaware(g1_Cm, g0_Cm):
 
 # 自定义 = accuracy 准确度
 # aka. (TP+TN)/N = P[h(x)=y]
+
 def unpriv_manual(g1_Cm, g0_Cm):
     n1 = check_zero(sum(g1_Cm))
     n0 = check_zero(sum(g0_Cm))
@@ -389,6 +369,8 @@ def unpriv_manual(g1_Cm, g0_Cm):
 # -------------------------------------
 # Fairness research & oracle bounds (cont.)
 # Fairness manifold + extension
+
+# Note that y|hx is np.ndarray
 
 
 @fantasy_timer
@@ -411,10 +393,12 @@ def DPext_alterSP(y, hx, idx_Sjs, pos_label=1):
 @fantasy_timer
 def StatsParity_sing(hx, idx_Sjs, pos=1):
     total = np.mean(hx == pos)
+
     # item = [np.mean(hx[idx] == pos) for idx in idx_Sjs]
     # item = np.nan_to_num(item).tolist()  # for robustness
     item = [hx[idx] == pos for idx in idx_Sjs]
     item = [np.mean(i) if i.shape[0] else 0. for i in item]
+
     elements = [float(np.abs(i - total)) for i in item]
     n_ai = len(idx_Sjs)
     return max(elements), sum(elements) / n_ai

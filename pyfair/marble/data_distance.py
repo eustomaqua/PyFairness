@@ -11,6 +11,7 @@ import scipy.optimize as optim
 
 from copy import deepcopy
 from pyfair.facil.utils_const import check_zero, non_negative
+# from hfm.utils.verifiers import check_zero, non_negative
 
 
 # =======================================

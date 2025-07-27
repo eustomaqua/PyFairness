@@ -36,7 +36,7 @@ def test_preprocessing():
     for dt in DATASETS[1: 2]:
         df = dt.load_raw_dataset()
         ans = preprocess(dt, df)
-        adv = adversarial(dt, df, ratio=.97)
+        adv = adversarial(dt, df, ratio=.95)
 
         for k in [
             'original', 'numerical', 'numerical-binsensitive',

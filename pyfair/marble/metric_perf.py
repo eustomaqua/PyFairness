@@ -1,8 +1,8 @@
 # coding: utf-8
-# metrics_perf.py
 #
-# TARGET:
-#   works for binary classification only
+# Aim to provide:
+#   Performance-based metrics
+#
 
 
 import numpy as np
@@ -10,11 +10,21 @@ import numba
 from pyfair.facil.utils_const import check_zero, non_negative
 
 
+def comp_accuracy(y, hx):
+    t = np.mean(np.equal(y, hx))
+    return float(t)
+
+
+def comp_error_rate(y, hx):
+    t = np.mean(np.not_equal(y, hx))
+    return float(t)
+
+
 # -------------------------------------
 # Performance metrics
 #
-# After having gotten Confusion matrix
-# NB. for one single classifier
+# After having the confusion matrix,
+# for one single classifier (binary)
 
 # '''
 # |                      |prediction is positive|predict negative|
@@ -23,7 +33,13 @@ from pyfair.facil.utils_const import check_zero, non_negative
 # '''
 
 
+# TP, FP, FN, TN
+# --------------------------
+# NB. some doesn't work for multi-class!
+
+
 # 精度 /正确率
+# Accuracy
 # @numba.jit(nopython=True)
 def calc_accuracy(tp, fp, fn, tn):
     n = float(tp + fp + fn + tn)
@@ -32,6 +48,7 @@ def calc_accuracy(tp, fp, fn, tn):
 
 
 # 错误率
+# Error rate = 1 - accuracy
 def calc_error_rate(tp, fp, fn, tn):
     n = float(tp + fp + fn + tn)
     # return 1. - (tp + tn) / check_zero(n)
@@ -40,6 +57,7 @@ def calc_error_rate(tp, fp, fn, tn):
 
 
 # 查准率 P
+# Precision
 def calc_precision(tp, fp, fn, tn):
     denominator = float(tp + fp)
     tmp = tp / check_zero(denominator)
@@ -47,6 +65,7 @@ def calc_precision(tp, fp, fn, tn):
 
 
 # 查全率 R
+# Recall
 def calc_recall(tp, fp, fn, tn):
     denominator = float(tp + fn)
     tmp = tp / check_zero(denominator)
@@ -54,6 +73,7 @@ def calc_recall(tp, fp, fn, tn):
 
 
 # F1 度量
+# F1 measure
 def calc_f1_score(tp, fp, fn, tn):
     n = float(tp + fp + fn + tn)
     denominator = n + tp - tn
@@ -62,6 +82,7 @@ def calc_f1_score(tp, fp, fn, tn):
 
 
 # F1 度量的一般形式
+# F1
 def calc_f_beta(p, r, beta=1):
     denominator = beta**2 * p + r
     numerator = (1. + beta**2) * p * r
@@ -261,4 +282,17 @@ def imba_likelihoods(sen, spe):
 
 
 # -------------------------------------
+#
+
+
+# metrics_perf.py, performance.py
+# core/oracle_metric.py
+#
+# TARGET:
+#   works for binary classification only
+
+# # performance.py, confusion_mat.py
+# hfm/metrics/excl_perf_bin.py
+# from hfm.utils.verifiers import check_zero
+# ---------------------
 #

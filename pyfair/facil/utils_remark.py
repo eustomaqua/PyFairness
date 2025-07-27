@@ -42,9 +42,8 @@ AVAILABLE_ABBR_ENSEM = ['Bagging', 'AdaBoostM1', 'SAMME']
 AVAILABLE_ABBR_CLS = [
     'DT', 'NB', 'SVM', 'linSVM', 'kNNu', 'kNNd',
     'MLP', 'LR1', 'LR2', 'LM1', 'LM2',
-    # 'DT', 'NB', 'SVM', 'linSVM', 'MLP',
-    # 'LR1', 'LR2', 'LM1', 'LM2', 'kNNu', 'kNNd',
-]  # ALG_NAMES  # 'lmSGD','LR',
+    # 'LM1', 'LM2', 'LR1', 'LR2', 'kNNu', 'kNNd', 'MLP',
+]  # ALG_NAMES                # 'lmSGD','LR', # NN,Lsvm
 
 
 NAME_INDIVIDUALS = {
@@ -69,11 +68,15 @@ SPEC_INDIVIDUALS = {
     'NB': naive_bayes.GaussianNB(),
     'SVM': svm.SVC(),
     'linSVM': svm.LinearSVC(),  # 'L-svm', 'LSVM'
-    'LM1': linear_model.SGDClassifier(loss="hinge", penalty="l1"),
-    'LM2': linear_model.SGDClassifier(loss="hinge", penalty="l2"),
+    'LM1': linear_model.SGDClassifier(
+        loss="hinge", penalty="l1"),
+    'LM2': linear_model.SGDClassifier(
+        loss="hinge", penalty="l2"),
     # 'LM*':  # max_iter=1000
-    'kNNu': neighbors.KNeighborsClassifier(n_neighbors=3, weights="uniform"),
-    'kNNd': neighbors.KNeighborsClassifier(n_neighbors=3, weights="distance"),
+    'kNNu': neighbors.KNeighborsClassifier(
+        n_neighbors=3, weights="uniform"),
+    'kNNd': neighbors.KNeighborsClassifier(
+        n_neighbors=3, weights="distance"),
     'MLP': neural_network.MLPClassifier(
         solver='lbfgs', alpha=1e-5,  # random_state=1,
         hidden_layer_sizes=(5, 2)),  # MLP
@@ -125,11 +128,13 @@ NONPAIRWISE = {
     'CFail': 'CoinFailure',   # Coincident Failure [Partridge and Krzanowski, 1997]
 }
 
-# AVAILABLE_NAME_DIVER = list(PAIRWISE.keys()) + list(NONPAIRWISE.keys())
-AVAILABLE_NAME_DIVER = ['Disag', 'QStat', 'Corre', 'KStat', 'DoubF',
-                        'KWVar', 'Inter', 'EntCC', 'EntSK', 'Diffi', 'GeneD', 'CFail']
+# AVAILABLE_NAME_DIVER = list(PAIRWISE.keys())+list(NONPAIRWISE.keys())
+AVAILABLE_NAME_DIVER = [
+    'Disag', 'QStat', 'Corre', 'KStat', 'DoubF',
+    'KWVar', 'Inter', 'EntCC', 'EntSK', 'Diffi', 'GeneD', 'CFail']
 DIVER_PAIRWISE = ['Disag', 'QStat', 'Corre', 'KStat', 'DoubF']
-DIVER_NON_PAIR = ['KWVar', 'Inter', 'EntCC', 'EntSK', 'Diffi', 'GeneD', 'CFail']
+DIVER_NON_PAIR = [
+    'KWVar', 'Inter', 'EntCC', 'EntSK', 'Diffi', 'GeneD', 'CFail']
 
 
 ######################################

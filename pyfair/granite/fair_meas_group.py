@@ -1,4 +1,5 @@
 # coding: utf-8
+# hfm.experiment/utils/fair_rev_group.py
 #
 # Aim to provide:
 #   Discrimination/ fairness metrics
@@ -8,7 +9,7 @@
 import numpy as np
 from pyfair.facil.utils_timer import fantasy_timer
 from pyfair.facil.metric_cont import contingency_tab_bi
-from pyfair.marble.metric_fair import (
+from pyfair.marble.metric_fair import (  # hfm.metrics.fair_grp_ext
     marginalised_np_mat, marginalised_np_gen, _elem, zero_division)
 
 

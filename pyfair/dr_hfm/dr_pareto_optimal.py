@@ -1,7 +1,8 @@
 # coding: utf-8
+# Aim to provide:
 #
 # TARGET:
-#   Oracle bounds regarding fairness for majority vote
+#   Oracle bounds regarding fairness for weighted vote
 #   PAC bounds
 #
 

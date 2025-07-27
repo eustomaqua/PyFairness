@@ -22,8 +22,9 @@ import numpy as np
 
 
 # mpl.use('Agg')  # set the 'backend'
-plt.rcParams['font.family'] = 'Times New Roman'
-plt.rcParams['font.family'] = 'Helvetica'  # 'Arial'
+# plt.rcParams['font.family'] = 'Times New Roman'
+# plt.rcParams['font.family'] = 'Helvetica'  # 'Arial'
+plt.rcParams['font.family'] = 'stixgeneral'
 
 # plt.rc('text', usetex=True)
 # plt.rcParams['font.sans-serif'] = ['SimHei']  # show chinese lbl
@@ -53,6 +54,15 @@ PLT_SPINEOFF = False
 # PLT_T_LAYOUT = False
 # PLT_AX_STYLE = False
 '''
+
+
+# mpl.rcParams.update(
+#     {
+#         'text.usetex': True,
+#         'font.family': 'stixgeneral',
+#         'mathtext.fontset': 'stix',
+#     }
+# )
 
 
 # -------------------------------------
@@ -174,3 +184,4 @@ def _setup_rgb_color(N, cname='GnBu_r'):
 
 # https://stackoverflow.com/questions/76901874/userwarning-the-figure-layout-has-changed-to-tight-self-figure-tight-layouta
 # https://github.com/mwaskom/seaborn/issues/3431
+# https://stackoverflow.com/questions/47253462/matplotlib-mathtext-glyph-errors-in-tick-labels

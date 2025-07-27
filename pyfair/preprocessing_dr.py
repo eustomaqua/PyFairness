@@ -5,7 +5,7 @@ import numpy as np
 # import pandas as pd
 
 from pyfair.facil.utils_saver import elegant_print
-from pyfair.facil.utils_const import DTY_BOL
+# from pyfair.facil.utils_const import DTY_BOL
 from pyfair.datasets import process_above, process_below, DATASETS
 
 
@@ -152,26 +152,23 @@ def transform_unpriv_tag(dataset, processed_data,
                          joint='and'):
     assert joint in (
         'and', 'or', 'both'), "Improper joint-parameter"
+
     belongs_priv = dataset.find_where_belongs(processed_data)
     if len(belongs_priv) <= 1:  # not >1
         belongs_priv_with_joint = []
         return belongs_priv, belongs_priv_with_joint
 
-    # else:   # if len(belongs_priv) > 1:
+    # else:   # if len(belongs_priv) > 1:  .astype(DTY_BOL)
     if joint == 'and':
         belongs_priv_with_joint = np.logical_and(
-            belongs_priv[0],
-            belongs_priv[1]).astype(DTY_BOL).tolist()
+            belongs_priv[0], belongs_priv[1]).tolist()
     elif joint == 'or':
         belongs_priv_with_joint = np.logical_or(
-            belongs_priv[0],
-            belongs_priv[1]).astype(DTY_BOL).tolist()
+            belongs_priv[0], belongs_priv[1]).tolist()
     elif joint == 'both':
         belongs_priv_with_joint = [
-            np.logical_and(belongs_priv[
-                0], belongs_priv[1]).astype(DTY_BOL),
-            np.logical_or(belongs_priv[
-                0], belongs_priv[1]).astype(DTY_BOL),
+            np.logical_and(belongs_priv[0], belongs_priv[1]),
+            np.logical_or(belongs_priv[0], belongs_priv[1]),
         ]
     return belongs_priv, belongs_priv_with_joint
 

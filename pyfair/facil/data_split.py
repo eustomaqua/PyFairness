@@ -2,10 +2,11 @@
 # Author: Yijun
 #
 # Target:
+#   Split data for experiments
 #   Split one dataset into "training/validation/test" datasets
 #
 #   Research and Applications of Diversity in Ensemble Classification
-#   Oracle bounds regarding fairness for majority voting
+#   Oracle bounds regarding fairness for weighted voting
 #
 
 
@@ -24,6 +25,12 @@ gc.enable()
 # =================================
 
 
+# Split situations 2 & 3
+# Cross-Validation (CV)
+# -------------------------------------
+# different ways to split data
+
+
 # split the data
 
 
@@ -36,7 +43,7 @@ def sklearn_k_fold_cv(num_cv, y):
     for trn, tst in kf.split(y):
         # split_idx.append((i_trn, i_tst))
         split_idx.append([trn.tolist(), tst.tolist()])
-    return split_idx
+    return split_idx  # element: np.ndarray
 
 
 def sklearn_stratify(num_cv, y, X):
@@ -65,7 +72,7 @@ def manual_repetitive(nb_cv, y, gen=False):
 # preprocessing for feature normalisation
 
 
-def scale_normalize_helper(scale_type, X_trn):
+def scale_normalize_helper(scale_type):
     assert scale_type in [
         "standard", "min_max", "min_abs", "normalize",
         "normalise",
@@ -85,13 +92,15 @@ def scale_normalize_helper(scale_type, X_trn):
 
 def scale_normalize_data(scaler, X_trn, X_val, X_tst):
     # def scale_normalize_data():
+    # scaler = scale_normalize_helper(scale_type)
+    # scaler.fit(X_trn)  # id(scaler) would not change
     scaler = scaler.fit(X_trn)  # .fit_transform()
     X_trn = scaler.transform(X_trn)
     X_val = [] if not X_val else scaler.transform(X_val)
     X_tst = scaler.transform(X_tst)
     X_trn, X_tst = X_trn.tolist(), X_tst.tolist()
     X_val = X_val.tolist() if len(X_val) > 0 else []
-    return scaler, X_trn, X_val, X_tst
+    return scaler, X_trn, X_val, X_tst  # deepcopy
 
 
 # get splited datasets
@@ -225,6 +234,10 @@ def _sub_sp_alt_cv(dY, tY, sY, k, nb_cv):
     return i_trn, i_val, i_tst
 
 
+# Cross-Validation
+# ----------------------------------
+
+
 def sitch_cross_validation(nb_cv, y, split_type='cv3'):
     assert split_type in [
         "cross_valid_v3", "cross_valid_v2", "cross_validation",
@@ -235,6 +248,7 @@ def sitch_cross_validation(nb_cv, y, split_type='cv3'):
     # dY = len(vY)
     # iY = [np.where(y == j)[0] for j in vY]  # indices
     # lY = [len(j) for j in iY]               # length
+    # # tY = [np.copy(j) for j in iY]  # np.arange(j),temp_index
     # tY = deepcopy(iY)     # tY = iY.copy()  # tmp_index
     # for j in tY:
     #     np.random.shuffle(j)
@@ -265,11 +279,12 @@ def sitch_cross_validation(nb_cv, y, split_type='cv3'):
     #     i_val = np.concatenate(i_val, axis=0).tolist()
     #     i_trn = np.concatenate(i_trn, axis=0).tolist()
     #     if split_type.endswith("v2"):
-    #         tmp = (i_trn + i_val, i_tst)
+    #         # "cross_valid_v2" or "cross_validation"
+    #         tmp = (i_trn + i_val, i_tst)  # deepcopy()
     #     else:
-    #         tmp = (i_trn, i_val, i_tst)
-    #     split_idx.append(tmp)
-    # #     del k_former, k_middle, k_latter, i_trn, i_val, i_tst
+    #         tmp = (i_trn, i_val, i_tst)   # deepcopy(),i_val.copy()
+    #     split_idx.append(tmp)             # deepcopy(temp_)
+    # #     del k_former, k_middle, k_latter, i_tst, i_val, i_trn
     # # del k, y, vY, dY, iY, lY, tY, sY
     # gc.collect()
     # return split_idx
@@ -301,7 +316,9 @@ def manual_cross_valid(nb_cv, y):
     return [[x + y, z] for x, y, z in split_idx]
 
 
-# Split situation 1: one single iteration
+# Split situation 1:
+#   i.e. one single iteration
+# ----------------------------------
 
 def situation_split1(y, pr_trn, pr_tst=None):
     # y = np.array(y)
@@ -310,6 +327,7 @@ def situation_split1(y, pr_trn, pr_tst=None):
     # iY = [np.where(y == j)[0] for j in vY]
     # lY = [len(j) for j in iY]  # index & length
     #
+    # # tmp_idx = [np.arange(j) for j in lY]
     # tY = deepcopy(iY)  # [np.copy(j) for j in iY]
     # for j in tY:
     #     np.random.shuffle(j)
@@ -433,6 +451,7 @@ def situation_split3(pr_trn, pr_tst, nb_cv, y):
     #
     # vY = np.unique(y).tolist()
     # dY = len(vY)
+    # # iY = [np.where(np.array(y) == j)[0] for j in vY]
     # iY = [np.where(np.equal(y, j))[0] for j in vY]
     # lY = [len(j) for j in iY]  # length
     # sY = [[int(np.max([np.round(j * i), 1])) for i in (
@@ -442,6 +461,7 @@ def situation_split3(pr_trn, pr_tst, nb_cv, y):
     # nb_y = len(y)
     # nb_trn = int(np.round(nb_y * pr_trn))
     # nb_tst = int(np.round(nb_y * pr_tst))
+    # # nb_val = int(np.round(nb_y * pr_val))
     # nb_trn = min(max(nb_trn, 1), nb_y)
     # nb_tst = min(max(nb_tst, 1), nb_y - 1)
     # nb_val = nb_y - nb_trn - nb_tst
@@ -450,7 +470,7 @@ def situation_split3(pr_trn, pr_tst, nb_cv, y):
     #
     # split_idx = []
     # for k in range(nb_cv):
-    #     for i in tmp_idx:
+    #     for i in tmp_idx:         # tem_idx
     #         np.random.shuffle(i)
     #     i_trn = [iY[i][tmp_idx[i][: sY[i][0]]] for i in range(dY)]
     #     i_tst = [iY[i][tmp_idx[i][

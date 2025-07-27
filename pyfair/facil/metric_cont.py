@@ -1,5 +1,8 @@
 # coding: utf-8
-# metrics_contg.py
+#
+# Aim to provide:
+#   Confusion matrices
+#
 
 
 import numpy as np
@@ -15,6 +18,9 @@ import numba
 # | Positive (1) |    TP    |    FN    |
 # | Negative (0) |    FP    |    TN    |
 
+# Contingency table (binary)
+# |True label `y`| Prediction `f(x)`   |
+
 
 @numba.jit(nopython=True)
 def contingency_tab_bi(y, y_hat, pos=1):
@@ -24,6 +30,8 @@ def contingency_tab_bi(y, y_hat, pos=1):
     fp = np.sum((y != pos) & (y_hat == pos))  # c
     tn = np.sum((y != pos) & (y_hat != pos))  # d
     return tp, fp, fn, tn
+    # return tp, fn, fp, tn
+
 
 # input: np.ndarray, not list
 #
@@ -33,6 +41,8 @@ def contingency_tab_bi(y, y_hat, pos=1):
 
 # # For multi-class classification
 # '''
+# 机器学习 周志华
+# 二分类代价矩阵
 # |True Label|      Prediction       |
 # |          | Class 0   | Class 1   |
 # | Class 0  |    0      | cost_{01} |
@@ -58,6 +68,7 @@ def contingency_tab_bi(y, y_hat, pos=1):
 
 
 def contg_tab_mu_type3(y, y_hat, vY):
+    # def contingency_tab_mu():
     dY = len(vY)
     Cij = np.zeros(shape=(dY, dY), dtype='int')  # DTY_INT)
     for i in range(dY):
@@ -79,6 +90,11 @@ def contg_tab_mu_merge(Cij, vY, pos=1):
     return tp, fp, fn, tn
 
 
+# @numba.jit(nopython=True)
+# def contg_tab_multi_type3(h, hp, vY):
+# def contg_tab_multi_merge(Cij, vY, pos=1):
+
+
 # '''
 # Machine learning, Zhi-Hua Zhou
 # |          | hi = pos | hi = neg |
@@ -96,6 +112,11 @@ def contg_tab_mu_merge(Cij, vY, pos=1):
 
 
 contg_tab_mu_type2 = contingency_tab_bi
+
+
+# @numba.jit(nopython=True)
+# def contg_tab_multi_type2(h, hp, pos=1):
+#     # namely, def contingency_zh()
 
 
 '''
@@ -128,6 +149,10 @@ def contg_tab_mu_type1(y, ha, hb):
     return tp, fp, fn, tn
 
 
+# def contg_tab_multi_type1(h, ha, hb):
+#     # namely, def contingency_ku()
+
+
 # -------------------------------------
 # Performance metrics (cont.)
 
@@ -145,3 +170,46 @@ def calc_confusion(y, fx, cv=5, pos=1):
 
 # def calc_macro_score(confusion, cv=5):
 # def calc_micro_score(confusion, cv=5):
+
+
+# 分类结果混淆矩阵
+# from hfm.metrics.contingency_mat import contingency_tab_bi
+#
+# @numba.jit(nopython=True)
+# def calc_confusion(y, fx, cv=5, pos=1, neg=0):
+#     confusion = list(map(contingency_tab_bi,
+#                     [y] * cv, fx, [pos] * cv, [neg] * cv))
+#     tp, fp, fn, tn = zip(*confusion)
+#     return tp, fp, fn, tn
+#     # return [contingency_table(y, t, pos, neg) for t in fx]
+#     return list(map(contingency_table,
+#                     [y] * cv, fx, [pos] * cv, [neg] * cv))
+
+
+# # --------------------------
+# # 分类结果混淆矩阵（二分类）
+#
+# '''
+# 机器学习 周志华
+# |True Label| Prediction          |
+# |          | Positive | Negative |
+# | Positive | TP       | FN       |
+# | Negative | FP       | TN       |
+#
+# 集成学习 周志华
+# |          | hi = pos | hi = neg |
+# | hj = pos |  a       |  c       |
+# | hj = neg |  b       |  d       |
+# i.e.,
+# |          | hj = pos | hj = neg |
+# | hi = pos |  a       |  b       |
+# | hi = neg |  c       |  d       |
+# '''
+#
+# # metric_cont.py, metrics_contg.py
+# hfm/metrics/contingency_mat.py
+# from hfm.utils.verifiers import DTY_INT
+#     # ''' if neg=0
+#     # return tn, fn, fp, tp
+#     # '''
+#     # # return tp, fn, fp, tn

@@ -26,17 +26,26 @@ We may test the code on different environments, and in that case, please choose 
   $ pip install -r requirements.txt
   $ python -m pytest
   $
-  $ git clone git@github.com:eustomaqua/PyFairness.git
-  $ pip install -r PyFairness/reqs_py311.txt
-  $ pip install -e ./PyFairness
-  $
   $ # To delete the virtual environment
-  $ pip uninstall pyfair
   $ conda deactivate && cd ..
   $ yes | rm -r FairML
   $ conda remove -n ensem --all
 
 
+If you would like to install `PyFairness <https://github.com/eustomaqua/PyFairness>`_, please do the following.
 
+.. code-block:: console
+  
+  $ git clone git@github.com:eustomaqua/PyFairness.git
+  $
+  $ pip install -r PyFairness/reqs_py311.txt
+  $ pip install -e ./PyFairness
+  $ pip uninstall pyfair
+  $
+  $ # mv ./PyFairness/pyfair ./
+  $ cp -r ./PyFairness/pyfair ./
+  $ rm -r pyfair
+  $
+  $ yes | rm -r PyFairness
 
 

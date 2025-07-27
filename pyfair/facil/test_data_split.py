@@ -37,7 +37,7 @@ def test_sklearn():
         assert np.shape(si) == (nb_cv, nb_inst)
 
     for typ in ['standard', 'min_max', 'min_abs', 'normalize']:
-        scaler = scale_normalize_helper(typ, X)
+        scaler = scale_normalize_helper(typ)  # , X)
         scaler, X_trn, X_val, X_tst = scale_normalize_data(
             scaler, X, [], X)
         assert np.shape(X_trn) == np.shape(X_tst)

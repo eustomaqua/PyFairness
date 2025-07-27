@@ -52,6 +52,7 @@ _colr_nms = [
     '#4DBEEE', '#A2142F']  # Matlab 2014, parula
 
 
+# '''
 # def multiple_line_chart(X, Ys, annots=(
 #     r"$\lambda$", r"Test Accuracy (%)"),
 #         annotY=('',), mkrs=None,
@@ -64,6 +65,7 @@ _colr_nms = [
 #         # mkrs += [for i in _line_marker]
 #
 #     num_bs = Ys.shape[1]
+# '''
 
 
 # def multiple_lines_with_errorbar(Ys, picked_keys, annotY='Acc',
@@ -108,7 +110,7 @@ def box_plot(Ys, picked_keys, annotY='Acc',
              figname='box_lam', figsize='M-WS', rotate=60):
     # Ys.shape (#baseline_for_comparison, #iter)
 
-    pick_baseline, _ = Ys.shape  # ,nsb_iter #picked_ways/method,
+    pick_baseline = Ys.shape[0]  # ,nb_iter #picked_ways/method,
     fig, ax = plt.subplots(figsize=_setup_config['M-NT'])
     ax.boxplot(Ys.T, patch_artist=patch_artist)  # bp=
 
@@ -193,7 +195,8 @@ def scatter_k_cv_with_real(X, Ys, z,  # y/z: real values
     _sns_line_err_bars(ax, kws, tX.reshape(-1), tYs)
     kws.pop('linestyle')
 
-    ax.ticklabel_format(style='sci', scilimits=(-1, 2), axis='y')
+    ax.ticklabel_format(
+        style='sci', scilimits=(-1, 2), axis='y')
     plt.legend(loc='best', frameon=False)  # PLT_LOCATION,PLT_FRAMEBOX)
     ax.set_xlabel(annotX)
     ax.set_ylabel(annotY)
@@ -232,9 +235,11 @@ def boxplot_k_cv_with_real(X, Ys, z,
     kws['color'] = '#465386'
     tz_avg, tz_std = np.mean(z), np.std(z, ddof=ddof)
     tx_min, tx_max = ax.get_xlim()
-    ax.plot([tx_min, tx_max], [tz_avg, tz_avg], label='Real value', **kws)
+    ax.plot([tx_min, tx_max], [tz_avg, tz_avg],
+            label='Real value', **kws)
     ax.fill_between(
-        [tx_min, tx_max], [tz_avg - tz_std] * 2, [tz_avg + tz_std] * 2,
+        [tx_min, tx_max],
+        [tz_avg - tz_std] * 2, [tz_avg + tz_std] * 2,
         alpha=.15, facecolor='#465386')
 
     kws['color'] = '#F65F47'
