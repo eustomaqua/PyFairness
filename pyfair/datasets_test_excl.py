@@ -23,6 +23,8 @@ def excl_test_datasets():
 
 
 def test_preprocessing():
+    # from fairml.preprocessing import (
+    #     adversarial)#,transform_X_and_y,transform_unpriv_tag)
     from pyfair.datasets import preprocess, DATASETS
     from pyfair.preprocessing_dr import (
         adversarial, transform_X_and_y, transform_unpriv_tag)
@@ -42,6 +44,7 @@ def test_preprocessing():
             'original', 'numerical', 'numerical-binsensitive',
                 'categorical-binsensitive']:
             assert ans[k].shape == adv[k].shape
+        # pdb.set_trace()
 
         proc_dt = ans['numerical-binsensitive']  # processed_dat
         dist_dt = adv['numerical-binsensitive']  # disturbed_dat

@@ -104,7 +104,7 @@ def contg_tab_mu_merge(Cij, vY, pos=1):
 # |          | hj = pos | hj = neg |
 # | hi = pos |  a       |  b       |
 # | hi = neg |  c       |  d       |
-
+#
 # contg_tab_multi_type3()
 # contg_tab_multi_merge()
 # 加起来就是 contingency_zh()
@@ -119,23 +119,23 @@ contg_tab_mu_type2 = contingency_tab_bi
 #     # namely, def contingency_zh()
 
 
-'''
-Kuncheva2003measures
-|              |hk correct (1)|hk wrong (0)|
-|hi correct (1)|   N^{11}     |   N^{10}   |
-|hi  wrong  (0)|   N^{01}     |   N^{00}   |
-Total, N= N^{00}+N^{01}+N^{10}+N^{11}
-
-i.e.,
-|          |hk correct|hk wrong|
-|hi correct|   tp     |   fn   | or | a | b |
-|hi  wrong |   fp     |   tn   |    | c | d |
-
-McNemar test
-|             |Alg B correct|Alg B  wrong |
-|Alg A correct|    e_{00}   |    e_{10}   |
-|Alg A  wrong |    e_{01}   |    e_{11}   |
-'''
+# '''
+# Kuncheva2003measures
+# |              |hk correct (1)|hk wrong (0)|
+# |hi correct (1)|   N^{11}     |   N^{10}   |
+# |hi  wrong  (0)|   N^{01}     |   N^{00}   |
+# Total, N= N^{00}+N^{01}+N^{10}+N^{11}
+#
+# i.e.,
+# |          |hk correct|hk wrong|
+# |hi correct|   tp     |   fn   | or | a | b |
+# |hi  wrong |   fp     |   tn   |    | c | d |
+#
+# McNemar test
+# |             |Alg B correct|Alg B  wrong |
+# |Alg A correct|    e_{00}   |    e_{10}   |
+# |Alg A  wrong |    e_{01}   |    e_{11}   |
+# '''
 
 
 def contg_tab_mu_type1(y, ha, hb):

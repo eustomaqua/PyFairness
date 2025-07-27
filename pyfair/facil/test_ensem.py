@@ -19,6 +19,7 @@ yt = [[1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0],
 wgh = [.2, .3, .1, .4]
 
 
+# '''
 # def excl_test_ensem_voting():
 #     from fairml.facils.ensem_voting import (
 #         plurality_voting, majority_voting, weighted_voting,
@@ -48,6 +49,7 @@ wgh = [.2, .3, .1, .4]
 #     assert np.equal(h1, h4).all()
 #     # pdb.set_trace()
 #     return
+# '''
 
 
 def test_ensem_voting():

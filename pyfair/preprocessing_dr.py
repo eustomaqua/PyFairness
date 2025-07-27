@@ -158,7 +158,7 @@ def transform_unpriv_tag(dataset, processed_data,
         belongs_priv_with_joint = []
         return belongs_priv, belongs_priv_with_joint
 
-    # else:   # if len(belongs_priv) > 1:  .astype(DTY_BOL)
+    # else:  # if len(belongs_priv) > 1:  .astype(DTY_BOL)
     if joint == 'and':
         belongs_priv_with_joint = np.logical_and(
             belongs_priv[0], belongs_priv[1]).tolist()

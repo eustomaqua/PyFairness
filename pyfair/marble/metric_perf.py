@@ -2,6 +2,7 @@
 #
 # Aim to provide:
 #   Performance-based metrics
+#   primarily for binary classification
 #
 
 

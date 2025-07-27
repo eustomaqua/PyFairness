@@ -2,6 +2,7 @@
 
 import numpy as np
 from pyfair.facil.utils_const import check_equal
+# from prgm.nucleus.utils_hypos import *
 from pyfair.marble.draw_hypos import (
     _regulate_vals, _regulate_sign,
     _Friedman_sequential, _Friedman_successive,
@@ -91,15 +92,15 @@ def test_subsubsec_243():
         assert mark[:6] in ('Accept', 'Reject')  # ' H0'
 
 
-'''
-U = np.arange(24)
-np.random.shuffle(U)
-U.resize(6, 4)
-
-U[5, 3] = U[5, 1]
-U[1, 0] = U[1, 2]
-U = U.astype('float')
-'''
+# '''
+# U = np.arange(24)
+# np.random.shuffle(U)
+# U.resize(6, 4)
+#
+# U[5, 3] = U[5, 1]
+# U[1, 0] = U[1, 2]
+# U = U.astype('float')
+# '''
 
 
 def _generate_U(N=6, k=4):

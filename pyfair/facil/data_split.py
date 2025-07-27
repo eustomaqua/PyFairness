@@ -70,6 +70,7 @@ def manual_repetitive(nb_cv, y, gen=False):
 
 # data regularisation
 # preprocessing for feature normalisation
+# ----------------------------------
 
 
 def scale_normalize_helper(scale_type):
@@ -107,7 +108,7 @@ def scale_normalize_data(scaler, X_trn, X_val, X_tst):
 
 
 def get_splited_set_acdy(X, y, split_idx_item):
-    # def according_index_split_train_valid_test
+    # def according_index_split_train_valid_test():
     # X, y: np.ndarray
     idx_trn, idx_val, idx_tst = split_idx_item
     X_trn, y_trn = X[idx_trn], y[idx_trn]
@@ -368,6 +369,9 @@ def situation_split1(y, pr_trn, pr_tst=None):
     #     return [(i_trn, i_tst)]
     # # nb_val = nb_y - nb_trn - nb_tst
     # i_val = np.concatenate(i_val, axis=0).tolist()
+    # # if len(i_val) == 0:
+    # #     i_val = list(set(
+    # #         np.random.randint(nb_y, size=nb_val)))
     # split_idx = [(i_trn, i_val, i_tst)]
     # return split_idx
 
@@ -398,8 +402,8 @@ def situation_split2(pr_trn, nb_cv, y_trn):
     # iY = [np.where(np.equal(y_trn, j))[0] for j in vY]
     # lY = [len(j) for j in iY]  # length
     # sY = [int(np.max([np.round(
-    #     j * pr_trn), 1])) for j in lY]  # split_loca
-    # tmp_idx = [np.arange(j) for j in lY]
+    #     j * pr_trn), 1])) for j in lY]    # split_loca
+    # tmp_idx = [np.arange(j) for j in lY]  # tem_idx
     #
     # nb_trn = len(y_trn)
     # nb_val = int(np.round(nb_trn * (1. * pr_trn)))
@@ -441,6 +445,7 @@ def situation_split2(pr_trn, nb_cv, y_trn):
                             nb_y, nb_val)
         split_idx.append(tmp)  # deepcopy(tmp))
     del sY, dY, iY, lY, tmp_idx
+    gc.collect()
     return split_idx      # deepcopy(split_idx)
 
 
@@ -513,9 +518,53 @@ def situation_split3(pr_trn, pr_tst, nb_cv, y):
                             nb_y, nb_tst, nb_val)
         split_idx.append(tmp)  # deepcopy(tmp))
     del sY, dY, iY, tmp_idx
+    gc.collect()
     return split_idx      # deepcopy(split_idx)
 
 
 # =================================
 # split the data
 # =================================
+
+
+def split_into_sets(split_type, *split_args):
+    # def split_into_train_validation_test():
+    assert split_type.endswith(
+        "split") or split_type.startswith(
+        "cross_valid"), "Error occurred when splitting the data."
+    # raise UserWarning()
+    # "Error occurred in `split_into_train_validation_test`."
+
+    if split_type == "2split":
+        pr_trn, nb_iter, y_trn = split_args
+        split_idx = situation_split2(pr_trn, nb_iter, y_trn)
+        del y_trn
+    elif split_type == "3split":
+        pr_trn, pr_tst, nb_iter, y = split_args
+        split_idx = situation_split3(pr_trn, pr_tst, nb_iter, y)
+        del y
+    else:  # elif split_type == "cross_validation":
+        nb_iter, y = split_args
+        split_idx = situation_cross_validation(nb_iter, y, split_type)
+        del y
+    gc.collect()
+    return deepcopy(split_idx)  # list
+
+
+# INTERFACE
+# Preliminaries
+# ----------------------------------
+# obtain data
+# split data
+
+# from core.fetch_utils import different_type_of_data
+# different ways to split data  # carry_split.py
+# def _spl2_step1():
+#     pass
+
+# from sklearn.model_selection import train_test_split
+# from sklearn.model_selection import cross_validate
+# sklearn
+# https://scikit-learn.org/stable/modules/ensemble.html
+# https://scikit-learn.org/0.24/modules/cross_validation.html
+# https://scikit-learn.org/0.24/model_selection.html

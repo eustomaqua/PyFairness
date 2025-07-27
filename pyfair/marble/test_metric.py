@@ -137,15 +137,20 @@ def test_my_DR():
     ans = cal_L_obj_v1(yt_hat, yt_hat_qtb, y_trn, coef)
     assert check_equal(res, ans)  # res == ans
     import pandas as pd
+
     X = np.random.randint(5, size=(5, 4))  # .tolist()
     # X_qtb = disturb_slightly(X, sen=[2], ratio=.5)
     # X, X_qtb = np.array(X), np.array(X_qtb)
     X_qtb = perturb_numpy_ver(X, [2, 1], [1, 1], ratio=.97)
     assert np.all(np.equal(X[:, [0, 3]], X_qtb[:, [0, 3]]))
+    assert not np.equal(X, X_qtb).all()
+
     X = pd.DataFrame(X, columns=['A', 'B', 'C', 'D'])
     X_qtb = perturb_pandas_ver(X, ['B', 'C'], [1, 0], ratio=.97)
     tmp = (X[['A', 'D']] == X_qtb[['A', 'D']]).all()
     assert tmp.to_numpy().all()
+    assert not (X == X_qtb).to_numpy().all()
+
     # pdb.set_trace()
     return
 

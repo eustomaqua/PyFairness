@@ -1,4 +1,5 @@
 # coding: utf-8
+# fairml.widget. (asst/past/utils)
 # pyfairness.plain.
 
 
@@ -47,9 +48,12 @@ def test_const():
     from pyfair.facil.utils_const import (
         CONST_ZERO, CONST_DIFF, check_zero, check_equal,
         check_signed_zero, unique_column, judge_transform_need,
-        judge_mathcal_Y, np_sum, np_prod)  # ,# renew_rand_seed,
-    #     synthetic_lbl, synthetic_dat, synthetic_set, synthetic_clf)
+        judge_mathcal_Y, np_sum, np_prod,  # renew_rand_seed,
+        synthetic_lbl, synthetic_dat, synthetic_set, synthetic_clf,
+        random_seed_generator)
+    # from fairml.widget.utils_const import random_seed_generator as renew_rand_seed
     import numpy as np
+    renew_rand_seed = random_seed_generator
 
     assert check_zero(0) == CONST_ZERO
     assert check_equal(0, CONST_DIFF / 2)
@@ -86,9 +90,25 @@ def test_const():
     answer = np.array([ord(i) for i in answer])
     assert np.all(answer >= 65)
     assert np.all(answer <= 91)
-
     assert np_sum(range(1, 11)) == 55
     assert np_prod(range(1, 5)) == 24
+
+    _, prng = renew_rand_seed('fixed_tim')  # psed,
+    nb_lbl, nb_spl, nb_ftr, nb_clf = 3, 21, 4, 7
+    X, y = synthetic_dat(nb_lbl, nb_spl, nb_ftr)
+    assert np.shape(X) == (nb_spl, nb_ftr) and len(y) == nb_spl
+    assert 0 <= min(y) < max(y) <= nb_lbl - 1
+    y, yt, coef = synthetic_set(nb_lbl, nb_spl, nb_clf)
+    assert np.shape(yt) == (nb_clf, nb_spl)
+    assert len(y) == nb_spl and nb_clf == len(coef)
+    assert 0 < sum(coef) <= 1.0000000000000002
+    err = .2
+    y_spl = synthetic_lbl(nb_lbl, nb_spl, prng)
+    yt = synthetic_clf(y_spl, nb_clf, err, prng=prng)
+    acc_opposite = np.mean(np.not_equal(y_spl, yt), axis=1)
+    acc_opposite = acc_opposite.tolist()
+    assert all([0 <= i <= err for i in acc_opposite])
+    del X, y, yt, coef, y_spl, err, nb_lbl, nb_spl, nb_ftr, nb_clf
     return
 
 

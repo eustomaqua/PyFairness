@@ -21,6 +21,9 @@ from pyfair.marble.diver_nonpairwise import (
     nonpairwise_measure_gather_multiclass,
     nonpairwise_measure_item_multiclass)
 
+# from fairml.widget.utils_const import (
+#     check_zero, DTY_FLT, DTY_INT, judge_transform_need)
+
 
 # ==================================
 #  General
@@ -94,6 +97,15 @@ from pyfair.marble.diver_nonpairwise import (
 #     # a,b,c,d are `np.integer` (not `int`), a/b/c/d.tolist() gets `int`
 #     return int(a), int(b), int(c), int(d)
 # """
+
+
+# ==================================
+#  General
+# ==================================
+#
+# zhou2012ensemble     : binary (multi: self defined)
+# kuncheva2003diversity: multiclass
+#
 
 
 # ----------------------------------
