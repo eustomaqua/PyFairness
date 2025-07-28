@@ -41,7 +41,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 html_theme = 'sphinxdoc'    # 'nature'
 # html_theme = 'solar_theme'
 # html_theme_path = [solar_theme.theme_path]
-# html_theme = 'sphinx_nefertiti'
+# html_theme = 'sphinx_nefertiti'  # 'bizstyle','scrolls','furo'
 
 # html_theme = "sphinx_rtd_theme"
 # extensions = ['recommonmark', 'sphinx_markdown_tables']

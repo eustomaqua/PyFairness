@@ -278,15 +278,16 @@ def marginalised_np_gen(y, y_hat, A, priv_val=1,
     # return gs_Cm, vA, idx, ex
 
     if (0 in A) and (len(set(A)) == 2):
-        vA = list(set(A))[:: -1]
+        vA = list(set(A.tolist()))[:: -1]
     else:
-        vA = sorted(set(A))
+        vA = sorted(set(A.tolist()))  # A))
     idx = vA.index(priv_val)
     g_y = [y[A == i] for i in vA]
     g_hx = [y_hat[A == i] for i in vA]
     gs_Cm = [contingency_tab_bi(
         i, j, pos_label) for i, j in zip(g_y, g_hx)]
-    ex = [sum(A == i) for i in vA]
+    # ex = [sum(A == i) for i in vA]
+    ex = [(A == i).sum().tolist() for i in vA]
     return gs_Cm, vA, idx, ex
 
 
@@ -429,7 +430,7 @@ def extGrp1_DP_sing(y, hx, idx_Sjs, pos=1):
     total = np.mean(total) if total.shape[0] else 0.
     alternative = [hx[idx] == pos for idx in idx_Sjs]
     alternative = [np.mean(
-        i) if i.shape[0] else 0. for i in alternative]
+        i).tolist() if i.shape[0] else 0. for i in alternative]
 
     elements = [float(np.abs(i - total)) for i in alternative]
     # if np.isnan(elements).any():
@@ -455,7 +456,7 @@ def extGrp2_EO_sing(y, hx, idx_Sjs, pos=1):
     total = np.mean(total) if total.shape[0] else 0.
     alternative = [renew_hx[Sj] == pos for Sj in renew_Sj]
     alternative = [np.mean(
-        i) if i.shape[0] else 0. for i in alternative]
+        i).tolist() if i.shape[0] else 0. for i in alternative]
 
     elements = [float(np.abs(i - total)) for i in alternative]
     # if np.isnan(elements).any():
@@ -481,7 +482,7 @@ def extGrp3_PQP_sing(y, hx, idx_Sjs, pos=1):
     total = np.mean(total) if total.shape[0] else 0.
     alternative = [renew_y[Sj] == pos for Sj in renew_Sj]
     alternative = [np.mean(
-        i) if i.shape[0] else 0. for i in alternative]
+        i).tolist() if i.shape[0] else 0. for i in alternative]
 
     elements = [float(np.abs(i - total)) for i in alternative]
     n_aj = len(idx_Sjs)

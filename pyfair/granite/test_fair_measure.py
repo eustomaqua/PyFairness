@@ -44,21 +44,32 @@ y = np.random.randint(2, size=n)
 y_hat = np.random.randint(2, size=n)
 
 nc, na = 3, 2
+ik = 1
 A = np.random.randint(nc, size=(n, na)) + 1
 idx_Ai_Sjs = [[A[:, i] == j + 1 for j in range(
     nc)] for i in range(na)]
-idx_Sjs = [A[:, 0] == j + 1 for j in range(nc)]
+# idx_Sjs = [A[:, 0] == j + 1 for j in range(nc)]
+idx_Sjs = [A[:, ik] == j + 1 for j in range(nc)]
 
 A_bin = A.copy()
 A_bin[A_bin != 1] = 0
 idx_a = [[A_bin[:, i] == 1, A_bin[:, i] != 1] for i in range(na)]
-idx_ai = idx_a[0]
+idx_ai = idx_a[ik]  # idx_ai = idx_a[0]
 pos, priv_val = 1, 1,
-A_i, priv_idx = A[:, 1], A[:, 1] == 1
-vals_in_Ai = list(set(A_i))
-A1_bin, val_A1 = A_bin[:, 1], [1, 0]
+# A_i, priv_idx = A[:, 1], A[:, 1] == 1  # ik=1
+# vals_in_Ai = list(set(A_i))
+# A1_bin, val_A1 = A_bin[:, 1], [1, 0]
+A_i, priv_idx = A[:, ik], A[:, ik] == 1
+vals_in_Ai = list(set(A_i.tolist()))
+A1_bin, val_A1 = A_bin[:, ik], [1, 0]
 
-hfm_idx_nsa_bin = [idx_Ai_Sjs[1][0], ~idx_Ai_Sjs[1][0]]
+hfm_idx_nsa_bin = [idx_Ai_Sjs[1][0], ~idx_Ai_Sjs[1][0]]  # priv_idx
+g1_Cm, g0_Cm = marginalised_np_mat(y, y_hat, pos, idx_Ai_Sjs[1][0])
+jt_1 = unpriv_group_one(g1_Cm, g0_Cm)
+jt_2 = unpriv_group_two(g1_Cm, g0_Cm)
+jt_3 = unpriv_group_thr(g1_Cm, g0_Cm)
+jt_prev = [calc_fair_group(
+    *jt_1), calc_fair_group(*jt_2), calc_fair_group(*jt_3)]
 
 
 """
@@ -119,6 +130,12 @@ def test_metric_grp1():
     assert check_equal(m1[0][0], [m2[0], m4[0][3][0]])  # m3[0][0],
     assert check_equal(m6[0][2][0], [m7[0], m8[0][1]])  # m8[0][0]])
 
+    # pdb.set_trace()
+    assert check_equal(jt_prev[0], alterGrps_sing(tm1[-1], hfm_idx_nsa_bin)[0])
+    assert check_equal(jt_prev[0], [
+        m2[0], m1[0][0], m4[0][-1][0], m6[0][-1][0], m7[0], ] + list(m6[0][:-1]))
+    # assert check_equal(m2[0], m7[0]) and check_equal(m3[0], m8[0])
+
     qa_1 = UD_grp1_DisI.bival(y, y_hat, priv_idx, pos)
     qa_2 = UD_grp1_DisI.mu_sp(y, y_hat, A_i, priv_val, pos)
     qa_3 = UD_grp1_DisI.mu_cx(y, y_hat, A_i, priv_val, pos)
@@ -166,6 +183,11 @@ def test_metric_grp2():
     m8 = UD_grp2_EO.mu_cx(y, y_hat, A1_bin, priv_val, pos)
     assert check_equal(m1[0][0], [m2[0], m4[0][3][0]])
     assert check_equal(m6[0][2][0], [m7[0], m8[0][1]])
+
+    # pdb.set_trace()
+    assert check_equal(jt_prev[1], alterGrps_sing(tm1[-1], hfm_idx_nsa_bin)[0])
+    assert check_equal(jt_prev[1], [m1[0][0], m2[0], m4[
+        0][-1][0], m6[0][-1][0], m7[0], ] + list(m6[0][:-1]))
 
     qa_1 = UD_grp2_EOdd.bival(y, y_hat, priv_idx, pos)
     qa_2 = UD_grp2_EOdd.mu_sp(y, y_hat, A_i, priv_val, pos)
@@ -220,6 +242,9 @@ def test_metric_grp3():
     assert check_equal(m6[0][2][0], [m7[0], m8[0][1]])
 
     # pdb.set_trace()
+    assert check_equal(jt_prev[2], alterGrps_sing(tm1[-1], hfm_idx_nsa_bin)[0])
+    assert check_equal(jt_prev[2], [m1[0][0], m2[0], m4[
+        0][-1][0], m6[0][-1][0], m7[0], ] + list(m6[0][:-1]))
     return
 
 

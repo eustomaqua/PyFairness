@@ -266,6 +266,9 @@ def test_group_fair():
         ans_3b_alt, _ = alterGrps_sing(ans_3b[-1], Sjs_bin)
         ans_3m_alt, _ = alterGrps_sing(ans_3m[-1], Sjs_non)
 
+        assert check_equal(res_bi, ans_1b[:-1])
+        assert check_equal(res_mu, ans_1m[:-1])
+
         assert ans_1b_alt[0] == ans_1b_alt[1] == prev[0]
         assert ans_2b_alt[0] == ans_2b_alt[1] == prev[1]
         assert ans_3b_alt[0] == ans_3b_alt[1] == prev[2]
