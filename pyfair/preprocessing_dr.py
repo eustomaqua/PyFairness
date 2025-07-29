@@ -13,6 +13,7 @@ __all__ = [
     'adverse_perturb', 'adversarial',  # 'disturbed_data',
     'transform_X_and_y', 'transform_unpriv_tag',
     'transform_perturbed',
+    # 'process_intersectional',
 ]
 
 

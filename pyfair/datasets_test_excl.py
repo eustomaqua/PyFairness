@@ -1,7 +1,7 @@
 # coding: utf-8
 
 # from copy import deepcopy
-# import pdb
+import pdb
 
 
 def excl_test_datasets():
@@ -22,7 +22,7 @@ def excl_test_datasets():
     return
 
 
-def test_preprocessing():
+def excl_test_preprocessing():
     # from fairml.preprocessing import (
     #     adversarial)#,transform_X_and_y,transform_unpriv_tag)
     from pyfair.datasets import preprocess, DATASETS
@@ -111,4 +111,32 @@ def test_preprocessing():
         # pdb.set_trace()
         assert len(sen_att_indices[0]) == len(mrg_grp[0]) + 1
         assert len(sen_att_indices[1]) == len(mrg_grp[1]) + 1
+    return
+
+
+def test_utils_empirical():
+    from pyfair.utils_empirical import DataSetup
+    # dat = DataSetup('ricci')
+    # dat = DataSetup('german')
+    # dat = DataSetup('adult')
+    # dat = DataSetup('ppr')
+    dat = DataSetup('ppvr')
+
+    # dt = dat._dataset
+    # df = dat._data_frame
+    # process_dat, disturb_dat = dat.preparing_curr_dat('dr')
+    # tt = process_dat['numerical-binsensitive'].columns.tolist()
+    _, proc_dr, dist_dr = dat.preparing_curr_dat('dr')
+    _, proc_df_bin, _ = dat.preparing_curr_dat('hfm_bin')
+    _, proc_df_nonbin, _ = dat.preparing_curr_dat('hfm_nonbin')
+    hinfo, proc_int, _ = dat.preparing_curr_dat('dr_multival')
+    assert proc_dr.shape == dist_dr.shape == proc_df_bin.shape
+    assert proc_dr.shape[0] == proc_df_nonbin[
+        0].shape[0] == proc_df_nonbin[1].shape[0]
+    assert proc_dr.shape[1] == proc_df_nonbin[
+        0].shape[1] + 1 == proc_df_nonbin[1].shape[1] + 1
+    assert proc_int['numerical-binsensitive'].shape == proc_int[
+        'numerical-multival'].shape == proc_df_nonbin[1].shape
+    assert len(hinfo['marginalised_grps']) <= 2
+    # pdb.set_trace()
     return

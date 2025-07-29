@@ -5,6 +5,7 @@ from copy import deepcopy
 import time
 import pandas as pd
 import numpy as np
+import pdb
 
 # from pyfair.facil.utils_const import DTY_BOL
 from pyfair.datasets import (
@@ -517,6 +518,62 @@ def renewed_transform_disturb(X, A, y, Aq, index,
     else:
         joint_ = np.array(belongs_priv_with_joint)[index].tolist()
     return X_idx, A_idx, y_idx, Aq_idx, start_with_not_unpriv, joint_
+
+
+# -------------------------------------
+
+
+# -------------------------------------
+# via manifold and its extension
+# -------------------------------------
+# Notice: different from preprocessing_hfm.py
+
+
+def process_intersectional(dataset, processed_dat):
+    # def process_addl_multival():
+
+    # Create a one-hot encoding of the categorical variables.
+    processed_numerical = pd.get_dummies(
+        processed_dat, columns=dataset.categorical_feats)
+    # Create a version of the numerical data for which the
+    # sensitive attribute is binary.
+    sen_att_jt = dataset.get_sensitive_attrs_with_joint()
+    priv_val = dataset.get_privileged_group_with_joint("")
+    if len(sen_att_jt[: 2]) > 1:
+        new_attr = '-'.join(sen_att_jt[: 2])
+        processed_numerical.drop(columns=new_attr, inplace=True)
+    undisturbed_binsensitive = make_sensitive_attrs_binary(
+        processed_numerical, sen_att_jt[:2], priv_val[:2])
+    # Make the class attribute numerical if it wasn't already
+    # (just for the bin sensitive version).
+    class_attr = dataset.label_name
+    pos_val = dataset.positive_label
+    undisturbed_binsensitive = make_class_attr_num(
+        undisturbed_binsensitive, class_attr, pos_val)
+
+    # Make the sensitive attributes numerical (multi-val ver.)
+    marginalised_grps = check_marginalised_group(
+        processed_numerical, sen_att_jt[:2], priv_val[:2])
+    undisturbed_multival = make_sens_attr_numerical(
+        processed_numerical, sen_att_jt[:2], priv_val[:2],
+        marginalised_grps)
+    undisturbed_multival = make_class_attr_num(
+        undisturbed_multival, class_attr, pos_val)
+
+    undisturbed_sa2bool = pd.get_dummies(
+        processed_numerical, columns=sen_att_jt[:2])
+    undisturbed_sa2bool.drop(columns=class_attr, inplace=True)
+    boolean_feats = check_bool_feat_columns(
+        processed_numerical, dataset.categorical_feats)
+    processed_numerical = make_bool_feat_numerical(
+        processed_numerical, boolean_feats)
+    pdb.set_trace()
+    return {
+        "numerical-binsensitive": undisturbed_binsensitive,
+        "numerical-multival": undisturbed_multival,  # 'sen-att'
+        "marginalised_groups": marginalised_grps,
+        "sen-att-2bool": undisturbed_sa2bool,  # _sen_att_2bool,
+        "boolean2num": processed_numerical}
 
 
 # -------------------------------------
