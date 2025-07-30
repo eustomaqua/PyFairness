@@ -51,7 +51,7 @@ def bias_degree_nonbin(Dy_dis, Df_dis):
     else:
         tmp = Df_dis / check_zero(Dy_dis)
     tmp = check_zero(tmp)
-    return np.log10(tmp)
+    return float(np.log10(tmp))
 
 
 # ---------------------------------------------
@@ -63,4 +63,6 @@ def bias_degree(Dy_dis, Df_dis):
         tmp = 1.
     else:
         tmp = Df_dis / check_zero(Dy_dis)
-    return tmp - 1., np.log10(check_zero(tmp))
+    # return tmp - 1., np.log10(check_zero(tmp))
+    tmp_ver = np.log10(check_zero(tmp))
+    return tmp - 1., float(tmp_ver)

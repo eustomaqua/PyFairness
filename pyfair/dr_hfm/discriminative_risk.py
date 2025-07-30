@@ -9,6 +9,8 @@ import numpy as np
 # import numba
 # import copy
 
+from pyfair.facil.utils_timer import fantasy_timer
+
 
 # =====================================
 # Oracle bounds for fairness
@@ -56,6 +58,7 @@ def ell_loss_x(fxp, y):
     return np.not_equal(fxp, y).tolist()
 
 
+@fantasy_timer
 def hat_L_fair(fxp, fxq):
     # both: list, shape (nb_inst,)
     # function is symmetrical
@@ -64,6 +67,7 @@ def hat_L_fair(fxp, fxq):
     return np.mean(Lfair).tolist()  # float
 
 
+@fantasy_timer
 def hat_L_loss(fxp, y):
     # both: list, shape (nb_inst,)
     Lloss = ell_loss_x(fxp, y)
@@ -124,8 +128,8 @@ def tandem_loss(fa, fb, y):
 
 
 def hat_L_objt(fxp, fxq, y, lam):
-    l_fair = hat_L_fair(fxp, fxq)
-    l_acc_p = hat_L_loss(fxp, y)
+    l_fair, _ = hat_L_fair(fxp, fxq)
+    l_acc_p, _ = hat_L_loss(fxp, y)
     return lam * l_fair + (1. - lam) * l_acc_p
 
 
@@ -165,11 +169,11 @@ def cal_L_obj_v2(yt, yq, y, wgt, lam=.5):
 
 
 def L_fair_MV_rho(MVrho, MVpmo):
-    return hat_L_fair(MVrho, MVpmo)
+    return hat_L_fair(MVrho, MVpmo)[0]
 
 
 def L_loss_MV_rho(MVrho, y):
-    return hat_L_loss(MVrho, y)
+    return hat_L_loss(MVrho, y)[0]
 
 
 # -------------------------------------
@@ -186,7 +190,7 @@ def L_loss_MV_rho(MVrho, y):
 
 def E_rho_L_fair_f(yt, yq, wgt):
     E_rho = [hat_L_fair(
-        p, q) for p, q in zip(yt, yq)
+        p, q)[0] for p, q in zip(yt, yq)
     ]  # list, shape (nb_cls,)
     tmp = np.sum(np.multiply(wgt, E_rho))
     return tmp.tolist()  # float

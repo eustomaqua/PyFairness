@@ -1,0 +1,49 @@
+Wed 2025/07/30 05:47:33 - intersectional | [BEGAN AT 2025-07-30 05:47:33]
+Wed 2025/07/30 05:47:33 - intersectional | EXPERIMENT
+Wed 2025/07/30 05:47:33 - intersectional | 	   trail = KF_exp1a
+Wed 2025/07/30 05:47:33 - intersectional | 	 dataset = german
+Wed 2025/07/30 05:47:33 - intersectional | 	data prep= none
+Wed 2025/07/30 05:47:33 - intersectional | PARAMETERS
+Wed 2025/07/30 05:47:33 - intersectional | HYPER-PARAMS
+Wed 2025/07/30 05:47:33 - intersectional | 
+Wed 2025/07/30 05:47:33 - intersectional | 
+-------------------
+Wed 2025/07/30 05:47:33 - intersectional | Balance statistics:
+Wed 2025/07/30 05:47:33 - intersectional | 
+Class:
+Wed 2025/07/30 05:47:33 - intersectional | credit
+1    700
+2    300
+dtype: int64
+Wed 2025/07/30 05:47:33 - intersectional | 
+Sensitive Attribute:
+Wed 2025/07/30 05:47:33 - intersectional | sex
+female    310
+male      690
+dtype: int64
+Wed 2025/07/30 05:47:33 - intersectional | 
+
+Wed 2025/07/30 05:47:33 - intersectional | age
+adult    851
+youth    149
+dtype: int64
+Wed 2025/07/30 05:47:33 - intersectional | 
+
+Wed 2025/07/30 05:47:33 - intersectional | 
+
+Wed 2025/07/30 05:47:33 - intersectional | 	Notice: m2 unfixed
+Wed 2025/07/30 05:47:33 - intersectional | Due to #inst = 1000
+Wed 2025/07/30 05:47:33 - intersectional | self._m2 = 6
+Wed 2025/07/30 05:47:33 - intersectional | self._m1 = 20
+Wed 2025/07/30 05:47:33 - intersectional | 	 BINARY? Y = {np.int64(0), np.int64(1)}
+Wed 2025/07/30 05:47:33 - intersectional | 	 orig.label= {np.int64(1), np.int64(2)}
+Wed 2025/07/30 05:47:33 - intersectional | 	     .shape= (1000,)
+Wed 2025/07/30 05:47:33 - intersectional | CrossValidation nb_cv=2, KF_
+Wed 2025/07/30 05:47:33 - intersectional | Iteration 1-th
+Wed 2025/07/30 05:47:36 - intersectional | Iteration 2-th
+Wed 2025/07/30 05:47:37 - intersectional | 
+Wed 2025/07/30 05:47:37 - intersectional | Duration /TimeCost: 3.55 sec
+	 i.e.,	 3.55 sec
+	 i.e.,	 0.05910795 minutes
+Wed 2025/07/30 05:47:37 - intersectional | [ENDED AT 2025-07-30 05:47:37]
+Wed 2025/07/30 05:47:37 - intersectional | 

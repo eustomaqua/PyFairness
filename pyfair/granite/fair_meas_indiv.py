@@ -50,6 +50,7 @@ class GEI_Theil(_elem):
         bi, mu, _ = cls._benefits(y, y_hat)
         numerator = (bi / mu) ** alpha - 1
         denominator = len(y) * alpha * (alpha - 1)
+        denominator = check_zero(denominator)
         # return np.sum(numerator) / denominator
         ans = np.sum(numerator) / denominator
         return float(ans)

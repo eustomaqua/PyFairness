@@ -5,7 +5,7 @@ from copy import deepcopy
 import time
 import pandas as pd
 import numpy as np
-import pdb
+# import pdb
 
 # from pyfair.facil.utils_const import DTY_BOL
 from pyfair.datasets import (
@@ -560,6 +560,14 @@ def process_intersectional(dataset, processed_dat):
     undisturbed_multival = make_class_attr_num(
         undisturbed_multival, class_attr, pos_val)
 
+    g1m_indices = []
+    for sa, pv, marginal in zip(
+            sen_att_jt[:2], priv_val[:2], marginalised_grps):
+        idx_non_sa = (processed_numerical[sa] == pv).to_numpy()
+        idx_marginal = [(processed_numerical[
+            sa] == mrg).values for mrg in marginal]
+        g1m_indices.append([idx_non_sa] + idx_marginal)
+
     undisturbed_sa2bool = pd.get_dummies(
         processed_numerical, columns=sen_att_jt[:2])
     undisturbed_sa2bool.drop(columns=class_attr, inplace=True)
@@ -567,11 +575,12 @@ def process_intersectional(dataset, processed_dat):
         processed_numerical, dataset.categorical_feats)
     processed_numerical = make_bool_feat_numerical(
         processed_numerical, boolean_feats)
-    pdb.set_trace()
+    # pdb.set_trace()
     return {
         "numerical-binsensitive": undisturbed_binsensitive,
         "numerical-multival": undisturbed_multival,  # 'sen-att'
         "marginalised_groups": marginalised_grps,
+        "g1m_indices": g1m_indices,
         "sen-att-2bool": undisturbed_sa2bool,  # _sen_att_2bool,
         "boolean2num": processed_numerical}
 
