@@ -36,17 +36,17 @@ from pyfair.marble.data_classify import EnsembleAlgorithm
 # del skl_ver
 
 
-# AVAILABLE_ABBR_CLS = [
-#     'DT', 'NB', 'SVM', 'linSVM', 'MLP',
-#     'LR1', 'LR2', 'LM1', 'LM2', 'kNNu', 'kNNd', 
-# ]   # ALG_NAMES    # 'lmSGD','LR'
+AVAILABLE_ABBR_CLS = [
+    'DT', 'NB', 'SVM', 'linSVM', 'MLP',
+    'LR1', 'LR2', 'LM1', 'LM2', 'kNNu', 'kNNd', 
+]   # ALG_NAMES    # 'lmSGD','LR'
 
 FAIR_INDIVIDUALS = {
     'DT': tree.DecisionTreeClassifier(),
     'NB': naive_bayes.GaussianNB(),
     'LR': linear_model.LogisticRegression(max_iter=500),
     'LR1': linear_model.LogisticRegression(
-        penalty='none', max_iter=500),
+        penalty=None, max_iter=500),  # not 'none'
     'LR2': linear_model.LogisticRegression(
         penalty='l2', max_iter=500),  # default
 
@@ -61,12 +61,12 @@ FAIR_INDIVIDUALS = {
     # 'NN': neural_network.MLPClassifier(
     #     solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5,2)),
     'lmSGD': linear_model.SGDClassifier(),
-    'LM1': linear_model.SGDClassifier(penalty='l1'),
+    'LM1': linear_model.SGDClassifier(penalty='l1'),  # 'l1'
     'LM2': linear_model.SGDClassifier(penalty='l2'),  # default
 }
 
-INDIVIDUALS = FAIR_INDIVIDUALS
-del FAIR_INDIVIDUALS
+# INDIVIDUALS = FAIR_INDIVIDUALS
+# del FAIR_INDIVIDUALS
 
 CONCISE_INDIVIDUALS = {
     'DT': tree.DecisionTreeClassifier(),

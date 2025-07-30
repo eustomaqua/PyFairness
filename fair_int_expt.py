@@ -9,10 +9,11 @@ import numpy as np
 from sklearn.ensemble import (
     BaggingClassifier, AdaBoostClassifier)
 import lightgbm
-# import fairgbm
+import fairgbm
 from pyfair.pkgs_AdaFair_py36 import AdaFair
-from pyfair.facil.utils_remark import (
-    NAME_INDIVIDUALS, AVAILABLE_ABBR_CLS)
+from pyfair.utils_learner import (
+    FAIR_INDIVIDUALS, AVAILABLE_ABBR_CLS)  # NAME_
+# from pyfair.facil.utils_remark import AVAILABLE_ABBR_CLS
 from pyfair.facil.utils_const import DTY_FLT, unique_column
 
 
@@ -49,7 +50,8 @@ class ComparisonA_setup:
         since = time.time()
 
         if self._name_cls in AVAILABLE_ABBR_CLS:
-            clf = NAME_INDIVIDUALS[self._name_cls]
+            # clf = NAME_INDIVIDUALS[self._name_cls]
+            clf = FAIR_INDIVIDUALS[self._name_cls]
             clf.fit(X_A_trn, y_trn)
 
         elif self._name_cls in ['bagging', 'Bagging']:
@@ -63,12 +65,12 @@ class ComparisonA_setup:
                 n_estimators=self._nb_cls)
             clf.fit(X_A_trn, y_trn)
 
-        elif self._name_cls in ['fairGBM', 'FairGBM']:
+        elif self._name_cls in ['fairGBM', 'FairGBM', 'fairgbm']:
             clf = fairgbm.FairGBMClassifier(
                 n_estimators=self._nb_cls,
                 constraint_type=constraint)
             clf.fit(X_A_trn, y_trn, constraint_group=~nsa_trn)
-        elif abbr_cls in ['AdaFair', 'adafair']:
+        elif self._name_cls in ['AdaFair', 'adafair']:  # abbr_cls
             clf = AdaFair(n_estimators=self._nb_cls,
                           saIndex=sa_idx, saValue=sa_val)
             clf.fit(X_A_trn, y_trn)
@@ -126,10 +128,10 @@ class ComparisonA_setup:
 
         X_nA_y = np.concatenate([y.reshape(-1, 1).astype(
             # 'float'), X_breve.values.astype('float')], axis=1)
-            DTY_FLT), X_breve.values.astype(DTY_FLT)], axis=1)
+            DTY_FLT), X_breve.astype(DTY_FLT)], axis=1)
         X_nA_fx = np.concatenate([y_hat.reshape(  # X_nA_y_hat
             -1, 1).astype(DTY_FLT),  # 'float'),
-            X_breve.values.astype(DTY_FLT)], axis=1)
+            X_breve.astype(DTY_FLT)], axis=1)
         tmp = self.subproc_part4_hfm(X_nA_y, X_nA_fx, g1m_indices)
         ans.extend(tmp)
         tmp = self.subproc_part4_hfm_hat(
@@ -298,35 +300,198 @@ class CompA_sing_learner(ComparisonA_setup):
 
     def prepare_trial(self):
         csv_row_1 = unique_column(12 + 158 * 2)
-        csv_row_2c = ['Ensem'] + ['Training set'] + [''] * 157 + [
-            'Test set'] + [''] * 157
+        # csv_row_2c = ['Ensem'] + ['Training set'] + [''] * 157 + [
+        #     'Test set'] + [''] * 157
+        csv_r2c = [''] * (24 - 1) + ['sa#1 grp-fairness'] + [
+            ''] * (29 - 1) + ['sa#2 grp-fairness'] + [''] * (
+                29 - 1) + ['individual-fairness'] + [''] * (
+                3 + 14) + ['HFM .direct'] + [''] * (29 - 1) + [
+                'HFM .approx'] + [''] * (29 - 1)  # DR|GEI_Theil
+        csv_r2c = ['Ensem', 'Training set'] + csv_r2c + [
+            'Test set'] + csv_r2c  # =1+(?+1)*2, ?=23+58+18+58=157
 
-        csv_r3c = ['Performance'] + [''] * (24 - 1) + [
-            'sa#1 grp-fairness'] + [''] * (29 - 1) + [
-            'sa#2 grp-fairness'] + [''] * (29 - 1) + [
-            'DR', '', '', '']
-        csv_r4c = ['Normal'] + [''] * 7 + ['Aft perturbation'] + [
-            ''] * 7 + ['Delta(performance)'] + [''] * 7 + ([
+        # csv_r3c = ['Performance (Normal)'] + [''] * 7 + [
+        #     'Aft perturbation'] + [''] * 7 + [
+        #     'Delta(performance)'] + [''] * 7 + ([
+        #         'DP', '', 'EO', '', 'PQP', '', 'DP', 'EO', 'PQP',
+        #         '**', 'SP /extGrp*'] + [''] * 17 + ['**']) * 2 + [
+        #     'DR', '', '', '', 'GEI .alph'] + [
+        #     ''] * 10 + ['Theil', 'TimeCost()', ''] + ([
+        #         'bin sa#1', '', '', '', 'bin sa#2', '', '', '',
+        #         'multiver'] + [''] * 6 + ['nonbin sa#1'] + [
+        #         ''] * 6 + ['nonbin sa#2'] + [''] * 6) * 2
+        csv_r3c = ['Performance (Normal)'] + [''] * 7 + [
+            'Aft perturbation'] + [''] * 7 + [
+            'Delta(performance)'] + [''] * 7 + ([
                 'DP', '', 'EO', '', 'PQP', '', 'DP', 'EO', 'PQP',
-                '**', 'SP /extGrp*'] + [''] * 17 + ['**']) * 2 + [
-            'hat_loss', '', 'hat_bias', '', 'GEI .alph'] + [
-            ''] * 10 + ['Theil', 'T(Theil)', 'T(GEIx11)']
-        csv_row_3c = [''] + csv_row_3c * 2
-        csv_row_4c = ['tim']  # ,csv_row_5c=['tim_elapsed']
+                '**'] + ['SP /extGrp* (max)', '', '',
+                         'extGrp* (avg)', '', '',
+                         'meticulous .max', '', '',
+                         'meticulous .avg', '', '', 'sep.tim'] + [
+                ''] * 5 + ['**']) * 2 + [
+            'DR', '', '', '', 'GEI .alph'] + [''] * 10 + [
+            'Theil', 'TimeCost', ''] + ([
+                'bin sa#1', '', '', '', 'bin sa#2', '', '', '',
+                'multiver'] + [''] * 6 + ['nonbin sa#1'] + [
+                ''] * 6 + ['nonbin sa#2'] + [''] * 6) * 2
+        csv_r3c = ['learning'] + csv_r3c * 2  # 'learner'
+        # =1+?*2, ?=24+29*2+18+29*2 =24+58+18+58=158
+        csv_r3c[-1] = 'Q.E.D.'  # '[END]'
+        csv_r2c[-1] = 'Q.E.D.'
 
-        tmp_p1_acc = ['Accuracy', 'Precision', 'Recall /Sensitivity',
-                      'Specificity', 'f1_score', 'g_mean',
-                      'balanced_acc', 'DiscPower']
-        tmp_p2_grp = ['g1', 'g0'] * 3 + ['abs'] * 3 + ['tim'] + [
-            'SP /ext* (max)', '-', '-', 'SP /ext* (avg)', '-', '-',
-            'meticulous .max', '-', '-', 'meticulous .avg', '-', '-',
-            'sep. tim_elapsed', '-', '-', '-', '-', '-', 'tim']
-        csv_row_4c
-        csv_row_4c.extend(tmp_p1_acc * 3 + tmp_p2_grp * 2 + [
-            'loss', 'ut', 'fair', 'ut'])
+        csv_r4c = ['']  # 'tim_elapsed']#tmp_p1_acc,_p2_grp,_p3_idv
+        tp1_acc = ['Accuracy', 'Precision', 'Recall /Sensitivity',
+                   'Specificity', 'f1_score', 'g_mean',
+                   'balanced_acc', 'DiscPower']
+        # tp2_grp = ['g1', 'g0'] * 3 + ['abs'] * 3 + ['tim'] + [
+        #     'SP /ext* (max)', '-', '-', 'SP /ext* (avg)', '-', '-',
+        #     'meticulous .max', '-', '-', 'meticulous .avg', '-', '-',
+        #     'sep.tim', '-', '-', '-', '-', '-', 'tim']
+        tp2_grp = ['g1', 'g0'] * 3 + ['abs'] * 3 + ['tim'] + [
+            'extGrp1', 'extGrp2', 'extGrp3'] * 4 + [
+            # 'sep.tim extGrp*', '--', '--',
+            # 'sep.tim extGrp* meticulous', '--', '--', 'tim']
+            'extGrp1', 'extGrp2', 'extGrp3', 'extGrp1 meticulous',
+            'extGrp2 meticulous', 'extGrp3 meticulous', 'tim']
+        tp3_idv = ['hat_loss', 'ut', 'hat_bias', 'ut'] + [
+            'alph={:.1f}'.format(alph) for alph in np.arange(
+                0., 1.01, 0.1)] + ['', 'T(Theil)', 'T(GEIx11)']
+        csv_r4c.extend(tp1_acc * 3 + tp2_grp * 2 + tp3_idv)
+        tp4_hfm = ['Ds', 'Df', 'df_prev', 'tim'] * 2 + [
+            'Ds', 'Df', 'df', 'Ds_avg', 'Df_avg', 'df_avg', 'tim'] * 3
+        csv_r4c.extend(tp4_hfm * 2)  # 24+(10+19)*2+18+(8+21)*2
+        csv_r4c.extend(              # =1+158*2
+            tp1_acc * 3 + tp2_grp * 2 + tp3_idv + tp4_hfm * 2)
+
+        del tp1_acc, tp2_grp, tp3_idv, tp4_hfm
+        # return csv_row_1, csv_row_2c, csv_r3c, csv_r4c, csv_r5c
+        return csv_row_1, csv_r2c, csv_r3c, csv_r4c
 
 
-# =============================
+# -----------------------------
+
+
+class CompA_fair_ens(CompA_sing_learner):
+    def __init__(self, name_cls='DT', nb_cls=7,
+                 saIndex=tuple(), saValue=tuple()):
+        self._name_cls = name_cls  # abbr_cls
+        self._nb_cls = nb_cls
+        # self._constraint = constraint_type
+        self.saIndex, self.saValue = saIndex, saValue
+        return
+
+    def get_member_clf_alt(self, X_A_trn, y_trn, name_ens,
+                           constraint='FPR,FNR', nsa_trn=tuple(),
+                           sa_idx=None, sa_val=None):
+        since = time.time()
+        if name_ens in ['bagging', 'Bagging']:
+            clf = BaggingClassifier(n_estimators=self._nb_cls)
+            clf.fit(X_A_trn, y_trn)
+        elif name_ens in ['AdaBoost', 'adaboost']:
+            clf = AdaBoostClassifier(n_estimators=self._nb_cls)
+            clf.fit(X_A_trn, y_trn)
+        elif name_ens in ['lightGBM', 'LightGBM', 'lightgbm']:
+            clf = lightgbm.LGBMClassifier(
+                n_estimators=self._nb_cls)
+            clf.fit(X_A_trn, y_trn)
+
+        elif name_ens in ['fairGBM', 'FairGBM', 'fairgbm']:
+            clf = fairgbm.FairGBMClassifier(
+                n_estimators=self._nb_cls,
+                constraint_type=constraint)
+            clf.fit(X_A_trn, y_trn, constraint_group=~nsa_trn)
+        elif name_ens in ['AdaFair', 'adafair']:
+            clf = AdaFair(n_estimators=self._nb_cls,
+                          saIndex=sa_idx, saValue=sa_val)
+            clf.fit(X_A_trn, y_trn)
+        tim_elapsed = time.time() - since
+        return clf, tim_elapsed
+
+    def schedule_content(
+            self, logger, pool,
+            XaA_trn, y_trn, XaA_qtb_trn, Xb_trn, A_trn, g1m_trn,
+            XaA_tst, y_tst, XaA_qtb_tst, Xb_tst, A_tst, g1m_tst,
+            m1=20, m2=8, n_e=2, positive_label=1):
+        res_over = []  # overall results
+        for name_ens in ['bagging', 'AdaBoost', 'lightGBM']:
+            clf, ut = self.get_member_clf_alt(XaA_trn, y_trn, name_ens)
+            tmp = self.count_scores_alt(
+                clf,
+                XaA_trn, y_trn, XaA_qtb_trn, Xb_trn, A_trn, g1m_trn,
+                XaA_tst, y_tst, XaA_qtb_tst, Xb_tst, A_tst, g1m_tst,
+                m1, m2, n_e, pool, positive_label)
+            res_over.append(['', name_ens, '', '', ut] + tmp)
+
+        n_a = len(g1m_trn)
+        for i in range(1, n_a + 1):
+            for constraint in ['FPR', 'FNR', 'FPR,FNR']:
+                clf, ut = self.get_member_clf_alt(
+                    XaA_trn, y_trn, 'fairGBM', constraint,
+                    g1m_trn[i - 1][0])
+                tmp = self.count_scores_alt(
+                    clf,
+                    XaA_trn, y_trn, XaA_qtb_trn, Xb_trn, A_trn,
+                    g1m_trn,
+                    XaA_tst, y_tst, XaA_qtb_tst, Xb_tst, A_tst,
+                    g1m_tst, m1, m2, n_e, pool, positive_label)
+                res_over.append([f'sa#{i}', f'fairgbm: {constraint}',
+                                 '', '', ut] + tmp)
+
+            clf, ut = self.get_member_clf_alt(
+                XaA_trn, y_trn, 'AdaFair', sa_idx=self.saIndex[
+                    i - 1], sa_val=self.saValue[i - 1])
+            # for i in range(n_a):
+            # clf, ut = self.get_member_clf_alt(
+            #     XaA_trn, y_trn, 'AdaFair', sa_idx=self.saIndex[i],
+            #     sa_val=self.saValue[i])
+            tmp = self.count_scores_alt(
+                clf,
+                XaA_trn, y_trn, XaA_qtb_trn, Xb_trn, A_trn, g1m_trn,
+                XaA_tst, y_tst, XaA_qtb_tst, Xb_tst, A_tst, g1m_tst,
+                m1, m2, n_e, pool, positive_label)
+            # res_over.append([f'sa#{i+1}', 'AdaFair', ut] + tmp)
+            res_over.append([f'sa#{i}', 'AdaFair', '', '', ut] + tmp)
+        return res_over  # .shape=(7|11,319) =(3+?*4, 3+158*2)
+
+    def count_scores_alt(
+            self, clf,
+            XaA_trn, y_trn, XaA_qtb_trn, Xb_trn, A_trn, g1m_trn,
+            XaA_tst, y_tst, XaA_qtb_tst, Xb_tst, A_tst, g1m_tst,
+            m1, m2, n_e, pool, pos_label):
+        y_insp = clf.predict(XaA_trn)
+        y_pred = clf.predict(XaA_tst)
+        yq_insp = clf.predict(XaA_qtb_trn)
+        yq_pred = clf.predict(XaA_qtb_tst)
+        ans_trn = self.count_half_member(
+            y_trn, y_insp, yq_insp, Xb_trn, A_trn, g1m_trn,
+            pos_label, m1, m2, n_e, pool)
+        ans_tst = self.count_half_member(
+            y_tst, y_pred, yq_pred, Xb_tst, A_tst, g1m_tst,
+            pos_label, m1, m2, n_e, pool)
+        return ans_trn + ans_tst
+
+
+class CompA_norm_cls(CompA_fair_ens):
+    def schedule_content(
+        self, logger, pool,
+            XaA_trn, y_trn, XaA_qtb_trn, Xb_trn, A_trn, g1m_trn,
+            XaA_tst, y_tst, XaA_qtb_tst, Xb_tst, A_tst, g1m_tst,
+            m1=20, m2=8, n_e=2, positive_label=1):
+        res_over = []
+        for abbr_cls in AVAILABLE_ABBR_CLS:
+            since = time.time()
+            # clf = NAME_INDIVIDUALS[abbr_cls]
+            clf = FAIR_INDIVIDUALS[abbr_cls]
+            clf.fit(XaA_trn, y_trn)
+            since = time.time() - since
+
+            tmp = self.count_scores_alt(
+                clf,
+                XaA_trn, y_trn, XaA_qtb_trn, Xb_trn, A_trn, g1m_trn,
+                XaA_tst, y_tst, XaA_qtb_tst, Xb_tst, A_tst, g1m_tst,
+                m1, m2, n_e, pool, positive_label)
+            res_over.append(['', abbr_cls, '', '', since] + tmp)
+        return res_over  # .shape=(11,3+158*2)
 
 
 # =============================

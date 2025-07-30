@@ -33,11 +33,11 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 from abc import ABCMeta, abstractmethod
 
 import numpy as np
-# import sklearn
+import sklearn
 from sklearn.base import is_classifier, ClassifierMixin, is_regressor
 from sklearn.ensemble import BaseEnsemble
 ## from sklearn.ensemble.forest import BaseForest
-from sklearn.ensemble._forest import BaseForest  # BaseEnsemble
+from sklearn.ensemble._forest import BaseEnsemble
 # from sklearn.externals import six
 
 from pyfair.facil.utils_const import check_zero
@@ -614,13 +614,13 @@ class AdaFair(BaseWeightBoosting, ClassifierMixin):
                         fp_non_protected += 1
 
         '''
-        pdb.set_trace()
-        tpr_protected = tp_protected / (tp_protected + fn_protected)
-        tnr_protected = tn_protected / (tn_protected + fp_protected)
+    pdb.set_trace()
+    tpr_protected = tp_protected / (tp_protected + fn_protected)
+    tnr_protected = tn_protected / (tn_protected + fp_protected)
 
-        tpr_non_protected = tp_non_protected / (tp_non_protected + fn_non_protected)
-        tnr_non_protected = tn_non_protected / (tn_non_protected + fp_non_protected)
-        '''
+    tpr_non_protected = tp_non_protected / (tp_non_protected + fn_non_protected)
+    tnr_non_protected = tn_non_protected / (tn_non_protected + fp_non_protected)
+    '''
         tpr_protected = tp_protected / check_zero(tp_protected + fn_protected)
         tnr_protected = tn_protected / check_zero(tn_protected + fp_protected)
         tpr_non_protected = tp_non_protected / check_zero(

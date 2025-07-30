@@ -10,7 +10,9 @@ import json
 import os
 import sys
 import time
+import warnings
 
+import sklearn
 import pandas as pd
 import numpy as np
 # import numba
@@ -21,6 +23,7 @@ from pyfair.utils_empirical import DataSetup
 from pyfair.facil.utils_saver import get_elogger, elegant_print
 from pyfair.facil.utils_timer import (
     elegant_dated, fantasy_durat, elegant_durat_core)
+# from pyfair.facil.utils_const import _get_tmp_name_ens
 from pyfair.preprocessing_dr import (
     transform_X_and_y,)  # , transform_unpriv_tag)
 from pyfair.preprocessing_hfm import (
@@ -29,8 +32,18 @@ from pyfair.facil.data_split import (
     manual_cross_valid, sklearn_k_fold_cv, sklearn_stratify,
     scale_normalize_helper,)
 
+
 from fair_int_expt import (
-    CompA_sing_learner)
+    CompA_sing_learner, CompA_fair_ens, CompA_norm_cls)
+
+warnings.filterwarnings(
+    "ignore", module="sklearn",
+    category=sklearn.exceptions.ConvergenceWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
+
+
+# =============================
+# Experiments
 
 
 class FairNonbinaryEmpirical(DataSetup):
@@ -69,6 +82,16 @@ class FairNonbinaryEmpirical(DataSetup):
             self._iterator = CompA_sing_learner(
                 abbr_cls, nb_cls,
                 constraint_type, self.saIndex, self.saValue)
+            self._log_document += '_{}_cls{}'.format(
+                abbr_cls, nb_cls)
+        elif trial_type.endswith('exp1b'):
+            self._iterator = CompA_fair_ens(
+                'DT', nb_cls, self.saIndex, self.saValue)
+            self._log_document += f'_fair_ens_cls{nb_cls}'
+        elif trial_type.endswith('exp1c'):
+            self._iterator = CompA_norm_cls(
+                'DT', 1, self.saIndex, self.saValue)
+            self._log_document += '_regular'
 
         # self._log_document += ('_gen' * gen + '_rep' * rep)
         return
@@ -124,13 +147,19 @@ class FairNonbinaryEmpirical(DataSetup):
 
     # EACH SUBROUTE
     def coding_per_procedure(self, csv_w, logger=None):
-        csv_row_2a = [   # 'binary', 'abbr_cls', 'learner'
+        csv_row_2a = [         # 'binary', 'abbr_cls', 'learner'
             'data_name', '#lbl', '#cv', 'ratio', 'm1', 'm2',
-            'n_e', '#sen-att', 'name_ens,abbr_cls,nb_cls,',
-            'k#', 'tilde tim_elapsed']
-        csv_row_2b = ['', self._prep, ] + [''] * 4 + [
-            'mp#core ={}'.format(self._mp_cores), '', '', '',
-            'perturbation']
+            'n_e', '#sen-att',     # 'name_ens,abbr_cls,nb_cls,',
+            'name_ens', 'k#', 'tilde(A)']  # 'tilde tim_elapsed']
+        # csv_row_2b = ['', self._prep, ] + [''] * 4 + [
+        #     'mp#core ={}'.format(self._mp_cores), '', '', '',
+        #     'perturbation']
+        (csv_row_1, csv_r2c, csv_r3c,
+         csv_r4c) = self._iterator.prepare_trial()  # ,csv_r5c
+        # csv_w.writerows([csv_row_1, csv_row_2a + csv_r2c,
+        #                  csv_row_2b + csv_r3c,
+        #                  [''] * 11 + csv_r4c, [''] * 10 + [
+        #                      'tim_elapsed'] + csv_r5c, ])
 
         # START
         res_ans, res_aux = self.coding_per_dataset(logger=logger)
@@ -142,13 +171,29 @@ class FairNonbinaryEmpirical(DataSetup):
         del json_saver, json_w
         # END
 
+        csv_w.writerows([csv_row_1, csv_row_2a + csv_r2c,
+                         res_aux[1] + csv_r3c,
+                         # [''] * 8 + [f'nb_cls={self._nb_cls}', '',
+                         #             'tim_elapsed'] + csv_r4c])
+                         [''] * 10 + ['tim_elapsed'] + csv_r4c])
+
         csv_w.writerow(res_aux[0])
-        csv_w.writerow(res_aux[1])
+        # csv_w.writerow(res_aux[1])
         sen_att, priv_val, marginal_grp = res_aux[2:5]
         nk = 1 if self._nb_cv <= 0 else self._nb_cv
         if self._trial_type[-5:] in ('exp1a'):
             for k in range(nk):
                 csv_w.writerow([''] * 9 + [k] + [''] + res_ans[k][0])
+        elif self._trial_type[-5:] in ('exp1b', 'exp1c'):
+            nb_row = np.shape(res_ans)[1]  # (#cv,#alg,#tag_col)
+            for r in range(nb_row):
+                # for k in range(self._nb_cv):
+                #     csv_w.writerow([''] * 7 + res_ans[k][r])
+                k = 0
+                csv_w.writerow([''] * 7 + res_ans[k][r][:2] + [
+                    k, ''] + res_ans[k][r][4:])
+                for k in range(1, self._nb_cv):
+                    csv_w.writerow([''] * 9 + [k] + res_ans[k][r][3:])
 
         del nk, sen_att, priv_val, marginal_grp, res_ans, res_aux
         return
@@ -202,15 +247,18 @@ class FairNonbinaryEmpirical(DataSetup):
         sen_att = self._dataset.sensitive_attrs
         tmp_cls = ''
         if self._trial_type.endswith('exp1a'):
-            tmp_cls = '{} {}'.format(self._abbr_cls, self._nb_cls)
+            tmp_cls = '{} #{}'.format(self._abbr_cls, self._nb_cls)
         res_aux = [[
             self._dataset.dataset_name, len(set(y.values)),
             self._nb_cv, self._ratio, self._m1, self._m2,
-            self._n_e, '#sa ={}'.format(len(sen_att)),
+            self._n_e,  # '#sa ={}'.format(len(sen_att)),
+            f'#sa={len(sen_att)}: {sen_att}',
             tmp_cls, '', handling_info[
                 'perturbation_tim_elapsed']], [
             '', self._prep, '', '', '', '', 'mp#core ={}'.format(
-                self._mp_cores), 'sen-att', '', ''],
+                self._mp_cores), 'sen-att',  # '', ''],
+            f'abbr_cls,nb_cls={self._nb_cls}',
+             '', 'perturbation'],
             sen_att, self._dataset.privileged_vals,
             handling_info['marginalised_grps'], ]
 
@@ -256,6 +304,9 @@ class FairNonbinaryEmpirical(DataSetup):
                 scaler = scaler.fit(Xb_trn)
                 Xb_trn = scaler.transform(Xb_trn)
                 Xb_tst = scaler.transform(Xb_tst)
+            else:
+                Xb_trn = Xb_trn.values
+                Xb_tst = Xb_tst.values
             # priv_col = list(range(len(XaA_trn[0])))
             # for i in self.saIndex:
             #     pass
@@ -293,12 +344,23 @@ class FairNonbinaryEmpirical(DataSetup):
                 XaA_tst, y_tst, XaA_qtb_tst, Xb_tst, A_tst, g1m_tst,
                 **pms)
             return [res_iter]
+        elif self._trial_type[-5:] in ('exp1b', 'exp1c'):
+            res_iter = self._iterator.schedule_content(
+                logger, pool,
+                XaA_trn, y_trn, XaA_qtb_trn, Xb_trn, A_trn, g1m_trn,
+                XaA_tst, y_tst, XaA_qtb_tst, Xb_tst, A_tst, g1m_tst,
+                **pms)
+            # return res_iter
 
         del positive_label, pms
         tim_elapsed = time.time() - since
         elegant_print("CV iteration {}-th, consumed {}".format(
             k, elegant_durat_core(tim_elapsed, True)), logger)
         return res_iter
+
+
+# =============================
+# Hyper-parameters
 
 
 def default_parameters():
@@ -368,6 +430,10 @@ if __name__ == "__main__":
         kwargs['abbr_cls'] = args.abbr_cls
         kwargs['nb_cls'] = args.nb_cls
         kwargs['constraint_type'] = args.constraint_type
+    elif trial_type.endswith('exp1b'):
+        kwargs['nb_cls'] = args.nb_cls
+    elif trial_type.endswith('exp1c'):
+        kwargs['nb_cls'] = 1
 
     case = FairNonbinaryEmpirical(
         trial_type, data_type, **kwargs)
@@ -376,5 +442,8 @@ if __name__ == "__main__":
 
 
 """
-python fair_int_main.py -exp KF_exp1a -nk 2 -dat ppvr -clf AdaBoost
+python fair_int_main.py -exp KF_exp1a -nk 2 -clf AdaBoost -dat ppvr
+python fair_int_main.py -exp KF_exp1a -nk 2 -clf AdaBoost
+python fair_int_main.py -exp KF_exp1b -nk 2 -dat ricci -pre min_max
+python fair_int_main.py -exp KF_exp1c -nk 2 -dat ricci
 """

@@ -17,7 +17,7 @@ from pympler.asizeof import asizeof
 from pyfair.facil.utils_const import (
     check_zero, judge_transform_need, random_seed_generator,
     DTY_FLT, DTY_INT,)
-from pyfair.facil.utils_remark import INDIVIDUALS
+from pyfair.facil.utils_remark import NAME_INDIVIDUALS
 
 gc.enable()
 
@@ -544,7 +544,7 @@ def original_ensemble_from_train_set(name_ens, name_cls, nb_cls,
 def achieve_ensemble_from_train_set(name_ens, abbr_cls, nb_cls,
                                     X_trn, y_trn, X_val, X_tst):
     since = time.time()
-    name_cls = INDIVIDUALS[abbr_cls]
+    name_cls = NAME_INDIVIDUALS[abbr_cls]
 
     coef, clfs, indices = EnsembleAlgorithm(
         name_ens, name_cls, nb_cls, X_trn, y_trn)

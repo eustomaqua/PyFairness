@@ -53,14 +53,14 @@ NAME_INDIVIDUALS = {
     'linSVM': svm.LinearSVC(),  # 'L-SVM', 'lSVM/Lsvm'
     'kNNu': neighbors.KNeighborsClassifier(weights='uniform'),
     'kNNd': neighbors.KNeighborsClassifier(weights='distance'),
-    'LR1': linear_model.LogisticRegression(penalty='none'),
+    # 'LR1': linear_model.LogisticRegression(penalty='none'),
+    'LR1': linear_model.LogisticRegression(penalty='l1'),
     'LR2': linear_model.LogisticRegression(penalty='l2'),  # default
     'LM1': linear_model.SGDClassifier(penalty='l1'),
     'LM2': linear_model.SGDClassifier(penalty='l2'),  # default
     'MLP': neural_network.MLPClassifier(),  # NN
 }
-
-INDIVIDUALS = NAME_INDIVIDUALS
+# INDIVIDUALS = NAME_INDIVIDUALS
 
 
 SPEC_INDIVIDUALS = {
