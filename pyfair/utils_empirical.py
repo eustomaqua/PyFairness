@@ -6,6 +6,8 @@ import os
 import pdb
 import time
 
+import pandas as pd
+
 from pyfair.datasets import (
     DATASETS, DATASET_NAMES, RAW_EXPT_DIR,  # preprocess)
     process_above, process_below)
@@ -195,19 +197,52 @@ class DataSetup:
 
 
 class GraphSetup:
-    def __init__(self, figname=''):
-        self._figname = figname
-        self._cmap_name = 'muted'  # 'bright'
+    # def __init__(self, figname=''):
+    #     self._figname = figname
+    #     self._cmap_name = 'muted'  # 'bright'
+    #
+    # @property
+    # def figname(self):
+    #     return self._figname
+
+    _cmap_name = 'muted'
+    _nb_cv = 5
 
     @property
-    def figname(self):
-        return self._figname
+    def nb_cv(self):
+        return self._nb_cv
+
+    @nb_cv.setter
+    def nb_cv(self, value):
+        self._nb_cv = value
 
     def schedule_mspaint(self, raw_dframe, prep=''):
         raise NotImplementedError
 
-    def load_raw_dataset(self, figname, sheetname):
-        filename = os.path.join(
+    def load_raw_dataset(self, filename, sheetname):
+        filepath = os.path.join(
             RAW_EXPT_DIR, filename + '.xlsx')
         dframe = pd.read_excel(filepath, sheetname)
         return dframe
+
+    def recap_sub_data(self, dframe, nb_row=4,
+                       sa_ir=3, sa_r=4, n_a=2):
+        # sa_irrelevant, sa_relevant: classifiers/learners
+        each = (sa_ir + sa_r * n_a) * self._nb_cv + 1
+        nb_set = len(dframe) - nb_row + 1
+        nb_set = (nb_set + sa_r * self._nb_cv) // each
+        each_sing = (sa_ir + sa_r) * self._nb_cv + 1
+        id_set = [0] + [(
+            i * each + each_sing) for i in range(nb_set)]
+        id_set = [i + nb_row - 1 for i in id_set]
+        # id_set: [3, 39, 95, 151, 207, 263]
+        return nb_set, id_set  # id_set[-1] for bounding
+
+    def fetch_sub_data(self, df, index, tag_col, ats='ua'):
+        data = df.iloc[index][tag_col]
+        if ats == 'ua':
+            data *= 100.
+        # elif ats == 'us':
+        #     data.fillna(self._nb_cls, inplace=True)
+        data = data.values.astype('float')  # .to_numpy()
+        return data                         # np.ndarray

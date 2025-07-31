@@ -24,18 +24,30 @@
 # cd ~/GitH/PyFairness
 
 
-PREP=min_max
+# PREP=min_max
+#
+# EXPT=KF_exp1b
+# for DATA in ricci german ppr ppvr # adult
+# do
+#   python fair_int_exec.py -exp $EXPT -dat $DATA -pre $PREP
+# done
+#
+# EXPT=KF_exp1c
+# for DATA in ricci german ppr ppvr # adult
+# do
+#   python fair_int_exec.py -exp $EXPT -dat $DATA -pre $PREP
+# done
 
-EXPT=KF_exp1b
-for DATA in ricci german ppr ppvr # adult
-do
-  python fair_int_exec.py -exp $EXPT -dat $DATA -pre $PREP
-done
 
-EXPT=KF_exp1c
-for DATA in ricci german ppr ppvr # adult
+for EXPT in KF_exp1b KF_exp1c # mCV_exp1b mCV_exp1c
 do
-  python fair_int_exec.py -exp $EXPT -dat $DATA -pre $PREP
+  for PREP in min_max none normalize standard min_abs
+  do
+    for DATA in ricci german ppr ppvr # adult
+    do
+      python fair_int_exec.py -exp $EXPT -dat $DATA -pre $PREP
+    done
+  done
 done
 
 # conda deactivate

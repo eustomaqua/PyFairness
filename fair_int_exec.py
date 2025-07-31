@@ -1,5 +1,5 @@
 # coding: utf-8
-# fair_intersectional.py
+# fair_intersectional.py, fair_int_main.py
 
 
 import argparse
@@ -53,7 +53,6 @@ class FairNonbinaryEmpirical(DataSetup):
                  constraint_type='FPR,FNR',
                  screen=True, logged=False):
         super().__init__(data_type)
-        self._ratio = ratio
         self._fix_m2 = fix_m2  # fixed_m2,appt_m2
         self._mp_cores = mp_cores
         self.preparing_iterator(
@@ -67,6 +66,7 @@ class FairNonbinaryEmpirical(DataSetup):
         self._trial_type = trial_type
         self._prep = prep    # pre-processing data
         self._nb_cv = nb_cv  # default:0 previous `nb_iter`
+        self._ratio = ratio
         self._m1, self._m2, self._n_e = m1, m2, n_e
 
         self._log_document = "_".join([
@@ -134,7 +134,7 @@ class FairNonbinaryEmpirical(DataSetup):
         elegant_print([
             "",
             "Duration /TimeCost: {}".format(fantasy_durat(
-                tim_elapsed, False)),
+                tim_elapsed, False, abbreviation=True)),
             "[ENDED AT {:s}]".format(elegant_dated(
                 time.time())), ""], logger)
         del logger
@@ -255,9 +255,10 @@ class FairNonbinaryEmpirical(DataSetup):
             f'#sa={len(sen_att)}: {sen_att}',
             tmp_cls, '', handling_info[
                 'perturbation_tim_elapsed']], [
-            '', self._prep, '', '', '', '', 'mp#core ={}'.format(
-                self._mp_cores), 'sen-att',  # '', ''],
-            f'abbr_cls,nb_cls={self._nb_cls}',
+            '', self._prep, '', '', '', '',
+             'mp#core ={}'.format(
+                 self._mp_cores),  # 'sen-att', '', ''],
+            '', f'abbr_cls,nb_cls={self._nb_cls}',
              '', 'perturbation'],
             sen_att, self._dataset.privileged_vals,
             handling_info['marginalised_grps'], ]
@@ -307,6 +308,10 @@ class FairNonbinaryEmpirical(DataSetup):
             else:
                 Xb_trn = Xb_trn.values
                 Xb_tst = Xb_tst.values
+                XaA_trn = XaA_trn.to_numpy()
+                XaA_tst = XaA_tst.to_numpy()
+                XaA_qtb_trn = XaA_qtb_trn.values
+                XaA_qtb_tst = XaA_qtb_tst.values
             # priv_col = list(range(len(XaA_trn[0])))
             # for i in self.saIndex:
             #     pass
@@ -373,7 +378,7 @@ def default_parameters():
     parser.add_argument("-pre", "--data-preprocessing",
                         type=str, default='none', choices=[
                             'none', 'standard', 'min_max',
-                            'min_abs', 'normalise'])
+                            'min_abs', 'normalise', 'normalize'])
     parser.add_argument('-nk', "--nb-cv", type=int, default=5,
                         help="K-fold cross validation")
 
@@ -442,8 +447,8 @@ if __name__ == "__main__":
 
 
 """
-python fair_int_main.py -exp KF_exp1a -nk 2 -clf AdaBoost -dat ppvr
-python fair_int_main.py -exp KF_exp1a -nk 2 -clf AdaBoost
-python fair_int_main.py -exp KF_exp1b -nk 2 -dat ricci -pre min_max
-python fair_int_main.py -exp KF_exp1c -nk 2 -dat ricci
+python fair_int_exec.py -exp KF_exp1a -nk 2 -clf AdaBoost -dat ppvr
+python fair_int_exec.py -exp KF_exp1a -nk 2 -clf AdaBoost
+python fair_int_exec.py -exp KF_exp1b -nk 2 -dat ricci -pre min_max
+python fair_int_exec.py -exp KF_exp1c -nk 2 -dat ricci
 """
