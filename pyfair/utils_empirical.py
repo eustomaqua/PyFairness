@@ -207,6 +207,8 @@ class GraphSetup:
 
     _cmap_name = 'muted'
     _nb_cv = 5
+    _datasets = {'abbr': DAT_EXPT_NMS, 'full': DAT_EXPT_ORG}
+    # _datasets = ['ricci', 'german', 'adult', 'ppr', 'ppvr']
 
     @property
     def nb_cv(self):
@@ -216,8 +218,11 @@ class GraphSetup:
     def nb_cv(self, value):
         self._nb_cv = value
 
-    def schedule_mspaint(self, raw_dframe, prep=''):
+    def schedule_mspaint(self, raw_dframe, figname=''):
         raise NotImplementedError
+
+    # def schedule_mspaint(self, raw_dframe, prep=''):
+    #     raise NotImplementedError
 
     def load_raw_dataset(self, filename, sheetname):
         filepath = os.path.join(
@@ -235,7 +240,8 @@ class GraphSetup:
         id_set = [0] + [(
             i * each + each_sing) for i in range(nb_set)]
         id_set = [i + nb_row - 1 for i in id_set]
-        # id_set: [3, 39, 95, 151, 207, 263]
+        # id_set: [3, 39,  95, 151, 207, 263] clf. 3+4
+        #         [3, 59, 115, 171, 227, 283] clf.11+0
         return nb_set, id_set  # id_set[-1] for bounding
 
     def fetch_sub_data(self, df, index, tag_col, ats='ua'):

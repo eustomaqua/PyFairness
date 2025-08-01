@@ -58,19 +58,21 @@ class FairNonbinaryPlotting:
         return
 
     def drawing_exp1(self):
-        xlsx_name = f'{self._trial_type}_iter{self._nb_cv}_pms'
+        xlsx_name = f'{self._trial_type[:-1]}_iter{self._nb_cv}_pms'
+        # xlsx_name = f'{self._trial_type}_iter{self._nb_cv}_pms'
         if self._trial_type.endswith('exp1b'):
-            xlsx_name += f'_fair_ens_cls{self._nb_cls}'
+            # xlsx_name += f'_fair_ens_cls{self._nb_cls}'
             self._iterator = PlotA_fair_ens()
         elif self._trial_type.endswith('exp1c'):
-            xlsx_name += '_regular'
+            # xlsx_name += '_regular'
             self._iterator = PlotA_norm_cls()
 
         sheet_name = 'exp{}_{}'.format(
             self._trial_type[-2:], self._prep.replace('_', ''))
         raw_df = self._iterator.load_raw_dataset(
             xlsx_name, sheet_name)
-        pdb.set_trace()
+        self._iterator.schedule_mspaint(raw_df, sheet_name)
+        # pdb.set_trace()
         return
 
 
