@@ -1,11 +1,11 @@
 # coding: utf-8
 
 
-import pdb
+# import pdb
 import pandas as pd
 import numpy as np
 
-from pyfair.utils_empirical import GraphSetup
+from pyfair.utils_empirical import GraphSetup, GRP_FAIR_COMMON
 from pyfair.facil.utils_const import unique_column, DTY_FLT
 
 from pyfair.granite.draw_addtl import (
@@ -163,16 +163,118 @@ class PlotA_initial(GraphSetup):
         return
 
     def draw_extended_grp_scat(self, df, tag_grp, tag_ext,
-                               tag_ext_alt, figname):
-        labels = ['grp', 'extGrp', 'alt.extGrp']  # 'extAlt'
+                               tag_ext_alt, figname,
+                               verbose=False):
+        # labels = ['grp', 'extGrp', 'alt.extGrp']  # 'extAlt'
+        labels = ['ori', 'ext', 'alt']
+        lbl_hfm = [[r'$\mathbf{df}_\text{prev}$', r'$\mathbf{df}$',
+                    r'$\mathbf{df}^{avg}$'], [
+            r'$\hat{\mathbf{df}}_\text{prev}$', r'$\hat{\mathbf{df}}$',
+            r'$\hat{\mathbf{df}}^{avg}$'], ]
+        lbl_dim2 = ['DP', 'EO', 'PQP', r'$\mathbf{df}_\text{prev}$',
+                    r'$\hat{\mathbf{df}}_\text{prev}$']
+        lbl_dim2[2] = 'PP'
+        lbl_dim2[:3] = GRP_FAIR_COMMON
+        multi_boxplot_rect(
+            df, tag_grp[:3], tag_ext[:3],
+            figname=f'{figname}_grpext', annotX=lbl_dim2[:3],
+            locate="upper left")
+        multi_boxplot_rect(
+            df, tag_grp[:3], tag_ext[:3], tag_ext_alt[:3],
+            figname=f'{figname}_grpalt', annotX=lbl_dim2[:3],
+            locate="upper left")
+        if not verbose:
+            return
+
         for i, tg in enumerate(tag_grp):
             data = [df[tg].values.astype(DTY_FLT),
                     df[tag_ext[i]].values.astype(DTY_FLT),
                     df[tag_ext_alt[i]].values.astype(DTY_FLT)]
             fgn = '{}_{}'.format(
-                figname, f'grp{i+1}' if i < 3 else f'hfm{i}')
-            boxplot_rect(data, labels, fgn)
-        pdb.set_trace()
+                figname, f'grp{i+1}' if i < 3 else f'hfm{i+3}')
+            # boxplot_rect(data, labels, fgn + '_prim')
+            multi_boxplot_rect(df, [tg, tag_ext[
+                i], tag_ext_alt[i]], figname=fgn,
+                annotX=labels if i < 3 else lbl_hfm[i - 3])  # not tag_Xs
+        multi_boxplot_rect(df, tag_grp, tag_ext,
+                           figname=f'{figname}_dim2', annotX=lbl_dim2)
+        multi_boxplot_rect(df, tag_grp, tag_ext, tag_ext_alt,
+                           figname=f'{figname}_dim3', annotX=lbl_dim2)
+        return
+
+    def obtain_sing_dat_cls(self, pick_set, pick_clf,
+                            tag_acc, tag_sa1, tag_sa2,
+                            dframe, id_set,  # tag='tst',
+                            multival=True):  # nonbin=True):
+        columns = {t2: t1 for t1, t2 in zip(tag_sa1, tag_sa2)}
+        picked_a = id_set[pick_set] + 1 + pick_clf * self._nb_cv
+        picked_b = id_set[pick_set] + 1 + (pick_clf + 1) * self._nb_cv
+        if multival:
+            assert pick_set in [0, 2, 3, 4]
+            df_tmp = dframe.iloc[picked_a: picked_b]
+            if pick_set in [3, 4]:
+                df_tmp = df_tmp[tag_acc + tag_sa2]
+                df_tmp = df_tmp.rename(columns=columns)
+            else:
+                df_tmp = df_tmp[tag_acc + tag_sa1]
+        else:
+            assert pick_set in [1, 2, 3, 4]
+            df_tmp = dframe.iloc[picked_a: picked_b]
+            if pick_set in [1, 3, 4]:
+                df_tmp = df_tmp[tag_acc + tag_sa1]
+            else:
+                df_tmp = df_tmp[tag_acc + tag_sa2]
+                df_tmp = df_tmp.rename(columns=columns)
+            if pick_set == 1:
+                df_alt = dframe.iloc[picked_a: picked_b][
+                    tag_acc + tag_sa2].rename(columns=columns)
+                df_tmp = pd.concat([df_tmp, df_alt], axis=0)
+        return df_tmp
+
+    def depict_separately(self, pick_set, pick_clf, df, id_set,
+                          tag_mk='tst', fgn='', multival=True,
+                          verbose=False):
+        tag_acc, tag_sa1, tag_sa2 = self.obtain_tag_col(
+            tag_mk)  # mark)
+        df_alt = self.obtain_sing_dat_cls(
+            pick_set, pick_clf, tag_acc, tag_sa1, tag_sa2,
+            df, id_set, multival)
+        sub_grp = tag_sa1[:3] + [tag_sa1[16 + 3], tag_sa1[27 + 3]]
+        sub_ext = tag_sa1[4:10][:3] + [tag_sa1[16 + 7], tag_sa1[27 + 7]]
+        sub_ext_alt = tag_sa1[10:16][:3] + [tag_sa1[
+            16 + 10], tag_sa1[27 + 10]]
+        sub_idv = tag_acc[16:16 + 4 + 6]  # dr 4+ GEI.alph 3+ Theil+Tx2
+        sub_idv = [sub_idv[2], ] + sub_idv[4:-2]
+        sub_idv = [sub_idv[0], sub_idv[2], sub_idv[-1]]
+
+        currX = sub_grp[:3] + sub_idv + sub_grp[-2:]
+        labels = ['DP', 'EO', 'PP', 'DR', r'GEI ($\alpha=0.5$)',
+                  'Theil', r'$\mathbf{df}_\text{prev}$',
+                  r'$\hat{\mathbf{df}}_\text{prev}$']
+        labels[:3] = GRP_FAIR_COMMON
+        df_tmp = df_alt[currX]  # =df_alt[curr_X].mean(axis=0)
+        # radar_chart(df_tmp, currX, annotX=labels, figname='test_b', clockwise=True)
+        # radar_chart(df_tmp, currX, annotX=labels, figname='test_a')
+        for i in currX:
+            df_tmp.loc[:, i] = float(df_tmp[i].mean())
+        radar_chart(df_tmp, currX, annotX=labels,
+                    figname=f'{fgn}_s{pick_set}c{pick_clf}_ori',
+                    clockwise=True)
+
+        df_tmp = df_tmp.reset_index(drop=True)[:3]
+        df_tmp_tmp = df_alt[sub_ext]
+        for i, j in zip(sub_grp, sub_ext):
+            df_tmp.loc[1, i] = float(df_tmp_tmp[j].mean())
+        df_tmp_tmp = df_alt[sub_ext_alt]
+        for i, j in zip(sub_grp, sub_ext_alt):
+            df_tmp.loc[2, i] = float(df_tmp_tmp[j].mean())
+        annotY = ['ori', 'ext', 'ext.alt']
+        if verbose:
+            radar_chart(df_tmp[:2], currX, labels, annotY[:2],
+                        figname=f'{fgn}_s{pick_set}c{pick_clf}_ext')
+        radar_chart(df_tmp, currX, labels, annotY,
+                    figname=f'{fgn}_s{pick_set}c{pick_clf}_extalt')
+        # pdb.set_trace()
         return
 
 
@@ -184,8 +286,10 @@ class PlotA_fair_ens(PlotA_initial):
         nb_set, id_set = self.recap_sub_data(
             raw_dframe, sa_ir=3, sa_r=4)
         mk = 'tst'  # flag,mark
-        df_bin = self.obtain_binval_senatt(raw_dframe, id_set, mk)
-        df_nonbin = self.obtain_multival_senatt(raw_dframe, id_set, mk)
+        first_incl = verbose = False
+        # df_bin = self.obtain_binval_senatt(raw_dframe, id_set, mk)
+        df_nonbin = self.obtain_multival_senatt(raw_dframe, id_set, mk,
+                                                first_incl=first_incl)
         tag_acc, tag_sa1, _ = self.obtain_tag_col(mk)
 
         tmp = tag_sa1[-6: -3]
@@ -194,7 +298,7 @@ class PlotA_fair_ens(PlotA_initial):
         tmp = tag_sa1[-3:]
         df_nonbin['extAlt'] = df_nonbin[tmp[0]] + df_nonbin[
             tmp[1]] + df_nonbin[tmp[2]] + df_nonbin['extGrp']
-        pdb.set_trace()
+        # pdb.set_trace()
         # self.draw_extended_grp(df_nonbin, tag_sa1[3], [tag_sa1[16]], (
         #     # 'Group fairness (bin-val)',
         #     # 'Extended group fairness (multival)'))
@@ -216,7 +320,25 @@ class PlotA_fair_ens(PlotA_initial):
             tag_sa1[16 + 3], tag_sa1[27 + 3]],
             tag_sa1[4:10][:3] + [tag_sa1[16 + 7], tag_sa1[27 + 7]],
             tag_sa1[10:16][:3] + [tag_sa1[16 + 10], tag_sa1[27 + 10]],
-            figname + '_scat')
+            figname + '_scat', verbose)
+
+        # # self.obtain_sing_dat_cls(0, 2, raw_dframe, id_set, mk)
+        # # self.depict_separately(0, 2, mk)
+        # self.depict_separately(0, 2, raw_dframe, id_set, mk,
+        #                        figname + '_radar')
+        # for pks in [2, 3, 4]:
+        #     self.depict_separately(pks, 2, raw_dframe, id_set,
+        #                            mk, figname + '_radar')
+        fgn = f'{figname}_radar'
+        for pkc in [0, 1, 2, 6, 10]:  # range(3+4+4):
+            for pks in [2, 3, 4]:
+                self.depict_separately(
+                    pks, pkc, raw_dframe, id_set, mk, fgn)
+        if not first_incl:
+            return
+        for pkc in [0, 1, 2, 6]:     # range(3+4):
+            self.depict_separately(  # pks = 0
+                0, pkc, raw_dframe, id_set, mk, fgn)
         return
 
 
@@ -224,9 +346,41 @@ class PlotA_norm_cls(PlotA_initial):
     def __init__(self):
         pass
 
-    def schedule_mspaint(self, raw_dframe, prep=''):
+    def schedule_mspaint(self, raw_dframe, figname=''):
         nb_set, id_set = self.recap_sub_data(
             raw_dframe, sa_ir=11, sa_r=0)
+        mk = 'tst'
+        first_incl = verbose = False
+        df_nonbin = self.obtain_multival_senatt(
+            raw_dframe, id_set, mk, first_incl)
+        tag_acc, tag_sa1, _ = self.obtain_tag_col(mk)
+
+        tmp = tag_sa1[-6: -3]
+        df_nonbin['extGrp'] = df_nonbin[
+            tmp[0]] + df_nonbin[tmp[1]] + df_nonbin[tmp[2]]
+        tmp = tag_sa1[-3:]
+        df_nonbin['extAlt'] = df_nonbin[tmp[0]] + df_nonbin[
+            tmp[1]] + df_nonbin[tmp[2]] + df_nonbin['extGrp']
+        self.draw_extended_grp_tim(df_nonbin, tag_sa1[
+            3], [tag_sa1[16], 'extGrp', 'extAlt'],
+            f'{figname}_grp', verbose)
+        self.draw_extended_hfm_tim(df_nonbin, tag_sa1[20], [
+            tag_sa1[27], tag_sa1[27 + 4], tag_sa1[27 + 4 + 7]],
+            f'{figname}_hfm')
+        self.draw_extended_grp_scat(df_nonbin, tag_sa1[:3] + [
+            tag_sa1[16 + 3], tag_sa1[27 + 3]],
+            tag_sa1[4:10][:3] + [tag_sa1[16 + 7], tag_sa1[27 + 7]],
+            tag_sa1[10:16][:3] + [tag_sa1[16 + 10], tag_sa1[27 + 10]],
+            f'{figname}_scat', verbose)
+        fgn = f'{figname}_radar'
+        for pks in [2, 3, 4]:
+            self.depict_separately(pks, 2, raw_dframe, id_set, mk, fgn)
+        if not verbose:
+            return
+        for pkc in [0, 1, 6, 10]:
+            for pks in [2, 3, 4]:
+                self.depict_separately(
+                    pks, pkc, raw_dframe, id_set, mk, fgn)
         return
 
 

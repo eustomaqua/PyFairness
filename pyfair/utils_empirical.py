@@ -18,8 +18,9 @@ from pyfair.preprocessing_hfm import (
 
 
 DAT_EXPT_NMS = ['ricci', 'german', 'adult', 'ppr', 'ppvr']
-DAT_EXPT_ORG = [
-    'Ricci', 'Credit', 'Income', 'COMPAS PPR', 'COMPAS PPVR']
+DAT_EXPT_ORG = [               # 'COMPAS PPR', 'COMPAS PPVR'
+    'Ricci', 'Credit', 'Income', 'Compas PPR', 'Compas PPVR']
+GRP_FAIR_COMMON = ['DP', 'EO', 'PP']  # 'PQP'  # GROUP_
 
 
 class DataSetup:
