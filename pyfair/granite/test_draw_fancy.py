@@ -46,6 +46,8 @@ def test_bplot():
     multi_boxplot_rect(df_alt, lb_grp, lb_ext, figname=f'chart_far_gr{i+1}_dim2')
     radar_chart(df_alt, lb_grp, annotX=lb_grp,
                 figname=f'chart_radar_dim1')
+    radar_chart(df_alt, lb_grp, annotX=lb_grp,
+                figname=f'chart_radar_dim2', stylish=True)
     # pdb.set_trace()
 
     fig, axs = plt.subplots(2, 3, figsize=(8.1, 4.7))  # =(6,5))

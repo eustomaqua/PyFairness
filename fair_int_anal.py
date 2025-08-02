@@ -1,7 +1,7 @@
 # coding: utf-8
 
 
-# import pdb
+import pdb
 import pandas as pd
 import numpy as np
 
@@ -13,6 +13,7 @@ from pyfair.granite.draw_addtl import (
     multi_lin_reg_without_distr)
 from pyfair.granite.draw_fancy import (
     boxplot_rect, multi_boxplot_rect, radar_chart)
+from pyfair.granite.draw_chart import analogous_confusion_extended
 
 
 # -----------------------------
@@ -25,6 +26,21 @@ from pyfair.granite.draw_fancy import (
 
 class PlotA_initial(GraphSetup):
     pass
+
+    _perf_metric = [
+        'Accuracy', 'Precision', 'Recall',  # 'Sensitivity'
+        'Specificity', r'$\mathrm{f}_1$ score', r'$\bar{g}$',
+        'bal. acc', 'discr power']  # 'discrim. discrimn.'
+    # _dal_metric = [
+    #     r'$\Delta(\text{Accuracy})$', r'$\Delta(\text{Precision})$',
+    #     r'$\Delta(\text{Recall})$', r'$\Delta(\text{Specificity})$',
+    #     r'$\Delta(\mathrm{f}_1 ~\text{score})$', r'$\Delta(\bar{g})$',
+    #     r'$\Delta(\text{bal. acc})$', r'$\Delta(\text{discr power})$']
+    _dal_metric = [
+        r'$\Delta$(Accuracy)', r'$\Delta$(Precision)',
+        r'$\Delta$(Recall)', r'$\Delta$(Specificity)',
+        r'$\Delta$($\mathrm{f}_1$ score)', r'$\Delta(\bar{g})$',
+        r'$\Delta$(bal. acc)', r'$\Delta$(discr power)']
 
     def obtain_tag_col(self, tag='tst'):
         csv_row_1 = unique_column(12 + 158 * 2)
@@ -277,6 +293,54 @@ class PlotA_initial(GraphSetup):
         # pdb.set_trace()
         return
 
+    def draw_trade_off(self, df, pick, tag_X, tag_Ys, figname):
+        for pk in pick:
+            annotX = self._perf_metric[pk]  # pick]
+
+        key_A = [tag_X[:8][i] for i in pick]
+        key_C = [tag_X[8:16][i] for i in pick]
+        key_B_bin = tag_Ys[0][:3] + tag_X[-3:] + tag_Ys[0][-2:]
+        key_B_nonbin = tag_Ys[1][:3] + tag_X[-3:] + tag_Ys[1][-2:]
+        key_B_extalt = tag_Ys[2][:3] + tag_X[-3:] + tag_Ys[2][-2:]
+        lbl_A = [self._perf_metric[i] for i in pick]
+        lbl_C = [self._dal_metric[i] for i in pick]
+        lbl_B_bin = GRP_FAIR_COMMON + [
+            'DR', r'GEI ($\alpha=0.5$)', 'Theil',
+            r'$\mathbf{df}_\text{prev}$',
+            r'$\hat{\mathbf{df}}_\text{prev}$']
+        lbl_B_ext = [f'{i} ext.' for i in GRP_FAIR_COMMON] + lbl_B_bin[
+            3:6] + [r'$\mathbf{df}$', r'$\hat{\mathbf{df}}$']
+        lbl_B_extalt = [
+            f'{i} alt.' for i in GRP_FAIR_COMMON] + lbl_B_bin[3:6] + [
+            r'$\mathbf{df}^\text{avg}$',
+            r'$\hat{\mathbf{df}}^\text{avg}$']
+        Mat_B_bin = df[key_B_bin].values.astype(DTY_FLT).T
+        Mat_B_ext = df[key_B_nonbin].values.astype(DTY_FLT).T
+        Mat_B_extalt = df[key_B_extalt].values.astype(DTY_FLT).T 
+        kws = {'cmap_name': 'Blues', 'rotate': 65}
+        # analogous_confusion_extended(
+        #     df[key_A].values.astype(DTY_FLT).T, Mat_B_bin, lbl_A,
+        #     lbl_B_bin, f'{figname}_cont1', **kws)
+        analogous_confusion_extended(
+            df[key_C].values.astype(DTY_FLT).T, Mat_B_bin, lbl_C,
+            lbl_B_bin, f'{figname}_cont1p', **kws)
+        kws['cmap_name'] = 'Oranges'
+        # analogous_confusion_extended(
+        #     df[key_A].values.astype(DTY_FLT).T, Mat_B_ext, lbl_A,
+        #     lbl_B_ext, f'{figname}_cont2', **kws)
+        analogous_confusion_extended(
+            df[key_C].values.astype(DTY_FLT).T, Mat_B_ext, lbl_C,
+            lbl_B_ext, f'{figname}_cont2p', **kws)
+        kws['cmap_name'] = 'RdPu'
+        # analogous_confusion_extended(
+        #     df[key_A].values.astype(DTY_FLT).T, Mat_B_extalt,
+        #     lbl_A, lbl_B_extalt, f'{figname}_cont3', **kws)
+        analogous_confusion_extended(
+            df[key_C].values.astype(DTY_FLT).T, Mat_B_extalt,
+            lbl_C, lbl_B_extalt, f'{figname}_cont3p', **kws)
+        pdb.set_trace()
+        return
+
 
 class PlotA_fair_ens(PlotA_initial):
     def __init__(self):
@@ -298,7 +362,19 @@ class PlotA_fair_ens(PlotA_initial):
         tmp = tag_sa1[-3:]
         df_nonbin['extAlt'] = df_nonbin[tmp[0]] + df_nonbin[
             tmp[1]] + df_nonbin[tmp[2]] + df_nonbin['extGrp']
-        # pdb.set_trace()
+        pdb.set_trace()
+        pick = [0, 1, 2, 3, 4, 5]  # ,6,7]
+        col_grp = tag_sa1[:3] + [tag_sa1[16 + 3], tag_sa1[27 + 3]]
+        col_ext = tag_sa1[4:10][:3] + [tag_sa1[16 + 7], tag_sa1[27 + 7]]
+        col_ext_alt = tag_sa1[10:16][:3] + [
+            tag_sa1[16 + 10], tag_sa1[27 + 10]]
+        self.draw_trade_off(df_nonbin, pick, tag_acc[:16] + [
+            tag_acc[15 + 3], tag_acc[19 + 2], tag_acc[19 + 4]], [
+            col_grp, col_ext, col_ext_alt], f'{figname}_to')
+        self.draw_extended_grp_scat(
+            df_nonbin, col_grp, col_ext, col_ext_alt,
+            f'{figname}_scat', verbose)
+
         # self.draw_extended_grp(df_nonbin, tag_sa1[3], [tag_sa1[16]], (
         #     # 'Group fairness (bin-val)',
         #     # 'Extended group fairness (multival)'))
@@ -311,16 +387,16 @@ class PlotA_fair_ens(PlotA_initial):
         self.draw_extended_hfm_tim(df_nonbin, tag_sa1[20], [
             tag_sa1[27], tag_sa1[27 + 4], tag_sa1[27 + 4 + 7]],
             figname + '_hfm')
-        # self.draw_extended_hfm_tim(df_nonbin, tag_sa1[20], [
-        #     tag_sa1[27], ], figname + '_hfm_prim')
-        self.draw_extended_grp_scat(df_nonbin, tag_sa1[:3] + [
-            # tag_sa1[19]],  # tag_sa1[4:4 + 6], tag_sa1[4 + 6: 4 + 12],
-            # tag_sa1[4:10] + [tag_sa1[19 + 4], tag_sa1[19 + 7]],
-            # tag_sa1[10:16] + [tag_sa1[26 + 3], tag_sa1[26 + 7]],
-            tag_sa1[16 + 3], tag_sa1[27 + 3]],
-            tag_sa1[4:10][:3] + [tag_sa1[16 + 7], tag_sa1[27 + 7]],
-            tag_sa1[10:16][:3] + [tag_sa1[16 + 10], tag_sa1[27 + 10]],
-            figname + '_scat', verbose)
+        # # self.draw_extended_hfm_tim(df_nonbin, tag_sa1[20], [
+        # #     tag_sa1[27], ], figname + '_hfm_prim')
+        # self.draw_extended_grp_scat(df_nonbin, tag_sa1[:3] + [
+        #     # tag_sa1[19]],  # tag_sa1[4:4 + 6], tag_sa1[4 + 6: 4 + 12],
+        #     # tag_sa1[4:10] + [tag_sa1[19 + 4], tag_sa1[19 + 7]],
+        #     # tag_sa1[10:16] + [tag_sa1[26 + 3], tag_sa1[26 + 7]],
+        #     tag_sa1[16 + 3], tag_sa1[27 + 3]],
+        #     tag_sa1[4:10][:3] + [tag_sa1[16 + 7], tag_sa1[27 + 7]],
+        #     tag_sa1[10:16][:3] + [tag_sa1[16 + 10], tag_sa1[27 + 10]],
+        #     figname + '_scat', verbose)
 
         # # self.obtain_sing_dat_cls(0, 2, raw_dframe, id_set, mk)
         # # self.depict_separately(0, 2, mk)

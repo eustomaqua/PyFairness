@@ -113,7 +113,8 @@ def multi_boxplot_rect(df, tag_Xs, tag_Ys=None, tag_Zs=None,
     return
 
 
-def _radar_X(ax, df, tag_Xs, annotX, clockwise=False):
+def _radar_X(ax, df, tag_Xs, annotX, clockwise=False,
+             stylish=False):
     # scores = [df[i].values.astype(DTY_FLT) for i in tag_Xs]
     # scores = [np.concatenate([i, [i[0]]]) for i in scores]
     angles = np.linspace(
@@ -122,6 +123,8 @@ def _radar_X(ax, df, tag_Xs, annotX, clockwise=False):
     angles = np.concatenate([angles, [angles[0], ]])
     if clockwise:
         angles = angles[::-1]
+    # if stylish:
+    #     plt.style.use('ggplot')  # 使用ggplot的绘图风格
     scores = df[tag_Xs].values.astype(DTY_FLT)
     scores = np.concatenate([scores, scores[:, 0].reshape(
         -1, 1)], axis=1)
@@ -132,7 +135,12 @@ def _radar_X(ax, df, tag_Xs, annotX, clockwise=False):
     # ax.set_rlim(0, 100)  # 设置雷达图的坐标刻度范围
     # ax.set_rlabel_position(270)  # 设置坐标显示角度，相对于起始角度的偏移量
 
-    ax.set_thetagrids(angles * 180 / np.pi, labels)
+    kws = {}  # {'fontsize': 14, 'style': 'italic'}
+    if stylish:
+        for i, sc in enumerate(scores):
+            ax.fill(angles, sc, alpha=.25)
+        kws['style'] = 'italic'
+    ax.set_thetagrids(angles * 180 / np.pi, labels, **kws)
     ax.set_theta_zero_location('N')  # 'E'
     ax.set_rlabel_position(225)
     return ax
@@ -140,10 +148,11 @@ def _radar_X(ax, df, tag_Xs, annotX, clockwise=False):
 
 def radar_chart(df, tag_Xs,  # tag_Ys=None, tag_Zs=None,
                 annotX=tuple(), annotY=tuple(), clockwise=True,
-                figname='', figsize='M-WS'):
+                stylish=False, figname='', figsize='M-WS'):
     fig = plt.figure(figsize=_setup_config[figsize])
     ax = fig.add_subplot(111, polar=True)  # 设置极坐标格式
-    ax = _radar_X(ax, df, tag_Xs, annotX, clockwise)
+    ax = _radar_X(ax, df, tag_Xs, annotX, clockwise,
+                  stylish=stylish)
     if annotY:
         plt.legend(annotY, loc="best",
                    labelspacing=.07, prop={'size': 9})
@@ -171,4 +180,6 @@ def radar_chart(df, tag_Xs,  # tag_Ys=None, tag_Zs=None,
 # https://blog.csdn.net/zyh960/article/details/118278429
 # https://zhuanlan.zhihu.com/p/686319124
 # https://developer.baidu.com/article/details/2795826
+# https://matplotlib.org.cn/stable/gallery/color/color_sequences.html
+# https://matplotlib.org.cn/stable/gallery/color/colormap_reference.html
 #
