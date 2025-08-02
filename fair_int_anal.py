@@ -10,10 +10,13 @@ from pyfair.facil.utils_const import unique_column, DTY_FLT
 
 from pyfair.granite.draw_addtl import (
     multi_lin_reg_with_distr, single_line_reg_with_distr,
-    multi_lin_reg_without_distr)
+    multi_lin_reg_without_distr,
+    scatter_with_marginal_distrib, lineplot_with_uncertainty,
+    line_reg_with_marginal_distr)
 from pyfair.granite.draw_fancy import (
     boxplot_rect, multi_boxplot_rect, radar_chart)
-from pyfair.granite.draw_chart import analogous_confusion_extended
+from pyfair.granite.draw_chart import (
+    analogous_confusion_extended, multiple_scatter_chart)
 
 
 # -----------------------------
@@ -294,8 +297,43 @@ class PlotA_initial(GraphSetup):
         return
 
     def draw_trade_off(self, df, pick, tag_X, tag_Ys, figname):
+        annotZs = GRP_FAIR_COMMON + [
+            r'GEI ($\alpha$=0.5)', 'Theil', 'DR']
         for pk in pick:
             annotX = self._perf_metric[pk]  # pick]
+            # annots = (annotX, "Fairness")  # 'Fairness measure'
+            # X = df[tag_X[pk]].values.astype(DTY_FLT)
+            # Ys = df[tag_Ys[0][:3] + tag_X[-2:]].values.astype(DTY_FLT).T
+            # multiple_scatter_chart(
+            #     X, Ys, annots, annotZs, f'{figname}_to{pk}v',
+            #     ind_hv='v', identity=False)
+            # scatter_with_marginal_distrib(
+            #     df, tag_X[pk], 'Fairness', tag_Ys[0][:3],
+            #     GRP_FAIR_COMMON, annotX=annotX, annotY='Fairness',
+            #     figname=f'{figname}_to{pk}_s4')
+            # line_reg_with_marginal_distr(
+            #     df, tag_X[pk], 'Fairness', tag_Ys[0][:3] + tag_X[
+            #         -2:] + tag_X[-3:-2], annotZs, annotX=annotX,
+            #     annotY='Fairness', snspec='sty4b',
+            #     figname=f'{figname}_to{pk}_s4')
+            line_reg_with_marginal_distr(  # tag_X[-2:]+tag_X[-3:-2]
+                df, tag_X[pk], 'Fairness', tag_X[-3:], annotZs[-3:],
+                annotX=annotX, annotY='Individual fairness',
+                snspec='sty4b', figname=f'{figname}_to{pk}_s4')
+            line_reg_with_marginal_distr(
+                df, tag_X[pk], 'Fairness', tag_Ys[0][:3], annotZs[:3],
+                annotX=annotX, annotY='Group fairness (bin-val)',
+                snspec='sty4b', figname=f'{figname}_to{pk}_s1')
+            line_reg_with_marginal_distr(
+                df, tag_X[pk], 'Fairness', tag_Ys[1][:3],
+                [f'{i} ext.' for i in annotZs[:3]], annotX=annotX,
+                annotY='Extended group fairness (multival)',
+                snspec='sty4b', figname=f'{figname}_to{pk}_s2')
+            line_reg_with_marginal_distr(
+                df, tag_X[pk], 'Fairness', tag_Ys[0][:3],
+                [f'{i} ext. alt' for i in annotZs[:3]], annotX=annotX,
+                annotY='Alternative extended group fairness (multival)',
+                snspec='sty4b', figname=f'{figname}_to{pk}_s3')
 
         key_A = [tag_X[:8][i] for i in pick]
         key_C = [tag_X[8:16][i] for i in pick]
@@ -304,10 +342,12 @@ class PlotA_initial(GraphSetup):
         key_B_extalt = tag_Ys[2][:3] + tag_X[-3:] + tag_Ys[2][-2:]
         lbl_A = [self._perf_metric[i] for i in pick]
         lbl_C = [self._dal_metric[i] for i in pick]
-        lbl_B_bin = GRP_FAIR_COMMON + [
-            'DR', r'GEI ($\alpha=0.5$)', 'Theil',
-            r'$\mathbf{df}_\text{prev}$',
-            r'$\hat{\mathbf{df}}_\text{prev}$']
+        # lbl_B_bin = GRP_FAIR_COMMON + [
+        #     'DR', r'GEI ($\alpha=0.5$)', 'Theil',
+        #     r'$\mathbf{df}_\text{prev}$',
+        #     r'$\hat{\mathbf{df}}_\text{prev}$']
+        lbl_B_bin = annotZs + [r'$\mathbf{df}_\text{prev}$',
+                               r'$\hat{\mathbf{df}}_\text{prev}$']
         lbl_B_ext = [f'{i} ext.' for i in GRP_FAIR_COMMON] + lbl_B_bin[
             3:6] + [r'$\mathbf{df}$', r'$\hat{\mathbf{df}}$']
         lbl_B_extalt = [
@@ -321,24 +361,33 @@ class PlotA_initial(GraphSetup):
         # analogous_confusion_extended(
         #     df[key_A].values.astype(DTY_FLT).T, Mat_B_bin, lbl_A,
         #     lbl_B_bin, f'{figname}_cont1', **kws)
+        # analogous_confusion_extended(
+        #     df[key_C].values.astype(DTY_FLT).T, Mat_B_bin, lbl_C,
+        #     lbl_B_bin, f'{figname}_cont1p', **kws)
         analogous_confusion_extended(
-            df[key_C].values.astype(DTY_FLT).T, Mat_B_bin, lbl_C,
-            lbl_B_bin, f'{figname}_cont1p', **kws)
+            df[key_C + key_A].values.astype(DTY_FLT).T, Mat_B_bin,
+            lbl_C + lbl_A, lbl_B_bin, f'{figname}_cont1p', **kws)
         kws['cmap_name'] = 'Oranges'
         # analogous_confusion_extended(
         #     df[key_A].values.astype(DTY_FLT).T, Mat_B_ext, lbl_A,
         #     lbl_B_ext, f'{figname}_cont2', **kws)
+        # analogous_confusion_extended(
+        #     df[key_C].values.astype(DTY_FLT).T, Mat_B_ext, lbl_C,
+        #     lbl_B_ext, f'{figname}_cont2p', **kws)
         analogous_confusion_extended(
-            df[key_C].values.astype(DTY_FLT).T, Mat_B_ext, lbl_C,
-            lbl_B_ext, f'{figname}_cont2p', **kws)
+            df[key_C + key_A].values.astype(DTY_FLT).T, Mat_B_ext,
+            lbl_C + lbl_A, lbl_B_ext, f'{figname}_cont2p', **kws)
         kws['cmap_name'] = 'RdPu'
         # analogous_confusion_extended(
         #     df[key_A].values.astype(DTY_FLT).T, Mat_B_extalt,
         #     lbl_A, lbl_B_extalt, f'{figname}_cont3', **kws)
+        # analogous_confusion_extended(
+        #     df[key_C].values.astype(DTY_FLT).T, Mat_B_extalt,
+        #     lbl_C, lbl_B_extalt, f'{figname}_cont3p', **kws)
         analogous_confusion_extended(
-            df[key_C].values.astype(DTY_FLT).T, Mat_B_extalt,
-            lbl_C, lbl_B_extalt, f'{figname}_cont3p', **kws)
-        pdb.set_trace()
+            df[key_C + key_A].values.astype(DTY_FLT).T, Mat_B_extalt,
+            lbl_C + lbl_A, lbl_B_extalt, f'{figname}_cont3p', **kws)
+        # pdb.set_trace()
         return
 
 
@@ -362,14 +411,14 @@ class PlotA_fair_ens(PlotA_initial):
         tmp = tag_sa1[-3:]
         df_nonbin['extAlt'] = df_nonbin[tmp[0]] + df_nonbin[
             tmp[1]] + df_nonbin[tmp[2]] + df_nonbin['extGrp']
-        pdb.set_trace()
-        pick = [0, 1, 2, 3, 4, 5]  # ,6,7]
+        # pdb.set_trace()
+        pick = [0, 4, 5]  # 1,2,3,] # ,6,7]
         col_grp = tag_sa1[:3] + [tag_sa1[16 + 3], tag_sa1[27 + 3]]
         col_ext = tag_sa1[4:10][:3] + [tag_sa1[16 + 7], tag_sa1[27 + 7]]
         col_ext_alt = tag_sa1[10:16][:3] + [
             tag_sa1[16 + 10], tag_sa1[27 + 10]]
         self.draw_trade_off(df_nonbin, pick, tag_acc[:16] + [
-            tag_acc[15 + 3], tag_acc[19 + 2], tag_acc[19 + 4]], [
+            tag_acc[19 + 2], tag_acc[19 + 4], tag_acc[15 + 3], ], [
             col_grp, col_ext, col_ext_alt], f'{figname}_to')
         self.draw_extended_grp_scat(
             df_nonbin, col_grp, col_ext, col_ext_alt,
