@@ -66,15 +66,16 @@ def _bp_dat_XY(df, tag_Xs, tag_Ys):
     return pd.concat(dfs, axis=0)
 
 
-def _bp_dat_XYZ(df, tag_Xs, tag_Ys, tag_Zs):
+def _bp_dat_XYZ(df, tag_Xs, tag_Ys, tag_Zs,
+                labels=('ori', 'ext', 'alt',)):
     df_tX = df[tag_Xs]
-    df_tX.loc[:, ('hue_dim',)] = 'ori'
+    df_tX.loc[:, ('hue_dim',)] = labels[0]  # 'ori'
     columns = {t2: t1 for t1, t2 in zip(tag_Xs, tag_Ys)}
     df_tY = df[tag_Ys].rename(columns=columns)
-    df_tY.loc[:, ('hue_dim',)] = 'ext'
+    df_tY.loc[:, ('hue_dim',)] = labels[1]  # 'ext'
     columns = {t3: t1 for t1, t3 in zip(tag_Xs, tag_Zs)}
     df_tZ = df[tag_Zs].rename(columns=columns)
-    df_tZ.loc[:, ('hue_dim',)] = 'ext.alt'
+    df_tZ.loc[:, ('hue_dim',)] = labels[2]  # 'ext.alt'
     df_alt = pd.concat([df_tX, df_tY, df_tZ], axis=0)
 
     dfs = [df_alt[[i, 'hue_dim']].rename(columns={
@@ -84,7 +85,37 @@ def _bp_dat_XYZ(df, tag_Xs, tag_Ys, tag_Zs):
     return pd.concat(dfs, axis=0)
 
 
+def _bp_dat_XYZT_extra(df, tag_Xs, tag_Ys, tag_Zs,
+                       tag_Ts, tag_Es, labels):
+    df_tX = df[tag_Xs]
+    df_tX.loc[:, ('hue_dim',)] = labels[0]  # 'ori'
+    columns = {t2: t1 for t1, t2 in zip(tag_Xs, tag_Ys)}
+    df_tY = df[tag_Ys].rename(columns=columns)
+    df_tY.loc[:, ('hue_dim',)] = labels[1]  # 'ext'
+    columns = {t3: t1 for t1, t3 in zip(tag_Xs, tag_Zs)}
+    df_tZ = df[tag_Zs].rename(columns=columns)
+    df_tZ.loc[:, ('hue_dim',)] = labels[2]  # 'alt', 'ext.alt'
+
+    columns = {t4: t1 for t1, t4 in zip(tag_Xs, tag_Ts)}
+    df_tT = df[tag_Ts].rename(columns=columns)
+    df_tT.loc[:, ('hue_dim',)] = labels[3]  # 'ext (avg)'
+    columns = {t5: t1 for t1, t5 in zip(tag_Xs, tag_Es)}
+    df_tE = df[tag_Es].rename(columns=columns)
+    df_tE.loc[:, ('hue_dim',)] = labels[4]  # 'alt (avg)'
+
+    df_alt = pd.concat([df_tX, df_tY, df_tZ,
+                        df_tT, df_tE], axis=0)
+    dfs = [df_alt[[i, 'hue_dim']].rename(columns={
+        i: 'fair'}) for i in tag_Xs]
+    for i, df in enumerate(dfs):
+        df['bel'] = tag_Xs[i]  # belong
+    return pd.concat(dfs, axis=0)
+
+
 def multi_boxplot_rect(df, tag_Xs, tag_Ys=None, tag_Zs=None,
+                       tag_Ts=None, tag_Extra=None,
+                       labels=('ori', 'ext', 'alt', 'ext (avg)',
+                               'alt (avg)',),  # tag_Es=None,
                        annotX=tuple(), figname='',
                        locate="best", figsize='M-WS'):
     fig, ax = plt.subplots(figsize=_setup_config[figsize])
@@ -96,11 +127,22 @@ def multi_boxplot_rect(df, tag_Xs, tag_Ys=None, tag_Zs=None,
         sns.boxplot(ax=ax, data=df_alt, x="bel", y="fair",
                     hue="hue_dim")
         sns.move_legend(ax, locate, title='')
-    else:
-        df_alt = _bp_dat_XYZ(df, tag_Xs, tag_Ys, tag_Zs)
+    elif tag_Ts is None:
+        df_alt = _bp_dat_XYZ(df, tag_Xs, tag_Ys, tag_Zs,
+                             labels=labels[:3])
         sns.boxplot(ax=ax, data=df_alt, x="bel", y="fair",
                     hue="hue_dim")
         sns.move_legend(ax, locate, title='')
+    else:
+        df_alt = _bp_dat_XYZT_extra(
+            df, tag_Xs, tag_Ys, tag_Zs, tag_Ts, tag_Extra,
+            labels)
+        sns.boxplot(ax=ax, data=df_alt, x="bel", y="fair",
+                    hue="hue_dim")
+        sns.move_legend(ax, locate, title='')
+        ax.legend(bbox_to_anchor=(1.05, 1), borderaxespad=0,
+                  loc='upper left', labelspacing=.07,
+                  prop={'size': 9})
     if annotX:
         tmp = ax.get_xticks()
         ax.set_xticks(tmp)
@@ -153,7 +195,11 @@ def radar_chart(df, tag_Xs,  # tag_Ys=None, tag_Zs=None,
     ax = fig.add_subplot(111, polar=True)  # 设置极坐标格式
     ax = _radar_X(ax, df, tag_Xs, annotX, clockwise,
                   stylish=stylish)
-    if annotY:
+    if len(annotY) > 3:
+        plt.legend(annotY, bbox_to_anchor=(1.05, 1), borderaxespad=0,
+                   loc='upper left', labelspacing=.07,
+                   prop={'size': 9})
+    elif annotY:
         plt.legend(annotY, loc="best",
                    labelspacing=.07, prop={'size': 9})
 
@@ -182,4 +228,6 @@ def radar_chart(df, tag_Xs,  # tag_Ys=None, tag_Zs=None,
 # https://developer.baidu.com/article/details/2795826
 # https://matplotlib.org.cn/stable/gallery/color/color_sequences.html
 # https://matplotlib.org.cn/stable/gallery/color/colormap_reference.html
+#
+# https://github.com/fonttools/fonttools/issues/3538
 #

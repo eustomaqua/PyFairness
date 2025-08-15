@@ -72,6 +72,7 @@ class FairNonbinaryPlotting:
         raw_df = self._iterator.load_raw_dataset(
             xlsx_name, sheet_name)
         self._iterator.schedule_mspaint(raw_df, sheet_name)
+        self._iterator.schedule_mspaint_avg(raw_df, sheet_name)
         # pdb.set_trace()
         return
 

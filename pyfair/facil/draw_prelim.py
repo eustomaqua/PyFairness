@@ -23,8 +23,8 @@ import numpy as np
 
 # mpl.use('Agg')  # set the 'backend'
 # plt.rcParams['font.family'] = 'Times New Roman'
-# plt.rcParams['font.family'] = 'Helvetica'  # 'Arial','Simsun'
-plt.rcParams['font.family'] = 'stixgeneral'
+plt.rcParams['font.family'] = 'Arial'  # 'Helvetica','Simsun'
+# plt.rcParams['font.family'] = 'stixgeneral'
 
 # plt.rc('text', usetex=True)
 # plt.rcParams['font.sans-serif'] = ['SimHei']  # show chinese lbl
