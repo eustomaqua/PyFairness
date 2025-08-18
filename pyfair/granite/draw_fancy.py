@@ -49,14 +49,15 @@ def _bp_dat_X(df, tag_Xs):
     return df_tmp
 
 
-def _bp_dat_XY(df, tag_Xs, tag_Ys):
+def _bp_dat_XY(df, tag_Xs, tag_Ys,
+               labels=('ori', 'ext',)):
     df_tX = df[tag_Xs]
     # df_tX['hue_dim'] = "ori"  # "ori."  # OG,orig
-    df_tX.loc[:, ('hue_dim',)] = "ori"
+    df_tX.loc[:, ('hue_dim',)] = labels[0]  # "ori"
     columns = {t2: t1 for t1, t2 in zip(tag_Xs, tag_Ys)}
     df_tY = df[tag_Ys].rename(columns=columns)
     # df_tY['hue_dim'] = "ext"  # "ext."
-    df_tY.loc[:, ('hue_dim',)] = "ext"
+    df_tY.loc[:, ('hue_dim',)] = labels[1]  # "ext"
     df_alt = pd.concat([df_tX, df_tY], axis=0)
 
     dfs = [df_alt[[i, 'hue_dim']].rename(columns={
@@ -123,13 +124,14 @@ def multi_boxplot_rect(df, tag_Xs, tag_Ys=None, tag_Zs=None,
         df_alt = _bp_dat_X(df, tag_Xs)
         sns.boxplot(ax = ax, data = df_alt, x = "bel", y = "fair")
     elif tag_Zs is None:
-        df_alt = _bp_dat_XY(df, tag_Xs, tag_Ys)
+        df_alt = _bp_dat_XY(df, tag_Xs, tag_Ys,
+                            labels=labels[: 2])
         sns.boxplot(ax=ax, data=df_alt, x="bel", y="fair",
                     hue="hue_dim")
         sns.move_legend(ax, locate, title='')
     elif tag_Ts is None:
         df_alt = _bp_dat_XYZ(df, tag_Xs, tag_Ys, tag_Zs,
-                             labels=labels[:3])
+                             labels=labels[: 3])
         sns.boxplot(ax=ax, data=df_alt, x="bel", y="fair",
                     hue="hue_dim")
         sns.move_legend(ax, locate, title='')
@@ -195,12 +197,12 @@ def radar_chart(df, tag_Xs,  # tag_Ys=None, tag_Zs=None,
     ax = fig.add_subplot(111, polar=True)  # 设置极坐标格式
     ax = _radar_X(ax, df, tag_Xs, annotX, clockwise,
                   stylish=stylish)
-    if len(annotY) > 3:
-        plt.legend(annotY, bbox_to_anchor=(1.05, 1), borderaxespad=0,
-                   loc='upper left', labelspacing=.07,
-                   prop={'size': 9})
-    elif annotY:
-        plt.legend(annotY, loc="best",
+
+    if annotY:  # if len(annotY) > 3:
+        # plt.legend(annotY, loc="best",
+        #            labelspacing=.07, prop={'size': 9})
+        plt.legend(annotY, bbox_to_anchor=(1.05, 1),
+                   borderaxespad=0, loc='upper left',
                    labelspacing=.07, prop={'size': 9})
 
     # if tag_Ys is None:

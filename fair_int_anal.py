@@ -30,11 +30,12 @@ from pyfair.granite.draw_chart import (
 
 class PlotA_initial(GraphSetup):
     pass
+    _dr_ptb = 'K'  # perturb(ation)  # 'K','L'
 
     _perf_metric = [
         'Accuracy', 'Precision', 'Recall',  # 'Sensitivity'
         'Specificity', r'$\mathrm{f}_1$ score',  # r'$\bar{g}$',
-        'g-mean', 'bal. acc', 'discr power']  # 'discrim. discrimn.'
+        'G mean', 'bal. acc', 'discr power']  # 'discrim. discrimn.'
     # _dal_metric = [
     #     r'$\Delta(\text{Accuracy})$', r'$\Delta(\text{Precision})$',
     #     r'$\Delta(\text{Recall})$', r'$\Delta(\text{Specificity})$',
@@ -44,7 +45,7 @@ class PlotA_initial(GraphSetup):
         r'$\Delta$(Accuracy)', r'$\Delta$(Precision)',
         r'$\Delta$(Recall)', r'$\Delta$(Specificity)',
         r'$\Delta$($\mathrm{f}_1$ score)',  # r'$\Delta(\bar{g})$',
-        r'$\Delta$(g-mean)',
+        r'$\Delta$(G mean)',  # r'$\Delta$(g-mean)', 'g_mean'
         r'$\Delta$(bal. acc)', r'$\Delta$(discr power)']
 
     def obtain_tag_col(self, tag='tst'):
@@ -77,22 +78,26 @@ class PlotA_initial(GraphSetup):
         #             SP-ext-meticulous *3, SP-ext-avg-meticulous *3,tim,
         #             hfm drt (bin 4+ nonbin 7), hfm app (bin 4+ nonbin 7)
         # siz: 16+4+6+14=40, 4+13+11*2=17+22=39
-        return tag_common, tag_sa1, tag_sa2
+        # return tag_common, tag_sa1, tag_sa2
+        return tag_common + csv_row_1[10:12], tag_sa1, tag_sa2
 
     def obtain_binval_senatt(self, dframe, id_set,  # nb_set,
                              tag='tst'):
         tag_acc, tag_sa1, tag_sa2 = self.obtain_tag_col(tag)
         columns = {t2: t1 for t1, t2 in zip(tag_sa1, tag_sa2)}
         df_raw = dframe.iloc[id_set[1] + 1: id_set[2]][tag_acc + tag_sa1]
+        df_raw[self._dr_ptb] = dframe.iloc[id_set[1]][self._dr_ptb]
         for k in [1, 2]:
             df_tmp = dframe.iloc[id_set[
                 k] + 1: id_set[k + 1]][tag_acc + tag_sa2]
             df_tmp = df_tmp.rename(columns=columns)
+            df_tmp[self._dr_ptb] = dframe.iloc[id_set[k]][self._dr_ptb]
             df_raw = pd.concat([df_raw, df_tmp], axis=0)
 
         for k in [3, 4]:
             df_tmp = dframe.iloc[id_set[
                 k] + 1: id_set[k + 1]][tag_acc + tag_sa1]
+            df_tmp[self._dr_ptb] = dframe.iloc[id_set[k]][self._dr_ptb]
             df_raw = pd.concat([df_raw, df_tmp], axis=0)
         return df_raw
 
@@ -101,16 +106,19 @@ class PlotA_initial(GraphSetup):
         tag_acc, tag_sa1, tag_sa2 = self.obtain_tag_col(tag)
         columns = {t2: t1 for t1, t2 in zip(tag_sa1, tag_sa2)}
         df_raw = dframe.iloc[id_set[2] + 1: id_set[3]][tag_acc + tag_sa1]
+        df_raw[self._dr_ptb] = dframe.iloc[id_set[2]][self._dr_ptb]
         for k in [3, 4]:
             df_tmp = dframe.iloc[id_set[k] + 1: id_set[
                 k + 1]][tag_acc + tag_sa2]
             df_tmp = df_tmp.rename(columns=columns)
+            df_tmp[self._dr_ptb] = dframe.iloc[id_set[k]][self._dr_ptb]
             df_raw = pd.concat([df_raw, df_tmp], axis=0)
         # df_raw = df_raw.reset_index(drop=True)
         # np.isnan(df_raw.values.astype('float')).any()
         if not first_incl:  # if not first: first_incl.
             return df_raw
         df_tmp = dframe.iloc[id_set[0] + 1: id_set[1]][tag_acc + tag_sa1]
+        df_tmp[self._dr_ptb] = dframe.iloc[id_set[0]][self._dr_ptb]
         df_raw = pd.concat([df_raw, df_tmp], axis=0)
         return df_raw
 
@@ -290,23 +298,28 @@ class PlotA_initial(GraphSetup):
         df_tmp_tmp = df_alt[sub_ext_alt]
         for i, j in zip(sub_grp, sub_ext_alt):
             df_tmp.loc[2, i] = float(df_tmp_tmp[j].mean())
-        annotY = ['ori', 'ext', 'ext.alt']
+        annotY = ['ori', 'ext', 'alt']  # 'ext.alt']
         if verbose:
             radar_chart(df_tmp[:2], currX, labels, annotY[:2],
                         figname=f'{fgn}_s{pick_set}c{pick_clf}_ext')
         radar_chart(df_tmp, currX, labels, annotY,
                     figname=f'{fgn}_s{pick_set}c{pick_clf}_extalt')
-        # pdb.set_trace()
         return
 
     def draw_trade_off(self, df, pick, tag_X, tag_Ys, figname,
                        ver_mark=''):
         annotZs = GRP_FAIR_COMMON + [
             r'GEI ($\alpha$=0.5)', 'Theil', 'DR']
-        tmp_ext = ['{:6s} ext'.format(i) for i in annotZs[:3]]
-        tmp_ext_alt = ['{:6s} alt'.format(i) for i in annotZs[:3]]
-        tmp_ext[1] = f'{annotZs[1]} ext'
-        tmp_ext_alt[1] = f'{annotZs[1]} alt'  # not '{:7s}'
+        # tmp_ext = ['{:6s} ext'.format(i) for i in annotZs[:3]]
+        # tmp_ext_alt = ['{:6s} alt'.format(i) for i in annotZs[:3]]
+        # tmp_ext[1] = f'{annotZs[1]} ext'
+        # tmp_ext_alt[1] = f'{annotZs[1]} alt'  # not '{:7s}'
+        tmp_ext = [r'$\text{DP}^\text{ext}$',
+                   r'$\text{EOpp}^\text{ext}$',
+                   r'$\text{PP}^\text{ext}$', ]
+        tmp_ext_alt = [r'$\text{DP}^\text{alt}$',
+                       r'$\text{EOpp}^\text{alt}$',
+                       r'$\text{PP}^\text{alt}$', ]
         for pk in pick:
             annotX = self._perf_metric[pk]  # pick]
             # annots = (annotX, "Fairness")  # 'Fairness measure'
@@ -359,10 +372,15 @@ class PlotA_initial(GraphSetup):
         #     r'$\hat{\mathbf{df}}_\text{prev}$']
         lbl_B_bin = annotZs + [r'$\mathbf{df}_\text{prev}$',
                                r'$\hat{\mathbf{df}}_\text{prev}$']
-        lbl_B_ext = [f'{i} ext.' for i in GRP_FAIR_COMMON] + lbl_B_bin[
-            3:6] + [r'$\mathbf{df}$', r'$\hat{\mathbf{df}}$']
-        lbl_B_extalt = [
-            f'{i} alt.' for i in GRP_FAIR_COMMON] + lbl_B_bin[3:6] + [
+        # lbl_B_ext = [f'{i} ext.' for i in GRP_FAIR_COMMON] + lbl_B_bin[
+        #     3:6] + [r'$\mathbf{df}$', r'$\hat{\mathbf{df}}$']
+        # lbl_B_extalt = [
+        #     f'{i} alt.' for i in GRP_FAIR_COMMON] + lbl_B_bin[3:6] + [
+        #     r'$\mathbf{df}^\text{avg}$',
+        #     r'$\hat{\mathbf{df}}^\text{avg}$']
+        lbl_B_ext = tmp_ext + lbl_B_bin[3:6] + [
+            r'$\mathbf{df}$', r'$\hat{\mathbf{df}}$']
+        lbl_B_extalt = tmp_ext_alt + lbl_B_bin[3:6] + [
             r'$\mathbf{df}^\text{avg}$',
             r'$\hat{\mathbf{df}}^\text{avg}$']
         Mat_B_bin = df[key_B_bin].values.astype(DTY_FLT).T
@@ -398,8 +416,97 @@ class PlotA_initial(GraphSetup):
         analogous_confusion_extended(
             df[key_C + key_A].values.astype(DTY_FLT).T, Mat_B_extalt,
             lbl_C + lbl_A, lbl_B_extalt, f'{figname}_cont3p', **kws)
-        # pdb.set_trace()
         return
+
+    def draw_extended_idv_tim(self, df, tag_X, tag_Ys, figname):
+        tim_grp, tim_grp_nonbin = tag_X
+        tim_idv, tim_df, tim_df_pl = tag_Ys
+        X = df[tim_grp].values.astype(DTY_FLT)
+        Ys = [df[i].values.astype(DTY_FLT) / X for i in [
+            tim_grp_nonbin, ] + tim_idv]
+        antX = r'T_\text{gf (bin-val)}'      # GF,gf
+        antY = r'T_\text{if (multival)}'
+        annots = [f'${antX}$ (sec)', f'${antY}$',
+                  f'${antY}={antX}$']  # antYs[1]
+        antZs = [r'$T_\text{gf (multival)}$',
+                 # r'$T_{\text{GEI (} \alpha\text{=0.5)}}$',
+                 r'$T_\text{GEI}$',    # alpha 0-1 in list
+                 r'$T_\text{Theil}$', r'$T_\text{DR}$']
+        # Z = df['idv_ptb'].values.astype(DTY_FLT) / X
+        # Z = Ys[:-1] + [Z, ]
+        annots[2] = r'$T_\text{if}= T_\text{gf (bin-val)}$'
+
+        kws = {'snspec': 'sty6'}  # {'linreg': True,
+        annots[1] = r'$\frac{ T_\text{if (multival)} }{ T_\text{gf (bin-val)} }-1$'
+        multi_lin_reg_without_distr(
+            X, [i - 1. for i in Ys], antZs, annots,
+            f'{figname}_tim_st6a', **kws)
+        # multi_lin_reg_without_distr(
+        #     X, [i - 1. for i in Z], antZs, annots,
+        #     f'{figname}_tim_st7a', **kws)
+        # multi_lin_reg_without_distr(
+        #     X, [i - 1. for i in Ys[:-1]], antZs[:-1], annots,
+        #     f'{figname}_tim_st8a', **kws)
+        multi_lin_reg_without_distr(
+            X, [i - 1. for i in Ys[1:]], antZs[1:], annots,
+            f'{figname}_tim_st9a', **kws)
+        # annots[1] = r'$\lg(\frac{ T_\text{IF (multival)} }{ T_\text{GF (bin-val)} })$'
+        annots[1] = r'$\lg(\frac{ T_\text{if (multival)} }{ T_\text{gf (bin-val)} })$'
+        multi_lin_reg_without_distr(
+            X, [np.log10(i) for i in Ys], antZs, annots,
+            f'{figname}_tim_st6b', **kws)
+        # multi_lin_reg_without_distr(
+        #     X, [np.log10(i) for i in Z], antZs, annots,
+        #     f'{figname}_tim_st7b', **kws)
+        # multi_lin_reg_without_distr(
+        #     X, [np.log10(i) for i in Ys[:-1]], antZs[:-1], annots,
+        #     f'{figname}_tim_st8b', **kws)
+        multi_lin_reg_without_distr(
+            X, [np.log10(i) for i in Ys[1:]], antZs[1:], annots,
+            f'{figname}_tim_st9b', **kws)
+
+        fgn = f'{figname}_df_tim'
+        antZs_drt = [r'$T_\text{gf (multival)}$',
+                     r'$T_{\mathbf{df}_\text{prev} \text{ (bin-val)}}$',
+                     r'$T_{\mathbf{df} \text{ (multival)}}$',
+                     r'$T_{\mathbf{df} \text{ intersectional}}$']
+        annots_drt = [r'$T_\text{gf (bin-val)}$ (sec)', '',
+                      r'$T_{\mathbf{df}} =T_\text{gf (bin-val)}$']
+        Ys = [df[i].values.astype(
+            DTY_FLT) for i in tag_X[1:] + tim_df[:2] + tim_df_pl[:1]]
+        annots_drt[1] = r'$\frac{ T_{\mathbf{df} \text{ (multival)}} }{T_\text{gf (bin-val)}}-1$'
+        multi_lin_reg_without_distr(
+            X, [i - 1. for i in Ys], antZs_drt, annots_drt,
+            f'{fgn}_da', **kws)
+        annots_drt[1] = r'$\lg(\frac{ T_{\mathbf{df} \text{ (multival)}} }{T_\text{gf (bin-val)}})$'
+        multi_lin_reg_without_distr(
+            X, [np.log10(i) for i in Ys], antZs_drt, annots_drt,
+            f'{fgn}_db', **kws)
+
+        antZs_app = [
+            r'$T_\text{gf (multival)}$',
+            r'$T_{\hat{\mathbf{df}}_\text{prev} \text{ (bin-val)}}$',
+            r'$T_{\hat{\mathbf{df}} \text{ (multival)}}$',
+            r'$T_{\hat{\mathbf{df}} \text{ intersectional}}$']
+        annots_app = [r'$T_\text{gf (bin-val)}$ (sec)', '',
+                      r'$T_{\hat{\mathbf{df}}} =T_\text{gf (bin-val)}$']
+        Ys = [df[i].values.astype(
+            DTY_FLT) for i in tag_X[1:] + tim_df[2:] + tim_df_pl[1:]]
+        annots_app[1] = r'$\frac{ T_{\hat{\mathbf{df}} \text{ (multival)}} }{T_\text{gf (bin-val)}}-1$'
+        multi_lin_reg_without_distr(
+            X, [i - 1. for i in Ys], antZs_app, annots_app,
+            f'{fgn}_aa', **kws)
+        annots_app[1] = r'$\lg(\frac{ T_{\hat{\mathbf{df}} \text{ (multival)}} }{T_\text{gf (bin-val)}})$'
+        multi_lin_reg_without_distr(
+            X, [np.log10(i) for i in Ys], antZs_app, annots_app,
+            f'{fgn}_ab', **kws)
+        pdb.set_trace()
+        return
+
+    # def sub_draw_idv_bin(self, df, tag_X, tag_Ys, figname):
+    #     return
+    # def sub_draw_idv_nonbin(self, df, tag_X, tag_Ys, figname):
+    #     return
 
 
 class PlotA_fair_ens(PlotA_initial):
@@ -434,6 +541,18 @@ class PlotA_fair_ens(PlotA_initial):
         self.draw_extended_grp_scat(
             df_nonbin, col_grp, col_ext, col_ext_alt,
             f'{figname}_scat', verbose)
+
+        tim_idv = [tag_acc[16 + 3], ] + tag_acc[16 + 4 + 4:][:2]
+        tim_idv = tim_idv[:: -1]   # DR,Theil,GEI: then reverse
+        tim_df_pl = [tag_acc[26:][6], tag_acc[26:][6 + 7],
+                     ]  # df/hat_df multiver (df intersectional)
+        tim_grp = [tag_sa1[3], tag_sa1[16], 'extGrp', 'extAlt']  # three
+        tim_df = [tag_sa1[20], tag_sa1[27], tag_sa1[27 + 4], tag_sa1[
+            27 + 4 + 7]]  # df4one sen-att: bin-val, multival, hat_df x2
+        df_nonbin['idv_ptb'] = df_nonbin[tag_acc[-2]] + df_nonbin[
+            tim_idv[-1]]  # 'idvDR_perturb','idv_dr_ptb', 'idvDR_'
+        self.draw_extended_idv_tim(df_nonbin, tim_grp[:2], [
+            tim_idv, tim_df, tim_df_pl], figname + '_idv')
 
         # self.draw_extended_grp(df_nonbin, tag_sa1[3], [tag_sa1[16]], (
         #     # 'Group fairness (bin-val)',
@@ -495,7 +614,10 @@ class PlotA_fair_ens(PlotA_initial):
         col_grp = tag_sa1[:3] + [tag_sa1[16 + 3], tag_sa1[27 + 3]]
         col_ext = tag_sa1[4:10][-3:] + [tag_sa1[23], tag_sa1[34]]
         col_ext_alt = tag_sa1[10:16][-3:] + [tag_sa1[26], tag_sa1[37]]
-        self.avg_draw_trade_off(df_nonbin, pick, tag_acc[:16] + [tag_acc[21], tag_acc[23], tag_acc[18], ], [col_grp, col_ext, col_ext_alt], f'{figname}_to_avg')  # f'{figname}_avg_to')
+        self.avg_draw_trade_off(df_nonbin, pick, tag_acc[
+            :16] + [tag_acc[21], tag_acc[23], tag_acc[18], ], [
+            col_grp, col_ext, col_ext_alt],
+            f'{figname}_to_avg')  # f'{figname}_avg_to')
         self.avg_draw_extended_grp_scat(
             df_nonbin, col_grp, col_ext + tag_sa1[4:7],
             col_ext_alt + tag_sa1[10:13],
@@ -507,18 +629,35 @@ class PlotA_fair_ens(PlotA_initial):
             for pks in [2, 3, 4]:
                 self.avg_depict_separately(
                     pks, pkc, raw_dframe, id_set, mk, fgn)
+                if pkc == 2:
+                    continue
+                os.remove(f'{fgn[:-4]}_s{pks}c{pkc}_ori.pdf')
         # if not first_incl:
         #     return
         # for pkc in [0, 1, 2, 6]:
         #     self.avg_depict_separately(
         #         0, pkc, raw_dframe, id_set, mk, fgn)
+
+        col_ext_max = tag_sa1[4:10][:3] + [tag_sa1[23], tag_sa1[34]]
+        col_ext_alt_max = tag_sa1[10:16][:3] + [
+            tag_sa1[26], tag_sa1[37]]
+        self.avg_draw_trade_off_alt(
+            df_nonbin, pick, tag_acc[:16] + [
+                tag_acc[21], tag_acc[23], tag_acc[18], ], [
+                col_grp, col_ext_max, col_ext_alt_max,
+                col_ext, col_ext_alt], f'{figname}_to_alt')
+        self.avg_draw_incompatible_alt(
+            df_nonbin, tag_acc[:16] + [
+                tag_acc[21], tag_acc[23], tag_acc[18], ], [
+                col_grp, col_ext_max, col_ext_alt_max,
+                col_ext, col_ext_alt], f'{figname}_nc')
         return
 
     def avg_depict_separately(self, pick_set, pick_clf, df, id_set,
-                              tag_mk='tst', fgn='', multival=True,
-                              verbose=True):
-        if not verbose:
-            os.remove(f'{fgn[:-4]}_s{pick_set}c{pick_clf}_ori.pdf')
+                              tag_mk='tst', fgn='', multival=True):
+        #                       verbose=True):
+        # if not verbose:
+        #     os.remove(f'{fgn[:-4]}_s{pick_set}c{pick_clf}_ori.pdf')
 
         tag_acc, tag_sa1, tag_sa2 = self.obtain_tag_col(tag_mk)
         df_alt = self.obtain_sing_dat_cls(
@@ -595,17 +734,17 @@ class PlotA_fair_ens(PlotA_initial):
         multi_boxplot_rect(
             df, tag_grp[:3], tag_ext[-3:], labels =labels[:3],
             # figname='{}_grpext'.format(figname.replace('avg', 'max')),
-            figname=f'{fgn}_grpext_max',
+            figname=f'{fgn}_grpext',  # f'{fgn}_grpext_max',
             annotX=lbl_dim2[:3], locate="upper left")
         multi_boxplot_rect(
             df, tag_grp[:3], tag_ext[-3:], tag_ext_alt[-3:],
             labels =labels[:3],
             # figname=f'{figname.replace('avg', 'max')}_grpalt',
             # figname='{}_grpext'.format(figname.replace('avg', 'max')),
-            figname=f'{fgn}_grpalt_max',
+            figname=f'{fgn}_grpalt',  # f'{fgn}_grpalt_max',
             annotX=lbl_dim2[:3], locate="upper left")
-        os.remove(f'{figname[:-9]}_scat_grpalt.pdf')
-        os.remove(f'{figname[:-9]}_scat_grpext.pdf')
+        # os.remove(f'{figname[:-9]}_scat_grpalt.pdf')
+        # os.remove(f'{figname[:-9]}_scat_grpext.pdf')
 
         # labels = labels[:3] if not ver_mark else ['ori'] + labels[-2:]
         # lbl_hfm = [[r'$\mathbf{df}_\text{prev}$', r'$\mathbf{df}$',
@@ -633,12 +772,19 @@ class PlotA_fair_ens(PlotA_initial):
         annotZs = GRP_FAIR_COMMON + [
             r'GEI ($\alpha$=0.5)', 'Theil', 'DR']
         annotY = 'Extended group fairness (multival)'
-        tmp_ext = ['{:6s} ext{}'.format(
-            i, ver_mark) for i in annotZs[:3]]
-        tmp_ext_alt = ['{:6s} alt{}'.format(  # 'ext. alt{}'
-            i, ver_mark) for i in annotZs[:3]]
-        tmp_ext[1] = f'{annotZs[1]} ext{ver_mark}'
-        tmp_ext_alt[1] = f'{annotZs[1]} alt{ver_mark}'
+        # tmp_ext = ['{:6s} ext{}'.format(
+        #     i, ver_mark) for i in annotZs[:3]]
+        # tmp_ext_alt = ['{:6s} alt{}'.format(  # 'ext. alt{}'
+        #     i, ver_mark) for i in annotZs[:3]]
+        # tmp_ext[1] = f'{annotZs[1]} ext{ver_mark}'
+        # tmp_ext_alt[1] = f'{annotZs[1]} alt{ver_mark}'
+        tmp_ext = [r'$\text{DP}^\text{ext(avg)}$',
+                   r'$\text{EOpp}^\text{ext(avg)}$',
+                   r'$\text{PP}^\text{ext(avg)}$', ]
+        tmp_ext_alt = [r'$\text{DP}^\text{alt(avg)}$',
+                       r'$\text{EOpp}^\text{alt(avg)}$',
+                       r'$\text{PP}^\text{alt(avg)}$', ]
+
         for pk in pick:
             annotX = self._perf_metric[pk]
             line_reg_with_marginal_distr(
@@ -668,11 +814,16 @@ class PlotA_fair_ens(PlotA_initial):
         Mat_B_extalt = df[key_B_extalt].values.astype(DTY_FLT).T 
         kws = {'cmap_name': 'Blues', 'rotate': 65}
 
-        lbl_B_ext = [f'{i} ext{ver_mark}' for i in GRP_FAIR_COMMON
-                     ] + lbl_B_bin[3:6] + [
+        # lbl_B_ext = [f'{i} ext{ver_mark}' for i in GRP_FAIR_COMMON
+        #              ] + lbl_B_bin[3:6] + [
+        #     r'$\mathbf{df}$', r'$\hat{\mathbf{df}}$']
+        # lbl_B_extalt = [f'{i} alt{ver_mark}' for i in GRP_FAIR_COMMON
+        #                 ] + lbl_B_bin[3:6] + [
+        #     r'$\mathbf{df}^\text{avg}$',
+        #     r'$\hat{\mathbf{df}}^\text{avg}$']
+        lbl_B_ext = tmp_ext + lbl_B_bin[3:6] + [
             r'$\mathbf{df}$', r'$\hat{\mathbf{df}}$']
-        lbl_B_extalt = [f'{i} alt{ver_mark}' for i in GRP_FAIR_COMMON
-                        ] + lbl_B_bin[3:6] + [
+        lbl_B_extalt = tmp_ext_alt + lbl_B_bin[3:6] + [
             r'$\mathbf{df}^\text{avg}$',
             r'$\hat{\mathbf{df}}^\text{avg}$']
         kws['cmap_name'] = 'Oranges'
@@ -683,6 +834,181 @@ class PlotA_fair_ens(PlotA_initial):
         analogous_confusion_extended(
             df[key_C + key_A].values.astype(DTY_FLT).T, Mat_B_extalt,
             lbl_C + lbl_A, lbl_B_extalt, f'{figname}_cont3p', **kws)
+        return
+
+    def avg_draw_trade_off_alt(self, df, pick, tag_X, tag_Ys,
+                               figname):
+        annotZs = GRP_FAIR_COMMON + [
+            r'GEI ($\alpha$=0.5)', 'Theil', 'DR']
+        key_A = [tag_X[:8][i] for i in pick]
+        key_C = [tag_X[8:16][i] for i in pick]
+        key_B_bin = tag_Ys[0][:3] + tag_X[-3:] + tag_Ys[0][-2:]
+        lbl_A = [self._perf_metric[i] for i in pick]
+        lbl_C = [self._dal_metric[i] for i in pick]
+        lbl_B_bin = annotZs + [r'$\mathbf{df}_\text{prev}$',
+                               r'$\hat{\mathbf{df}}_\text{prev}$']
+        Mat_B_bin = df[key_B_bin].values.astype(DTY_FLT).T
+        kws = {'cmap_name': 'Blues', 'rotate': 65}
+
+        key_B_nonbin = tag_Ys[1][:3] + tag_Ys[3][:3] + tag_Ys[1][-2:]
+        key_B_extalt = tag_Ys[2][:3] + tag_Ys[4][:3] + tag_Ys[2][-2:]
+        # lbl_B_ext = [f'{i} ext' for i in GRP_FAIR_COMMON] + [
+        #     f'{i} ext(avg)' for i in GRP_FAIR_COMMON] + [
+        #     r'$\mathbf{df}$', r'$\hat{\mathbf{df}}$']
+        # lbl_B_extalt = [f'{i} alt' for i in GRP_FAIR_COMMON] + [
+        #     f'{i} alt(avg)' for i in GRP_FAIR_COMMON] + [
+        #     r'$\mathbf{df}^\text{avg}$',
+        #     r'$\hat{\mathbf{df}}^\text{avg}$']
+        Mat_B_ext = df[key_B_nonbin].values.astype(DTY_FLT).T
+        Mat_B_extalt = df[key_B_extalt].values.astype(DTY_FLT).T
+
+        lbl_B_ext = [r'$\text{DP}^\text{ext}$',
+                     r'$\text{EOpp}^\text{ext}$',
+                     r'$\text{PP}^\text{ext}$',
+                     r'$\text{DP}^\text{ext(avg)}$',
+                     r'$\text{EOpp}^\text{ext(avg)}$',
+                     r'$\text{PP}^\text{ext(avg)}$', ] + [
+            r'$\mathbf{df}$', r'$\hat{\mathbf{df}}$']
+        lbl_B_extalt = [r'$\text{DP}^\text{alt}$',
+                        r'$\text{EOpp}^\text{alt}$',
+                        r'$\text{PP}^\text{alt}$',
+                        r'$\text{DP}^\text{alt(avg)}$',
+                        r'$\text{EOpp}^\text{alt(avg)}$',
+                        r'$\text{PP}^\text{alt(avg)}$', ] + [
+            r'$\mathbf{df}^\text{avg}$',
+            r'$\hat{\mathbf{df}}^\text{avg}$']
+
+        fgn = figname[:-4]  # figname.replace('_alt', '')
+        os.remove(f'{fgn}_cont1p.pdf')
+        os.remove(f'{fgn}_cont2p.pdf')
+        os.remove(f'{fgn}_cont3p.pdf')
+        os.remove(f'{fgn}_avg_cont2p.pdf')
+        os.remove(f'{fgn}_avg_cont3p.pdf')
+        Mat_C_A = df[key_C + key_A].values.astype(DTY_FLT).T
+        analogous_confusion_extended(
+            Mat_C_A, Mat_B_bin, lbl_C + lbl_A, lbl_B_bin,
+            f'{fgn}_cont1p', **kws)
+
+        kws['cmap_name'] = 'Oranges'
+        analogous_confusion_extended(
+            Mat_C_A, Mat_B_ext, lbl_C + lbl_A, lbl_B_ext,
+            f'{figname}_cont2p', **kws)
+        kws['cmap_name'] = 'RdPu'
+        analogous_confusion_extended(
+            Mat_C_A, Mat_B_extalt, lbl_C + lbl_A,
+            lbl_B_extalt, f'{figname}_cont3p', **kws)
+        return
+
+    def avg_draw_incompatible_alt(self, df, tag_X, tag_Ys,
+                                  figname):
+        annotZs = GRP_FAIR_COMMON + [
+            r'GEI ($\alpha$=0.5)', 'Theil', 'DR']
+        # ta, ra = f"{'':<5}", f"{'':>5}"
+        # tmp_ext = [r'$\text{DP}^\text{ext}$' + ta,
+        #            r'$\text{EOpp}^\text{ext}$',
+        #            r'$\text{PP}^\text{ext}$' + ta, ]
+        # tmp_ext_alt = [r'$\text{DP}^\text{alt}$' + ta,
+        #                r'$\text{EOpp}^\text{alt}$',
+        #                r'$\text{PP}^\text{alt}$' + ta, ]
+        # tmp_ext_avg = [r'$\text{DP}^\text{ext(avg)}$' + ra,
+        #                r'$\text{EOpp}^\text{ext(avg)}$',
+        #                r'$\text{PP}^\text{ext(avg)}$' + ra]
+        # tmp_ext_alt_avg = [r'$\text{DP}^\text{alt(avg)}$' + ra,
+        #                    r'$\text{EOpp}^\text{alt(avg)}$',
+        #                    r'$\text{PP}^\text{alt(avg)}$' + ra]
+        # annotZs[0] += f"{'':>4}"  # ta
+        # annotZs[2] += f"{'':<4}"  # ra
+        #
+        # kws = {'annotY': 'Group fairness', 'snspec': 'sty5b'}  # invt_a=True
+        # for i, pk in enumerate(tag_X[-3:]):
+        #     annotX = annotZs[i + 3]
+        #     annotX = f'Individual fairness: {annotX}'
+        #     # annotX = f'Individual fairness ({annotX})'
+        #     # f'{fgn}_bin' _ext,_alt,_ext_avg,_alt_avg
+        #     fgn = f'{figname}_corr{i+3}'
+        #     line_reg_with_marginal_distr(
+        #         df, pk, 'Fairness', tag_Ys[0][:3], annotZs[:3],
+        #         annotX=annotX, figname=f'{fgn}_g1', **kws)
+        #     line_reg_with_marginal_distr(
+        #         df, pk, 'Fairness', tag_Ys[1][:3], tmp_ext,
+        #         annotX=annotX, figname=f'{fgn}_g2', **kws)
+        #     line_reg_with_marginal_distr(
+        #         df, pk, 'Fairness', tag_Ys[2][:3], tmp_ext_alt,
+        #         annotX=annotX, figname=f'{fgn}_g3', **kws)
+        #     line_reg_with_marginal_distr(
+        #         df, pk, 'Fairness', tag_Ys[3][:3], tmp_ext_avg,
+        #         annotX=annotX, figname=f'{fgn}_g4', **kws)
+        #     line_reg_with_marginal_distr(
+        #         df, pk, 'Fairness', tag_Ys[4][:3], tmp_ext_alt_avg,
+        #         annotX=annotX, figname=f'{fgn}_g5', **kws)
+
+        ta, ra = f"{'':<7}", f"{'':>8}"
+        tmp_ext = [r'$\text{DP}^\text{ext}$' + ta,
+                   r'$\text{EOpp}^\text{ext}$' + ta,
+                   r'$\text{PP}^\text{ext}$' + ta, ]
+        tmp_ext_alt = [r'$\text{DP}^\text{alt}$' + ra,
+                       r'$\text{EOpp}^\text{alt}$' + ra,
+                       r'$\text{PP}^\text{alt}$' + ra, ]
+        tmp_ext_avg = [r'$\text{DP}^\text{ext(avg)}$',
+                       r'$\text{EOpp}^\text{ext(avg)}$',
+                       r'$\text{PP}^\text{ext(avg)}$']
+        tmp_ext_alt_avg = [r'$\text{DP}^\text{alt(avg)}$' + ' ',
+                           r'$\text{EOpp}^\text{alt(avg)}$' + ' ',
+                           r'$\text{PP}^\text{alt(avg)}$' + ' ']
+        annotZs[0] += ra + f"{'':>3}"
+        annotZs[2] += ra + f"{'':>2}"
+        annotZs[1] += ra + f"{'':<3}"
+        grp1 = [y[0] for y in tag_Ys]
+        grp2 = [y[1] for y in tag_Ys]
+        grp3 = [y[2] for y in tag_Ys]
+        lbl_g1 = [annotZs[0], tmp_ext[0], tmp_ext_alt[0],
+                  tmp_ext_avg[0], tmp_ext_alt_avg[0]]
+        lbl_g2 = [annotZs[1], tmp_ext[1], tmp_ext_alt[1],
+                  tmp_ext_avg[1], tmp_ext_alt_avg[1]]
+        lbl_g3 = [annotZs[2], tmp_ext[2], tmp_ext_alt[2],
+                  tmp_ext_avg[2], tmp_ext_alt_avg[2]]
+        kws = {'snspec': 'sty5b'}  # kws.pop('annotY')
+        for i, pk in enumerate(tag_X[-3:]):
+            annotX = annotZs[i + 3]
+            fgn = f'{figname}_corr{i+4}'
+            line_reg_with_marginal_distr(
+                df, pk, 'Fairness', grp1, lbl_g1, annotX=annotX,
+                annotY=lbl_g1[0], figname=f'{fgn}_grp1', **kws)
+            line_reg_with_marginal_distr(
+                df, pk, 'Fairness', grp2, lbl_g2, annotX=annotX,
+                annotY=lbl_g2[0], figname=f'{fgn}_grp2', **kws)
+            line_reg_with_marginal_distr(
+                df, pk, 'Fairness', grp3, lbl_g3, annotX=annotX,
+                annotY=lbl_g3[0], figname=f'{fgn}_grp3', **kws)
+
+        hfm_drt = [tag_Ys[0][-2], tag_Ys[1][-2], tag_Ys[2][-2]]
+        hfm_app = [tag_Ys[0][-1], tag_Ys[1][-1], tag_Ys[2][-1]]
+        lbl_drt = [r'$\mathbf{df}_\text{prev}$', r'$\mathbf{df}$',
+                   r'$\mathbf{df}^\text{avg}$']
+        lbl_app = [r'$\hat{\mathbf{df}}_\text{prev}$',
+                   r'$\hat{\mathbf{df}}$',
+                   r'$\hat{\mathbf{df}}^\text{avg}$']
+        for k, (pi, pj) in enumerate(zip(hfm_drt, hfm_app)):
+            fgn = f'{figname}_df{k}'
+            # _drt_g1,_drt_g2,_drt_g3,_app_g1,_app_g2,_app_g3
+            line_reg_with_marginal_distr(
+                df, pi, 'Fairness', grp1, lbl_g1, annotX=lbl_drt[k],
+                annotY=lbl_g1[0], figname=f'{fgn}_g1d', **kws)
+            line_reg_with_marginal_distr(
+                df, pi, 'Fairness', grp2, lbl_g2, annotX=lbl_drt[k],
+                annotY=lbl_g2[0], figname=f'{fgn}_g2d', **kws)
+            line_reg_with_marginal_distr(
+                df, pi, 'Fairness', grp3, lbl_g3, annotX=lbl_drt[k],
+                annotY=lbl_g3[0], figname=f'{fgn}_g3d', **kws)
+            line_reg_with_marginal_distr(
+                df, pj, 'Fairness', grp1, lbl_g1, annotX=lbl_app[k],
+                annotY=lbl_g1[0], figname=f'{fgn}_g1a', **kws)
+            line_reg_with_marginal_distr(
+                df, pj, 'Fairness', grp2, lbl_g2, annotX=lbl_app[k],
+                annotY=lbl_g2[0], figname=f'{fgn}_g2a', **kws)
+            line_reg_with_marginal_distr(
+                df, pj, 'Fairness', grp3, lbl_g3, annotX=lbl_app[k],
+                annotY=lbl_g3[0], figname=f'{fgn}_g3a', **kws)
         return
 
 

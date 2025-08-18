@@ -674,7 +674,8 @@ def _marginal_distr_step4(grid, dfs_pl, columns, col_X, col_Y,
         _curr_kw['columnspacing'] = .4
     ax4.legend(
         prop=legend_font, labelspacing=.35, handleheight=1.2,
-        handletextpad=0, loc=_curr_lc, ncol=_curr_nc, **_curr_kw)
+        handletextpad=0, loc=_curr_lc, ncol=_curr_nc,
+        **_curr_kw)  # mode='expand',
     del _curr_lc, _curr_nc, _curr_kw
     if not distrib:
         _style_set_axis(ax4)
