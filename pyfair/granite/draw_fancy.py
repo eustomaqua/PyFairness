@@ -233,3 +233,7 @@ def radar_chart(df, tag_Xs,  # tag_Ys=None, tag_Zs=None,
 #
 # https://github.com/fonttools/fonttools/issues/3538
 #
+
+
+_nat_sci_cs = ['#073068', '#206FB6', '#6BADD7', '#C5DAEE',
+               '#FDDFD0', '#FC9171', '#EE3B2A', '#A60E16']

@@ -436,52 +436,68 @@ class PlotA_initial(GraphSetup):
         # Z = Ys[:-1] + [Z, ]
         annots[2] = r'$T_\text{if}= T_\text{gf (bin-val)}$'
 
-        kws = {'snspec': 'sty6'}  # {'linreg': True,
+        kws = {'snspec': 'sty7'}  # 'sty6' # {'linreg': True,
         annots[1] = r'$\frac{ T_\text{if (multival)} }{ T_\text{gf (bin-val)} }-1$'
-        multi_lin_reg_without_distr(
-            X, [i - 1. for i in Ys], antZs, annots,
-            f'{figname}_tim_st6a', **kws)
+        # multi_lin_reg_without_distr(
+        #     X, [i - 1. for i in Ys], antZs, annots,
+        #     f'{figname}_tim_st6a', **kws)
         # multi_lin_reg_without_distr(
         #     X, [i - 1. for i in Z], antZs, annots,
         #     f'{figname}_tim_st7a', **kws)
-        # multi_lin_reg_without_distr(
-        #     X, [i - 1. for i in Ys[:-1]], antZs[:-1], annots,
-        #     f'{figname}_tim_st8a', **kws)
         multi_lin_reg_without_distr(
-            X, [i - 1. for i in Ys[1:]], antZs[1:], annots,
-            f'{figname}_tim_st9a', **kws)
+            X, [i - 1. for i in Ys[:-1]], antZs[:-1], annots,
+            f'{figname}_tim_st8a', **kws)
+        # multi_lin_reg_without_distr(
+        #     X, [i - 1. for i in Ys[1:]], antZs[1:], annots,
+        #     f'{figname}_tim_st9a', **kws)
         # annots[1] = r'$\lg(\frac{ T_\text{IF (multival)} }{ T_\text{GF (bin-val)} })$'
         annots[1] = r'$\lg(\frac{ T_\text{if (multival)} }{ T_\text{gf (bin-val)} })$'
-        multi_lin_reg_without_distr(
-            X, [np.log10(i) for i in Ys], antZs, annots,
-            f'{figname}_tim_st6b', **kws)
+        # multi_lin_reg_without_distr(
+        #     X, [np.log10(i) for i in Ys], antZs, annots,
+        #     f'{figname}_tim_st6b', **kws)
         # multi_lin_reg_without_distr(
         #     X, [np.log10(i) for i in Z], antZs, annots,
         #     f'{figname}_tim_st7b', **kws)
-        # multi_lin_reg_without_distr(
-        #     X, [np.log10(i) for i in Ys[:-1]], antZs[:-1], annots,
-        #     f'{figname}_tim_st8b', **kws)
         multi_lin_reg_without_distr(
-            X, [np.log10(i) for i in Ys[1:]], antZs[1:], annots,
-            f'{figname}_tim_st9b', **kws)
+            X, [np.log10(i) for i in Ys[:-1]], antZs[:-1], annots,
+            f'{figname}_tim_st8b', **kws)
+        # multi_lin_reg_without_distr(
+        #     X, [np.log10(i) for i in Ys[1:]], antZs[1:], annots,
+        #     f'{figname}_tim_st9b', **kws)
 
-        fgn = f'{figname}_df_tim'
+        # fgn = f'{figname}_df_tim'
+        # self.sub_draw_idv_df(df, tim_df, tim_df_pl, tag_X, X, fgn, kws)
+        # pdb.set_trace()
+        return
+
+    # def sub_draw_idv_bin(self, df, tag_X, tag_Ys, figname):
+    #     return
+    # def sub_draw_idv_nonbin(self, df, tag_X, tag_Ys, figname):
+    #     return
+
+    def sub_draw_idv_df(self, df, tim_df, tim_df_pl, tag_X, X, fgn, kws):
         antZs_drt = [r'$T_\text{gf (multival)}$',
                      r'$T_{\mathbf{df}_\text{prev} \text{ (bin-val)}}$',
                      r'$T_{\mathbf{df} \text{ (multival)}}$',
                      r'$T_{\mathbf{df} \text{ intersectional}}$']
         annots_drt = [r'$T_\text{gf (bin-val)}$ (sec)', '',
                       r'$T_{\mathbf{df}} =T_\text{gf (bin-val)}$']
-        Ys = [df[i].values.astype(
-            DTY_FLT) for i in tag_X[1:] + tim_df[:2] + tim_df_pl[:1]]
+        Ys = [df[i].values.astype(DTY_FLT) / X for i in tag_X[
+            1:] + tim_df[:2] + tim_df_pl[:1]]
         annots_drt[1] = r'$\frac{ T_{\mathbf{df} \text{ (multival)}} }{T_\text{gf (bin-val)}}-1$'
         multi_lin_reg_without_distr(
             X, [i - 1. for i in Ys], antZs_drt, annots_drt,
             f'{fgn}_da', **kws)
+        # multi_lin_reg_without_distr(
+        #     X, [i - 1. for i in Ys[1:]], antZs_drt[1:],
+        #     annots_drt, f'{fgn}_d1p', **kws)
         annots_drt[1] = r'$\lg(\frac{ T_{\mathbf{df} \text{ (multival)}} }{T_\text{gf (bin-val)}})$'
         multi_lin_reg_without_distr(
             X, [np.log10(i) for i in Ys], antZs_drt, annots_drt,
             f'{fgn}_db', **kws)
+        # multi_lin_reg_without_distr(
+        #     X, [np.log10(i) for i in Ys[1:]], antZs_drt[1:],
+        #     annots_drt, f'{fgn}_d2p', **kws)
 
         antZs_app = [
             r'$T_\text{gf (multival)}$',
@@ -490,23 +506,23 @@ class PlotA_initial(GraphSetup):
             r'$T_{\hat{\mathbf{df}} \text{ intersectional}}$']
         annots_app = [r'$T_\text{gf (bin-val)}$ (sec)', '',
                       r'$T_{\hat{\mathbf{df}}} =T_\text{gf (bin-val)}$']
-        Ys = [df[i].values.astype(
-            DTY_FLT) for i in tag_X[1:] + tim_df[2:] + tim_df_pl[1:]]
+        Ys = [df[i].values.astype(DTY_FLT) / X for i in tag_X[
+            1:] + tim_df[2:] + tim_df_pl[1:]]
         annots_app[1] = r'$\frac{ T_{\hat{\mathbf{df}} \text{ (multival)}} }{T_\text{gf (bin-val)}}-1$'
         multi_lin_reg_without_distr(
             X, [i - 1. for i in Ys], antZs_app, annots_app,
             f'{fgn}_aa', **kws)
+        # multi_lin_reg_without_distr(
+        #     X, [i - 1. for i in Ys[1:]], antZs_app[1:],
+        #     annots_app, f'{fgn}_a1p', **kws)
         annots_app[1] = r'$\lg(\frac{ T_{\hat{\mathbf{df}} \text{ (multival)}} }{T_\text{gf (bin-val)}})$'
         multi_lin_reg_without_distr(
             X, [np.log10(i) for i in Ys], antZs_app, annots_app,
             f'{fgn}_ab', **kws)
-        pdb.set_trace()
+        # multi_lin_reg_without_distr(
+        #     X, [np.log10(i) for i in Ys[1:]], antZs_app[1:],
+        #     annots_app, f'{fgn}_a2p', **kws)
         return
-
-    # def sub_draw_idv_bin(self, df, tag_X, tag_Ys, figname):
-    #     return
-    # def sub_draw_idv_nonbin(self, df, tag_X, tag_Ys, figname):
-    #     return
 
 
 class PlotA_fair_ens(PlotA_initial):

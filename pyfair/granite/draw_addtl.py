@@ -1211,6 +1211,16 @@ def multi_lin_reg_without_distr(X, Ys, Zs, annots=('X', 'Y', 'Z'),
     legend_font = {'family': _curr_ft, 'size': 8}
 
     myclr = _pl_myclr
+    if snspec.startswith('sty7'):
+        myclr = ['navy', ] + myclr[:6]  # +_pl_myclr[3:]
+        del myclr[4]   # del myclr[-2]  # 1+5=6
+        # myclr = ['navy', _pl_myclr[0], '#DED031', '#96DE31', _pl_myclr[
+        #     4]]  # '#B4A81F', '#1FB4A8' # '#27F5B0','#27D3F5','#D3F527',
+        # # myclr[1], myclr[4] = '#3196DE', '#7931DE'
+        # myclr[2:] = ['#E58E50', '#8E50E5', '#A7E550', '#50A8E5']
+        del myclr[2:4]  # myclr[3] = '#81C718'; del myclr[2]
+        # myclr[3] = _pl_myclr[7]  # default:_pl_myclr[5]
+        snspec = snspec.replace('y7', 'y6')
     annotZ = annots[2] if len(annots) > 2 else r'$f(x)=x$'
     n_k = len(Ys)  # aka. len(Zs)
     start_i = 2 if n_k == 2 else 1
