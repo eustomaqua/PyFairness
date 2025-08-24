@@ -9,7 +9,7 @@ Set up the environment
 ..   :linenos:
 
 
-We developed `ApproxBias <https://github.com/eustomaqua/ApproxBias>`_, `FairML <https://github.com/eustomaqua/FairML>`_, and `PyFairness <https://github.com/eustomaqua/PyFairness>`_ with ``Python 3.8`` and released the code to help you reproduce our work. Note that the experimental parts must be run on the ``Ubuntu`` operating system due to FairGBM (one baseline method that we used for comparison).
+We developed `ApproxBias <https://github.com/eustomaqua/ApproxBias>`_, `FairML <https://github.com/eustomaqua/FairML>`_, `PyFairness <https://github.com/eustomaqua/PyFairness>`_, and `AssessBias <https://github.com/eustomaqua/AssessBias>`_ with ``Python 3.8`` and released the code to help you reproduce our work. Note that the experimental parts must be run on the ``Ubuntu`` operating system due to FairGBM (one baseline method that we used for comparison).
 
 
 Initialization
@@ -68,6 +68,7 @@ Configuration via Docker
 .. code-block:: console
 
   $ exit
+  $
   $ docker ps -a                  # docker container ps|list
   $ docker rm <container-id>
   $ docker image rm <image-name>  # docker rmi <image-id>
