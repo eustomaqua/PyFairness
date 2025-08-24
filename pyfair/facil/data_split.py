@@ -545,7 +545,7 @@ def split_into_sets(split_type, *split_args):
         del y
     else:  # elif split_type == "cross_validation":
         nb_iter, y = split_args
-        split_idx = situation_cross_validation(nb_iter, y, split_type)
+        split_idx = sitch_cross_validation(nb_iter, y, split_type)
         del y
     gc.collect()
     return deepcopy(split_idx)  # list

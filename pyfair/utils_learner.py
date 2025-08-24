@@ -79,3 +79,13 @@ CONCISE_INDIVIDUALS = {
     'MLP': neural_network.MLPClassifier(),
     'lmSGD': linear_model.SGDClassifier(),
 }
+
+
+FAIR_ENSEMBLES = {
+    'bagging': BaggingClassifier,
+    'AdaBoost': AdaBoostClassifier,
+    'lightGBM': LGBMClassifier,
+    'FairGBM': FairGBMClassifier,
+    'AdaFair': AdaFair,
+    'ensem': EnsembleAlgorithm,
+}

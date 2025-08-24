@@ -21,7 +21,7 @@ import numpy as np
 # import pdb
 # import lightgbm
 
-from pyfair.facil.utils_const import check_equal
+# from pyfair.facil.utils_const import check_equal
 # from pyfair.marble.metric_fair import (
 #     marginalised_np_mat, marginalised_np_gen)  # addtl,addl
 from pyfair.granite.fair_meas_indiv import (

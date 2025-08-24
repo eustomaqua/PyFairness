@@ -273,10 +273,14 @@ def compare_alternative(nai, m1, m2):
             X_nA_y, A_j, idx_S0, idx_S1, idx_y_fx, ik, m2)
         ans_jr = sub_accelerator_larger(
             X_nA_y, A_j, idx_S0, idx_S1, idx_y_fx, ik, m2)
+        i_anchor = idx_y_fx[i]
+        X_yfx_anchor = X_yfx[i_anchor]
         res_js, _ = subalt_accel_smaler(
-            X_nA_y, idx_S0, idx_S1, idx_y_fx, ik, m2)
+            X_nA_y, idx_S0, idx_S1, idx_y_fx, ik, m2,
+            i_anchor, X_yfx_anchor)
         res_jr, _ = subalt_accel_larger(
-            X_nA_y, idx_S0, idx_S1, idx_y_fx, ik, m2)
+            X_nA_y, idx_S0, idx_S1, idx_y_fx, ik, m2,
+            i_anchor, X_yfx_anchor)
         # return ans_js, ans_jr, res_js, res_jr
         return ans_js, res_js, ans_jr, res_jr
 

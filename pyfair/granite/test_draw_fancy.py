@@ -5,7 +5,6 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import pdb
 
 from pyfair.granite.draw_fancy import (
     boxplot_rect, multi_boxplot_rect, radar_chart)
@@ -52,9 +51,9 @@ def test_bplot():
     multi_boxplot_rect(df_alt, lb_grp, lb_ext,
                        figname=f'chart_far_gr{i+1}_dim2')
     radar_chart(df_alt, lb_grp, annotX=lb_grp,
-                figname=f'chart_radar_dim1')
+                figname=f'chart_radar_dim1{i}')
     radar_chart(df_alt, lb_grp, annotX=lb_grp,
-                figname=f'chart_radar_dim2', stylish=True)
+                figname=f'chart_radar_dim2{i}', stylish=True)
     # pdb.set_trace()
 
     fig, axs = plt.subplots(2, 3, figsize=(8.1, 4.7))  # =(6,5))
