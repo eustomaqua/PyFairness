@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-# import pdb
+import pdb
 
 from pyfair.granite.draw_fancy import (
     boxplot_rect, multi_boxplot_rect, radar_chart)
@@ -40,10 +40,17 @@ def test_bplot():
     df_lbl = ['First', 'Second', 'Third']  # {'Third', ..}
     # boxplot_rect([np.nan_to_num(df[df['class'] == i][
     #     'age'].values) for i in df_lbl], df_lbl, 'chart_titanic')
-    boxplot_rect([df[df['class'] == i][
-        'age'].values for i in df_lbl], df_lbl, 'chart_titanic')
+    df_new = []
+    for i in df_lbl:
+        it = df[df['class'] == i]['age']
+        it = it.fillna(0.)  # it.replace(np.nan, 0.)
+        df_new.append(it.values)
+    # [df[df['class'] == i]['age'].values for i in df_lbl]
+    boxplot_rect(df_new, df_lbl, 'chart_titanic')
+    i = 0
     multi_boxplot_rect(df_alt, lb_grp, figname=f'chart_far_gr{i+1}_dim1')
-    multi_boxplot_rect(df_alt, lb_grp, lb_ext, figname=f'chart_far_gr{i+1}_dim2')
+    multi_boxplot_rect(df_alt, lb_grp, lb_ext,
+                       figname=f'chart_far_gr{i+1}_dim2')
     radar_chart(df_alt, lb_grp, annotX=lb_grp,
                 figname=f'chart_radar_dim1')
     radar_chart(df_alt, lb_grp, annotX=lb_grp,

@@ -135,8 +135,8 @@ def hat_L_objt(fxp, fxq, y, lam):
 
 def tandem_objt(fa, fa_q, fb, fb_q, y, lam):
     l_fair = tandem_fair(fa, fa_q, fb, fb_q)
-    l_acc_p = hat_L_loss(fa, y)
-    l_acc_q = hat_L_loss(fb, y)
+    l_acc_p = hat_L_loss(fa, y)[0]
+    l_acc_q = hat_L_loss(fb, y)[0]
     # l_acc = (1. - lam) * (l_acc_p + l_acc_q) / 2.
     # return lam * l_fair + l_acc
     l_acc = (l_acc_p + l_acc_q) / 2.
@@ -197,7 +197,7 @@ def E_rho_L_fair_f(yt, yq, wgt):
 
 
 def E_rho_L_loss_f(yt, y, wgt):
-    E_rho = [hat_L_loss(p, y) for p in yt]
+    E_rho = [hat_L_loss(p, y)[0] for p in yt]
     # return np.mean(E_rho).tolist()
     tmp = np.sum(np.multiply(wgt, E_rho))
     return tmp.tolist()  # float

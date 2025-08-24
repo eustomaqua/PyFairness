@@ -110,8 +110,8 @@ def test_my_DR():
         # Erho_sup_L_loss, ED_Erho_I_fair, ED_Erho_I_loss,
         perturb_numpy_ver, perturb_pandas_ver)  # disturb_slightly)
 
-    ans = hat_L_fair(y_hat, hx_qtb)
-    res = hat_L_loss(y_hat, y_trn)
+    ans = hat_L_fair(y_hat, hx_qtb)[0]
+    res = hat_L_loss(y_hat, y_trn)[0]
     err = float(1. - np.mean(np.equal(y_trn, y_hat)))
     assert check_equal(err, res)
 

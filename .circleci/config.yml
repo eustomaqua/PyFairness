@@ -30,6 +30,7 @@ jobs:
             pip install -r requirements.txt
             pip install carbontracker pytest
             pip install coverage coveralls pytest-xdist
+            pip list
             coverage run -m pytest --ignore-glob="*/excl_test_*,*/*excl.py,*/pkgs*"
             coverage report
             coverage html
