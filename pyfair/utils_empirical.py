@@ -249,7 +249,7 @@ class GraphSetup:
         data = df.iloc[index][tag_col]
         if ats == 'ua':
             data *= 100.
-        # elif ats == 'us':
+        # elif ats == 'us': or 'ut'
         #     data.fillna(self._nb_cls, inplace=True)
         data = data.values.astype('float')  # .to_numpy()
         return data                         # np.ndarray

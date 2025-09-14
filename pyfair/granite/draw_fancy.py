@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import numpy as np
-# import pdb
+
 from pyfair.facil.draw_prelim import (
     _setup_figsize, _setup_figshow, _setup_config)
 from pyfair.facil.utils_const import DTY_FLT
@@ -217,6 +217,37 @@ def radar_chart(df, tag_Xs,  # tag_Ys=None, tag_Zs=None,
     return
 
 
+def grped_radar_cht(df_pl, tag_Xs, annotX=tuple(), annotY=tuple(),
+                    clockwise=True, figname='', stylish=True):
+    if len(df_pl) >= 5:
+        fsz, fb, ft = (17, 3.4), (1.65, 1), {'fontsize': 'large'}
+    else:
+        fsz, fb, ft = (13, 2.47), (1.76, 1), {}
+    # fsz = (17, 3.4) if len(df_pl) >= 5 else (13, 2.47)  # fb
+    fig, ax = plt.subplots(ncols=len(df_pl), figsize=fsz,
+                           subplot_kw={'projection': 'polar'})
+    for i, df in enumerate(df_pl):
+        ax[i] = _radar_X(ax[i], df, tag_Xs, annotX, clockwise,
+                         stylish=stylish)
+    if annotY:
+        # lines, labels = fig.axes[-1].get_legend_handles_labels()
+        # fig.legend(lines, labels,
+        plt.legend(annotY,  # loc='upper right', prop={'size': 9})
+                   # bbox_to_anchor=(.74, .96), ncol=4, framealpha=1)
+                   # , fontsize='large') (1.65,1)
+                   bbox_to_anchor=fb, borderaxespad=.05,
+                   labelspacing=.09, frameon=False, **ft)
+    del fsz, fb, ft  # del fsz  # del fsz, fb
+    # fig.tight_layout()  # 调整整体空白，调整子图间距
+    kw = {'left': None, 'bottom': None, 'right': None, 'top': None}
+    plt.subplots_adjust(wspace=.34, hspace=0, **kw)
+    fig.savefig("{}{}".format(
+        figname, '.pdf'), dpi=300, bbox_inches='tight')
+    # _setup_figshow(fig, figname)
+    plt.close(fig)
+    return
+
+
 # ------------------------------
 # refs:
 #
@@ -232,6 +263,12 @@ def radar_chart(df, tag_Xs,  # tag_Ys=None, tag_Zs=None,
 # https://matplotlib.org.cn/stable/gallery/color/colormap_reference.html
 #
 # https://github.com/fonttools/fonttools/issues/3538
+#
+# https://blog.csdn.net/weixin_44637060/article/details/126127700
+# https://www.zhihu.com/question/507342145
+# https://blog.csdn.net/GAN_player/article/details/78543643
+# https://blog.csdn.net/qq_40994260/article/details/114478555
+# https://blog.csdn.net/CSDN_LYY/article/details/114014856
 #
 
 

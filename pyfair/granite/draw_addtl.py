@@ -1006,7 +1006,7 @@ def _uncertainty_plotting(X, Ys, picked_keys, annotY=None, ddof=0,
         'size': 9 if len(picked_keys) <= 6 else 8})
     ax.set_xlim(X[0], X[-1])
     ax.set_xlabel(r'$\alpha$')
-    annotY = _sub_unc_text(annotY, alpha_loc)
+    annotY = _sub_unc_text_beta(annotY, alpha_loc)
 
     # '''
     # assert alpha_loc in ('b4', 'af')
@@ -1027,18 +1027,77 @@ def _uncertainty_plotting(X, Ys, picked_keys, annotY=None, ddof=0,
     return
 
 
+def _sub_unc_text_beta(annotY, alpha_loc):
+    assert alpha_loc in ['b4', 'af']
+    if annotY is None:
+        if alpha_loc == 'b4':
+            annotY = r'$\beta·$ performance $+(1-\beta)·$ fairness'
+        elif alpha_loc == 'af':
+            annotY = r'$(1-\beta)·$ performance $+\beta·$ fairness'
+        return annotY
+    if alpha_loc == 'b4':
+        annotY = r'$\beta·${}$+($1$-\beta)·$ fairness'.format(annotY)
+    elif alpha_loc == 'af':
+        annotY = r'$($1$-\beta)·${} $+\beta·$ fairness'.format(annotY)
+    return annotY
+
+
+def _uncertainty_plot_beta(X, Ys, picked_keys, annotY=None, ddof=0,
+                           alpha_loc='b4|af', cmap_name='hus1',
+                           figsize='M-WS', figname='lwu',
+                           alpha_clarity=.3):
+    _curr_sty = ['-.', '-.', '-.', '--', '-', '-']
+    # _curr_sty = ['--^', '--<', '-->', '-.p', '-s', '-h']
+    # _curr_sty = ['--', '--', '--', '-.', '-', '-']
+    # _curr_mks = ['o', 'o', 'o', 'd', 'p', 's']
+    # X                                     # (#gap,)
+    Ys_avg = np.mean(Ys, axis=2)            # (#baseline, #gap)
+    Ys_std = np.std(Ys, axis=2, ddof=ddof)  # (#baseline, #gap)
+    # picked_keys                           # (#baseline,)
+    fig, ax = plt.subplots(figsize=_setup_config['M-NT'])
+    clrs = sns.color_palette(cmap_name, len(picked_keys))
+    # clrs = clrs[::-1]
+
+    for i, _ in enumerate(picked_keys):  # _:key
+        ax.plot(X, Ys_avg[i], _curr_sty[i], label=picked_keys[i],
+                c=clrs[i], lw=1.5)  # marker=_curr_mks[i])  # ,
+        #       # markerfacecolor=_curr_sty[i])
+        ax.fill_between(
+            X, Ys_avg[i] - Ys_std[i], Ys_avg[i] + Ys_std[i],
+            alpha=alpha_clarity, facecolor=clrs[i])
+
+    ax.legend(labelspacing=.1, prop={
+        'size': 9 if len(picked_keys) <= 6 else 8})
+    ax.set_xlim(X[0], X[-1])
+    ax.set_xlabel(r'$\beta$')
+    annotY = _sub_unc_text_beta(annotY, alpha_loc)
+
+    ax.set_ylabel(annotY, fontsize=9)
+    ax.autoscale_view()
+    fig = _setup_figsize(fig, figsize)
+    _setup_figshow(fig, figname)
+    plt.close(fig)
+    return
+
+
 def lineplot_with_uncertainty(df, col_X, col_Y, tag_Ys, picked_keys,
                               # annotX='acc', annotY='fair',
                               annotY=None, ddof=0, num_gap=100,
                               alpha_loc='b4', cmap_name='husl',
                               alpha_rev=True,  # middle of annotY
                               figsize='M-WS', figname='lwu',
-                              alpha_clarity=.3):
+                              alpha_clarity=.3, whether_beta=False):
     dfs_pl, _ = _marginal_distr_read_in(  # ,df_all
         df, col_X, col_Y, tag_Ys, picked_keys)  # alp_loc/rev
     X, Ys = _uncertainty_read_in(dfs_pl, col_X, col_Y, num_gap=num_gap,
                                  alpha_loc=alpha_loc, alpha_rev=alpha_rev)
     kwargs = {'figsize': figsize, 'figname': figname}
+    if whether_beta:
+        _uncertainty_plot_beta(X, Ys, picked_keys, annotY, ddof,
+                               alpha_loc=alpha_loc,
+                               alpha_clarity=alpha_clarity,
+                               cmap_name=cmap_name, **kwargs)
+        return
     _uncertainty_plotting(X, Ys, picked_keys, annotY, ddof,
                           alpha_loc=alpha_loc,
                           alpha_clarity=alpha_clarity,
