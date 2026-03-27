@@ -23,6 +23,7 @@ from pyfair.granite.draw_graph import _sns_line_err_bars
 # _setup_locater,_set_quantile, cnames, cname_keys, cmap_names,
 # _backslash_distributed, _barh_patterns, _sns_line_fit_regs,
 from pyfair.facil.utils_const import DTY_FLT
+from pyfair.marble.draw_hypos import Pearson_correlation
 
 
 # ===============================
@@ -1126,7 +1127,8 @@ def _subproc_pl_lin_reg(ax4, X, Y, Z, annotZ, snspec, clr='navy',
     if Y is None:
         return
 
-    R = np.corrcoef(X, Y)[1, 0]
+    R = Pearson_correlation(X, Y)[0]  # or pearsonccs(X,Y)[1,0]
+    # R = np.corrcoef(X, Y)[1, 0]
     key = 'Correlation = %.4f' % R
     regr = np.polyfit(X, Y, deg=1)
     estimated = np.polyval(regr, X)
@@ -1145,14 +1147,25 @@ def _subproc_pl_lin_reg(ax4, X, Y, Z, annotZ, snspec, clr='navy',
                     linewidths=.4, color=clr)
         plt.plot(X, estimated, '-', lw=1, label=key, color=clr)
         # plt.plot(Z, Z, 'k--', lw=1, label=annotZ)
-    elif snspec == 'sty3b':
+    elif snspec in ('sty3b', 'sty3c', 'sty3d', 'sty3e',):  # =='sty3b':
         ax4.scatter(x=X, y=Y, alpha=1, edgecolors='w',
                     linewidths=.4, label=key, color=clr)
         plt.plot(X, estimated, '-', lw=1, color=clr)
-    elif snspec == 'sty4':
+    elif snspec in ('sty4', 'sty4c', 'sty4e',):
+        # snspec.startswith('sty4'): #=='sty4':#in['sty4','sty8']:
         ax4.scatter(x=X, y=Y, alpha=1, edgecolors='w',
                     linewidths=.2, s=27, label=Z, color=clr)
-    elif snspec == 'sty6':
+    elif snspec == 'sty8a':
+        ax4.scatter(x=X, y=Y, alpha=1, edgecolors='w',
+                    linewidths=.4, s=42, label=Z,
+                    color=clr)  # 'navy')
+        ax4.xaxis.get_offset_text().set_size(7)  # 8)
+        ax4.yaxis.get_offset_text().set_size(7)  # 8)
+    elif snspec == 'sty8b':
+        plt.plot(X, estimated, '-', lw=1, color=clr)
+        ax4.scatter(x=X, y=Y, alpha=1, edgecolors='w',
+                    linewidths=.4, label=key, color=clr)
+    elif snspec in ('sty6', 'sty6c', 'sty6d', 'sty6e',):  # =='sty6':
         ax4.scatter(x=X, y=Y, alpha=1, edgecolors='w',
                     linewidths=.4, label=Z, color=clr)
 
@@ -1173,7 +1186,11 @@ def _subproc_pl_lin_reg(ax4, X, Y, Z, annotZ, snspec, clr='navy',
 def _subproc_pl_lin_reg_alt(ax4, X, Y, snspec, clr='navy'):
     if Y is None:
         return
-    if snspec not in ['sty4', 'sty6']:
+    if snspec.startswith('sty8'):
+        kws = {'color': 'navy', 'lw': 1}
+        _sns_line_err_bars(ax4, kws, X, Y)
+    elif snspec not in ['sty4', 'sty6', 'sty6c', 'sty6d',
+                        'sty4d', 'sty4c', 'sty4e', 'sty6e', ]:
         kws = {'color': clr, 'lw': 1}
         _sns_line_err_bars(ax4, kws, X, Y)
     return
@@ -1182,11 +1199,13 @@ def _subproc_pl_lin_reg_alt(ax4, X, Y, snspec, clr='navy'):
 def _subproc_pl_identity(ax4, Xs, annotZ, snspec):
     # Zs = [sorted(X) for X in Xs]  # , clr='navy'):
     tX = np.concatenate(Xs, axis=0)
+    tX = tX.tolist()  # fmpar env.
     Z = sorted(tX)  # tZ = sorted(tX)
-    if snspec in ['sty3a', 'sty3b', 'sty4',
-                  'sty5a', 'sty5b']:
+    if snspec in ['sty3a', 'sty3b', 'sty4', 'sty5a', 'sty5b',
+                  'sty8a', 'sty8b', 'sty3c', 'sty3d',
+                  'sty4d', 'sty4c', 'sty3e', 'sty4e', ]:
         plt.plot(Z, Z, 'k--', lw=1, label=annotZ)
-    elif snspec == 'sty6':
+    elif snspec in ('sty6', 'sty6c', 'sty6d', 'sty6e',):  # =='sty6':
         tx_min, tx_max = ax4.get_xlim()
         ax4.plot([tx_min, tx_max], [0, 0], 'k--', lw=1, label=annotZ)
         del tx_min, tx_max
@@ -1236,7 +1255,7 @@ def multi_lin_reg_with_distr(Xs, Ys, Zs, annots=('X', 'Y', 'Z'),
     elif snspec in ['sty6', ]:
         _curr_fram = {'frameon': True, 'framealpha': .5,
                       'loc': 'upper right'}  # 'loc': 'best'}
-    elif snspec in ['sty4']:
+    elif snspec in ['sty4', ]:
         _curr_fram = {'loc': 'best', 'frameon': True, 'framealpha': .5}
     ax4.legend(prop=legend_font, labelspacing=.35, **_curr_fram)
     if sci_format_y:
@@ -1254,6 +1273,67 @@ def multi_lin_reg_with_distr(Xs, Ys, Zs, annots=('X', 'Y', 'Z'),
 # refers to
 #   def multi_lin_reg_with_distr
 #
+
+
+def _add_on_DR_plot(ax4, X, Ys, Zs, annotZ, snspec, myclr):
+    n_k = len(Ys)  # aka. len(Zs)
+    start_i = 2 if n_k == 2 else 1
+    if snspec.startswith('sty8'):  # 'navy','royalblue'
+        myclr = ['#1f77b4'] * (len(Ys) + start_i)
+
+    if len(Ys) == 1 and snspec in ('sty3e',):  # 'sty3b'):
+        # myclr = ['navy', ] * (1 + start_i)
+        # elif snspec == 'sty3e':
+        # ax4.scatter(x=X, y=Ys[0], alpha=1, edgecolors='w',
+        #             linewidths=.4, color=myclr[0 + start_i])
+        _subproc_pl_identity(ax4, [X, X], annotZ, snspec)
+        ttt = np.mean(Ys[0] <= X).tolist() * 100.
+        tx_min, tx_max = ax4.get_xlim()
+        ax4.plot([tx_min], [tx_min], 'w-', label=(
+            r'$f(x)\leq x$ coverage {:.2f}%'.format(ttt)))
+        del ttt, tx_min, tx_max
+        # plt.plot(X, estimated, '-', lw=1, color='navy')
+
+        myclr = ['navy', ] + myclr  # myclr[:1]+
+        # R = np.corrcoef(X, Y)[1, 0]  # or pearsonccs(X,Y)[1,0]
+        R = Pearson_correlation(X, Ys[0])[0]
+        key = 'Correlation = %.4f' % R
+        regr = np.polyfit(X, Ys[0], deg=1)
+        estimated = np.polyval(regr, X)
+        # key = '{} {}'.format(key, Z) if (
+        #     not reverse) else '{:9s} {}'.format(Z, key)
+        # plt.plot(X, estimated, '-', lw=1, label=key, color='navy')
+        ax4.scatter(x=X, y=Ys[0], alpha=1, edgecolors='w',
+                    linewidths=.4, label=key, color=myclr[start_i])
+        plt.plot(X, estimated, '-', lw=1, color='navy')
+        del R, key, regr, estimated
+        _sns_line_err_bars(ax4, {'color': 'navy', 'lw': 1}, X, Ys[0])
+        return
+
+    # if len(Ys) == 1 and snspec == 'sty3b':
+    #     myclr = ['navy', ] + myclr
+    for i in range(n_k):
+        _subproc_pl_lin_reg(ax4, X, Ys[i], Zs[i], annotZ,
+                            snspec, myclr[i + start_i])
+    # if len(Ys) == 1 and snspec == 'sty3b':
+    #     myclr = myclr[:1] * (len(Ys) + start_i)
+    for i in range(n_k):
+        _subproc_pl_lin_reg_alt(
+            ax4, X, Ys[i], snspec, myclr[i + start_i])
+    # pdb.set_trace()
+    # if len(Ys) == 1 and snspec.startswith('sty8'):
+    #     ttt = np.mean(Ys[0] <= X).tolist()
+    #     # annotZ += '\nCoverage = {:2f}%'.format(ttt * 100.)
+    #     annotZ += ' (Coverage {:.2f}%)'.format(ttt * 100.)
+    #     del ttt
+    _subproc_pl_identity(ax4, [X, X], annotZ, snspec)
+    if len(Ys) == 1 and snspec in ('sty8a', 'sty8b',):  # 'sty3b'):
+        ttt = np.mean(Ys[0] <= X).tolist() * 100.
+        tx_min, tx_max = ax4.get_xlim()
+        ax4.plot([tx_min], [tx_min], 'w-',
+                 label=r'$f(x)\leq x$ coverage {:.2f}%'.format(ttt))
+        del ttt, tx_min, tx_max
+    return
 
 
 def multi_lin_reg_without_distr(X, Ys, Zs, annots=('X', 'Y', 'Z'),
@@ -1280,28 +1360,45 @@ def multi_lin_reg_without_distr(X, Ys, Zs, annots=('X', 'Y', 'Z'),
         del myclr[2:4]  # myclr[3] = '#81C718'; del myclr[2]
         # myclr[3] = _pl_myclr[7]  # default:_pl_myclr[5]
         snspec = snspec.replace('y7', 'y6')
+    elif snspec in ('sty3c', 'sty6c', 'sty4c',):  # =='sty3c'
+        myclr = _pl_myclr[1:]  # HFM_ext
+    elif snspec in ('sty3d', 'sty6d', 'sty4d',):
+        myclr = _pl_myclr[2:]  # HFM_ext
+    elif snspec in ('sty3e', 'sty4e', 'sty6e',):
+        # myclr = _pl_myclr[3:]  # HFM_ext
+        myclr = _pl_myclr[1:3] + _pl_myclr[5:]
+        if len(Ys) == 1:
+            myclr = ['#1f77b4', ] + myclr  # default:|'#17becf'
     annotZ = annots[2] if len(annots) > 2 else r'$f(x)=x$'
-    n_k = len(Ys)  # aka. len(Zs)
-    start_i = 2 if n_k == 2 else 1
-    for i in range(n_k):
-        _subproc_pl_lin_reg(ax4, X, Ys[i], Zs[i], annotZ,
-                            snspec, myclr[i + start_i])
-    for i in range(n_k):
-        _subproc_pl_lin_reg_alt(
-            ax4, X, Ys[i], snspec, myclr[i + start_i])
-    _subproc_pl_identity(ax4, [X, X], annotZ, snspec)
 
-    if snspec in ['sty3a', 'sty3b', ]:
-        _curr_fram = {'frameon': False, 'loc': 'upper left',
-                      'framealpha': .5}  # 'loc': 'best',
-    elif snspec in ['sty6', ]:
+    _add_on_DR_plot(ax4, X, Ys, Zs, annotZ, snspec, myclr)
+
+    if snspec in ['sty3a', 'sty3b', 'sty3c', 'sty3d', 'sty3e', ]:
+        # _curr_fram = {'frameon': False, 'loc': 'upper left',
+        #               'fontsize': 6,  # 'loc': 'lower right',
+        #               'framealpha': .5}  # 'loc':'best',
+        _curr_fram = {  # 'frameon': snspec == 'sty3b',
+            'frameon': snspec in ('sty3b', 'sty3e', 'sty3c',),
+            'loc': 'upper left' if snspec != 'sty3e' else 'best',
+            'fontsize': 6, 'framealpha': .5}
+    elif snspec in ['sty6', 'sty6c', 'sty6d', 'sty6e', ]:
         _curr_fram = {'frameon': True, 'framealpha': .5,
                       'loc': 'upper right'}  # 'loc': 'best'}
-    elif snspec in ['sty4']:
-        _curr_fram = {'loc': 'best', 'frameon': True, 'framealpha': .5}
-    ax4.legend(prop=legend_font, labelspacing=.35, **_curr_fram)
+    elif snspec in ['sty4', 'sty8a', 'sty8b', 'sty4d', 'sty4c',
+                    'sty4e', ]:
+        _curr_fram = {'loc': 'best', 'frameon': True,
+                      'framealpha': .5}
+        if snspec.startswith('sty8'):
+            _curr_fram['frameon'] = False
+            # _curr_fram['loc'] = 'upper left'
+        elif snspec == 'sty4e':
+            _curr_fram['loc'] = 'upper left'
+    ax4.legend(prop=legend_font, labelspacing=.14,  # =.35
+               handletextpad=.21, **_curr_fram)
+    # ax4.legend(prop=legend_font, labelspacing=.35, **_curr_fram)
     if sci_format_y:
-        ax4.ticklabel_format(style='sci', scilimits=(-3, 4), axis='y')
+        ax4.ticklabel_format(style='sci', scilimits=(-3, 4),
+                             axis='y')
         ax4.yaxis.get_offset_text().set_fontsize(8)
     _style_set_axis(ax4)
     ax4.set_xlabel(annots[0], fontsize=9, family=_curr_ft, x=.55)
@@ -1628,5 +1725,8 @@ def FairGBM_tradeoff_v2(Xs, Ys, annot, label=('X', 'Y'),
 # -------------------------------
 
 # -------------------------------
+#
+# matplotlib(legend)
+# https://blog.csdn.net/henkekao/article/details/75282446
 
 # -------------------------------

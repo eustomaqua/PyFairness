@@ -249,6 +249,57 @@ def grped_radar_cht(df_pl, tag_Xs, annotX=tuple(), annotY=tuple(),
 
 
 # ------------------------------
+# 南丁格尔玫瑰图
+# https://zhuanlan.zhihu.com/p/367450085
+# https://blog.csdn.net/gb4215287/article/details/108744093
+# https://stackoverflow.com/questions/76047803/typeerror-figurebase-gca-got-an-unexpected-keyword-argument-projection
+
+# https://comate.baidu.com/zh/page/to0m6xpc4v0
+# https://blog.csdn.net/Drajor/article/details/116572069
+
+
+def _petal_X(ax, df, tag_Xs, annotX):
+    # 准备好角度和半径
+    angles = np.arange(0, 2 * np.pi, 2 * np.pi / len(tag_Xs))
+    radius = np.array(df[tag_Xs].mean())  # or .mean().values
+    # plt.bar(angles, radius, color=[
+    #     'blue', 'red', 'yellow', 'green'], width=.3)
+
+    plt.bar(angles, radius, alpha=.74)  # 绘制南丁格尔玫瑰图
+    plt.xticks(angles, tag_Xs)          # 添加X轴的标签
+    # plt.ylim(-25, 125)  # 设置Y的取值范围，以让中间出现圆圈/显示空心
+    plt.yticks([])      # 不显示Y轴的数字标签, 添加数值和标题
+    # for a, b in zip(angles, radius):
+    #     plt.text(a + 0.03, b + 1, b, va='center', ha='center')
+    # plt.title('coxcomb chart', loc='center')
+
+    plt.ylim(0, .817)
+    for a, b in zip(angles, radius):
+        ia = round(a + .03, 4)  # float('{:.4f}'.format(a+.03))
+        ib = round(b + .14, 4)   # float('{:.4f}'.format(b+1.))
+        plt.text(ia, ib, round(b - 1, 4), va='center', ha='center')
+    return ax
+
+
+def petal_chart(df, tag_Xs, annotX=tuple(), annotY=tuple(),
+                clockwise=True, figname='', figsize='M-WS'):
+    fig = plt.figure(figsize=_setup_config[figsize])
+    ax = fig.add_subplot(111, polar=True)
+    # ax = fig.gca(polar=True)
+    ax.set_theta_offset(np.pi / 2)
+    if clockwise:
+        ax.set_theta_direction(-1)
+        ax.set_rlabel_position(0)
+    ax = _petal_X(ax, df, tag_Xs, annotX)  # ,clockwise)
+    _setup_figshow(fig, figname)
+    plt.close(fig)
+    return
+
+
+# ------------------------------
+
+
+# ------------------------------
 # refs:
 #
 # https://zhuanlan.zhihu.com/p/375866522
@@ -270,7 +321,6 @@ def grped_radar_cht(df_pl, tag_Xs, annotX=tuple(), annotY=tuple(),
 # https://blog.csdn.net/qq_40994260/article/details/114478555
 # https://blog.csdn.net/CSDN_LYY/article/details/114014856
 #
-
 
 _nat_sci_cs = ['#073068', '#206FB6', '#6BADD7', '#C5DAEE',
                '#FDDFD0', '#FC9171', '#EE3B2A', '#A60E16']

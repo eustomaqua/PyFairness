@@ -711,4 +711,22 @@ def Pearson_correlation(X, Y):
     return numerator / denominator, cov
 
 
+# https://stackoverflow.com/questions/45897003/python-numpy-corrcoef-runtimewarning-invalid-value-encountered-in-true-divide
+# https://stackoverflow.com/questions/62115245/why-does-numpy-corrcoef-returns-nan
+
+# def pearsonccs(samples):
+#     C = np.cov(samples)
+#     diag = np.diag(C)
+#     N = np.sqrt(np.outer(diag, diag))
+#     N[N == 0] = 1.
+#     return C / N
+
+def pearsonccs(X, Y):
+    C = np.cov([X, Y])
+    diag = np.diag(C)
+    N = np.sqrt(np.outer(diag, diag))
+    N[N == 0] = 1.
+    return C / N
+
+
 # -------------------------------------

@@ -184,3 +184,36 @@ def JS_div(arr1, arr2, num_bins=368):
     PDF1 = pd.cut(arr1, bins).value_counts() / len(arr1)
     PDF2 = pd.cut(arr2, bins).value_counts() / len(arr2)
     return JS_divergence(PDF1.values, PDF2.values)
+
+
+# DK
+# https://datascience.stackexchange.com/questions/9262/calculating-kl-divergence-in-python
+# https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.kl_div.html
+
+
+def KL_div_ver1(p, q):
+    # scipy.special.kl_div(p, q)
+    return float(stats.entropy(p, q))
+
+
+def KL_div_ver2(p, q):
+    p = np.asarray(p, dtype='float')  # np.float)
+    q = np.asarray(q, dtype='float')  # np.float)
+    # np.sum(np.where(p != 0, p * np.log(p / q), 0))
+    tmp = p * np.log(p / q)
+    tmp = np.sum(np.where(p != 0, tmp, 0))
+    return float(tmp)
+
+
+# def KL_div_ver3(p, q):
+#     p = np.asarray(p, dtype='float')
+#     q = np.asarray(q, dtype='float')
+#     tmp = p * np.log(p / q)
+#     if np.isnan(tmp).any():
+#         tmp = np.nan_to_num(tmp)
+#     tmp = np.sum(np.where(p != 0, tmp, 0))
+#     return float(tmp)
+
+
+# KL_div = KL_div_ver2  # _ver1
+KL_div = KL_div_ver1

@@ -7,7 +7,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 from pyfair.granite.draw_fancy import (
-    boxplot_rect, multi_boxplot_rect, radar_chart)
+    boxplot_rect, multi_boxplot_rect, radar_chart,
+    petal_chart)
+import pdb
 
 
 n, n_d = 10, 5
@@ -28,7 +30,7 @@ df_ext_alt = pd.DataFrame(far_ext, columns=lb_ext_alt)
 df_alt = pd.concat([df_grp, df_ext, df_ext_alt], axis=1)
 
 
-def test_bplot():
+def excl_test_bplot():
     i = 0
     boxplot_rect([far_grp[:, i], far_ext[:, i], far_ext_alt[:, i]
                   ], annots, f'chart_far_grp{i+1}')
@@ -78,4 +80,24 @@ def test_bplot():
     axs[1, 2].yaxis.grid(True)
     plt.savefig("chart_bps_sns.pdf", dpi=300)  # plt.show()
     # pdb.set_trace()
+    return
+
+
+def test_rose():
+    # 南丁格尔玫瑰图  # i = 0, df_alt[lb_grp]
+    # radar_chart(df_alt, lb_grp, annotX=lb_grp,
+    #             figname='chart_radar_dim1')
+    # radar_chart(df_alt, lb_grp, annotX=lb_grp,
+    #             figname='chart_radar_dim2', stylish=True)
+    tmp = df_alt[:1]  # df_alt.mean()
+    for i in lb_grp:
+        tmp[i] = df_alt[i].mean()
+    radar_chart(tmp, lb_grp, annotX=lb_grp, clockwise=True,
+                figname='chart_rader_dim3', stylish=True)
+    tmp = pd.DataFrame({'day': [
+        'Mon', 'Tues', 'Wed', 'Thu', 'Fri', 'Sat',
+        'Sun'], 'price': [50, 60, 70, 20, 90, 110, 30]})
+    petal_chart(df_alt, lb_grp, annotX=lb_grp, clockwise=True,
+                figname='chart_petal_dim1')
+    pdb.set_trace()
     return

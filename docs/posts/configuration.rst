@@ -193,8 +193,8 @@ Executing on the server
   [qgl539@hendrixgpu04fl Singdocker]$ exit
   [qgl539@hendrixgate01fl ~]$ exit    # exit screen
   [qgl539@hendrixgate01fl ~]$ logout  # Connection to hendrixgate closed.
-  $ rsync -r hendrix:/home/qgl539/tmp.tar.gz .     # copy from server
-  $ tar -xzvf tmp.tar.gz                           # decompression
+  $ rsync -r hendrix:/home/qgl539/GitH/tmp.tar.gz .  # copy from server
+  $ tar -xzvf tmp.tar.gz                             # decompression
   $ rm tmp.tar.gz
 
 

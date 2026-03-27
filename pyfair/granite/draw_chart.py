@@ -27,6 +27,7 @@ from pyfair.facil.draw_prelim import (
     _setup_figsize, _setup_figshow,  # _sns_line_err_bars,
     _setup_locater, _style_set_fig, _style_set_axis)
 from pyfair.granite.draw_graph import _sns_line_err_bars
+from pyfair.marble.draw_hypos import Pearson_correlation  # pearsonccs
 
 
 mpl.use('Agg')  # set the 'backend'
@@ -75,6 +76,12 @@ _nat_sci_cs = [
     # '#F0E6E4', '#CEB5B9', '#AE8FCE', '#98A1B1', '#b36asf',
     # '#F8CDCF', '#FAC5A4', '#FBEAA6', '#C2E99E', '#ABEAF9',
 ]
+# _nat_sci_cs = [
+#     '#3F82AC', '#754D98', '#239B3A', '#FFEBA6', '#E52D07',
+#     '#CE2C2A', '#BF7eB1', '#A8592E', '#CB5A49', '#2D8BC1',
+#     '#E29543', '#4BA474', '#918FC1', '#89AEC1', '#FCDD99',
+#     '#E77A34', ]
+_nat_sci_cs.append('#FFEBA6')  # _nat_sci_cs[4] = '#FFEBA6'
 
 
 def _sub_spread_COR(Xs, Ys, annotZs):
@@ -200,7 +207,8 @@ def multiple_scatter_chart(X, Ys, annots=('X', 'Ys'),
                            figname="", figsize='M-WS',
                            ind_hv='h', identity=True,
                            base=None,  # diff=0.05,
-                           locate=PLT_LOCATION):
+                           # locate=PLT_LOCATION):
+                           loc=PLT_LOCATION, box=PLT_FRAMEBOX):
     '''
     if ind_hv == 'h':
         multi_scatter_hor(X, Ys, annots, annotZs,
@@ -221,8 +229,9 @@ def multiple_scatter_chart(X, Ys, annots=('X', 'Ys'),
     figname += ("_hor" if ind_hv == 'h' else "_vrt")
     if base is not None:
         _setup_locater(fig, base)
-    plt.legend(loc=locate, frameon=PLT_FRAMEBOX,
-               labelspacing=.07, prop={'size': 9})
+    plt.legend(  # loc=locate,frameon=PLT_FRAMEBOX,
+        loc=loc, frameon=box,
+        labelspacing=.07, prop={'size': 9})
     if figsize is not None:
         fig = _setup_figsize(fig, figsize)
     _setup_figshow(fig, figname)
@@ -299,7 +308,12 @@ def _alt_confus_cm_asym(Mat_A, Mat_B):
     cm = np.zeros((num_za, num_zb))
     for i in range(num_za):
         for j in range(num_zb):
-            cm[i, j] = np.corrcoef(Mat_B[j], Mat_A[i])[1, 0]
+            # cm[i, j] = np.corrcoef(Mat_B[j], Mat_A[i])[1, 0]
+            #
+            cm[i, j] = Pearson_correlation(Mat_B[j], Mat_A[i])[0]
+            # cm[i, j] = np.corrcoef(Mat_B[j], Mat_A[i])[
+            #     1, 0] if rmk == 'np.' else Pearson_correlation(
+            #     Mat_B[j], Mat_A[i])[0]  # pearsonccs()[0,1]
     return cm
 
 
