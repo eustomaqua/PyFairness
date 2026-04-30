@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 from pyfair.granite.draw_fancy import (
     boxplot_rect, multi_boxplot_rect, radar_chart,
-    petal_chart)
+    petal_chart, multi_boxplot_rect_revised)
 import pdb
 
 
@@ -37,6 +37,9 @@ def excl_test_bplot():
     df_tmp = pd.DataFrame({annots[0]: far_grp[:, i], annots[
         1]: far_ext[:, i], annots[2]: far_ext_alt[:, i]})
     multi_boxplot_rect(df_tmp, annots, figname=f'chart_far_gr{i+1}p')
+    multi_boxplot_rect_revised(
+        df_tmp, annots, figname='chart_test')  # ,annotX=list(annots)
+    # pdb.set_trace()
 
     df_lbl = ['First', 'Second', 'Third']  # {'Third', ..}
     # boxplot_rect([np.nan_to_num(df[df['class'] == i][
@@ -56,6 +59,8 @@ def excl_test_bplot():
                 figname=f'chart_radar_dim1{i}')
     radar_chart(df_alt, lb_grp, annotX=lb_grp,
                 figname=f'chart_radar_dim2{i}', stylish=True)
+    multi_boxplot_rect_revised(df_alt, lb_grp, figname='chart_tst1')
+    multi_boxplot_rect_revised(df_alt, lb_grp, lb_ext, figname='chart_tst2')
     # pdb.set_trace()
 
     fig, axs = plt.subplots(2, 3, figsize=(8.1, 4.7))  # =(6,5))

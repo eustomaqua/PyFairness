@@ -221,7 +221,8 @@ def imba_discriminant_power(sen, spe):
 
 @numba.jit(nopython=True)
 def imba_balanced_accuracy(sen, spe):
-    return sen * spe / 2.
+    # return sen * spe / 2.
+    return (sen + spe) / 2.
 
 
 def imba_Matthew_s_cc(tp, fp, fn, tn):

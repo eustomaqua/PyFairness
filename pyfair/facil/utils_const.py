@@ -146,6 +146,10 @@ def unique_column(nb_col, alphabet=None):
     return _sub_ABC(nb_col, alphabet, double)
 
 
+def subfig_ind(k):  # _indices index
+    return f"({chr(k + 65).lower()})"
+
+
 # RuntimeWarning:
 # overflow encountered in long_scalars
 # import decimal

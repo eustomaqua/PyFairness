@@ -25,6 +25,7 @@ import numpy as np
 # plt.rcParams['font.family'] = 'Times New Roman'
 plt.rcParams['font.family'] = 'Arial'  # 'Helvetica','Simsun'
 # plt.rcParams['font.family'] = 'stixgeneral'
+# plt.rcParams['font.style'] = 'italic'
 
 # plt.rc('text', usetex=True)
 # plt.rcParams['font.sans-serif'] = ['SimHei']  # show chinese lbl
@@ -68,11 +69,15 @@ PLT_SPINEOFF = False
 # -------------------------------------
 # Help(er) functions
 
+# https://www.cnblogs.com/xyz/p/16404155.html
+# https://blog.51cto.com/u_16175433/7424505
+# ax.tick_params(axis='x|y', direction='out')
 
-def _style_set_axis(ax, invt=False):
+
+def _style_set_axis(ax, invt=False, dirc='in'):
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
-    ax.tick_params(direction='in')
+    ax.tick_params(direction=dirc)  # 'in')
     if invt:
         ax.invert_yaxis()  # x-y,矩阵模式
     return ax
@@ -93,7 +98,8 @@ _setup_config = {
     'M-WS': (3.05, 2.52),  # nice
     'M-NT': (3.15, 2.61),  # default
     'L-WS': (3.67, 2.95),  # ( 3.45, 2.85),
-    'L-NT': (4.2, 3.4),    # (4,3.2),(5,4),
+    'L-NT': (4.78, 3.76),  # (4.2,3.4), (4,3.2),(5,4),
+    'L-WT': (5.21, 4.07),  # (4.97,3.81),(5.24,3.97)
     'extra': (7, 5.467), 'L-ET': (6, 4.7)
     # 'extra': (9, 5.4)
 }  # 'S/M/L' 'Wide/Narrow' 'Tall/Short'

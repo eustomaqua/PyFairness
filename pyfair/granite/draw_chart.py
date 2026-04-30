@@ -319,13 +319,19 @@ def _alt_confus_cm_asym(Mat_A, Mat_B):
 
 def analogous_confusion_extended(Mat_A, Mat_B, key_A, key_B,
                                  figname, cm=None, figsize='L-NT',
-                                 cmap_name="Blues_r", rotate=5):
+                                 cmap_name="Blues_r", rotate=5,
+                                 entitle=None):
     num_za, num_zb = len(key_A), len(key_B)
     if cm is None:
         cm = _alt_confus_cm_asym(Mat_A, Mat_B)
 
-    # cmap = plt.get_cmap(cmap_name)
-    cmap = plt.colormaps.get_cmap(cmap_name)
+    # mpl.colormaps[cmap_name].resampled(max(num_za, num_zb))
+    # mpl.colors.ListedColormap(cmap_name, name='from_list', N=None)
+    cmap = mpl.colors.LinearSegmentedColormap.from_list(
+        'my_custom', ["white", cmap_name])
+
+    # # cmap = plt.get_cmap(cmap_name)
+    # cmap = plt.colormaps.get_cmap(cmap_name)
     fig, _ = _ext_confus_cm(cm, cmap, figsize)
 
     # _style_set_axis(ax, invt=True)
@@ -333,8 +339,122 @@ def analogous_confusion_extended(Mat_A, Mat_B, key_A, key_B,
     tick_mk_b = np.arange(num_zb)
     plt.xticks(tick_mk_b, key_B, rotation=rotate)
     plt.yticks(tick_mk_a, key_A)
+    if entitle:
+        plt.xlabel(entitle)  # plt.title
     _style_set_fig(fig, siz=_setup_config[figsize])
     _setup_figshow(fig, figname)
+    return
+
+
+def _ac_ext_imshow(ax, cm, k, cmap, vm, key, rotate):
+    # im = ax.imshow(cm, cmap=cmap, vmin=vmin, vmax=vmax)
+    im = ax.imshow(cm, cmap=cmap, vmin=vm[0], vmax=vm[1])
+    num_za, num_zb = cm.shape
+    for i, j in itertools.product(range(num_za), range(num_zb)):
+        ax.text(j, i, f'{cm[i,j]:.3f}', color='k',
+                horizontalalignment='center', size='small')
+
+    tick_mk_a = np.arange(num_za)
+    tick_mk_b = np.arange(num_zb)  # key_B
+    ax.set_xticks(tick_mk_b, key[1], rotation=rotate)
+    ax.set_yticks(tick_mk_a, [])
+    if k == 0:
+        ax.set_yticks(tick_mk_a, key[0])  # key_A)
+    return im
+
+
+def _ac_ext_sub_ver1(cmap, num_zc, cm, figsz, vm, kA, kBs, rotate):
+    # 1. 生成示例数据，并统一数据的范围
+    # vmin = min([i.min().tolist() for i in cm])
+    # vmax = max([i.max().tolist() for i in cm])
+    # 2. 创建子图
+    # fig, axs = plt.subplots(1, num_zc, figsize=(10, 4))
+    fig, axs = plt.subplots(
+        1, num_zc, figsize=figsz)  # ,constrained_layout=True)
+    # 3. 绘制图像，必须设置统一的 vmin, vmax, cmap
+    for i, ax in enumerate(axs):  # for ax in axs:
+        # im = _ac_ext_imshow(ax, cm[i], cmap, vm[0], vm[1])
+        im = _ac_ext_imshow(ax, cm[i], i, cmap, vm, [kA, kBs[i]], rotate)
+    # 重新为第二个子图指定数据
+    for i, curr in enumerate(cm[1:]):
+        # axs[i + 1].imshow(curr, cmap=cmap, vmin=vm[0], vmax=vm[1])
+        _ac_ext_imshow(axs[
+            i + 1], curr, i + 1, cmap, vm, [kA, kBs[i + 1]], rotate)
+    # 4. 在子图右侧添加共享的 colorbar
+    # fig.colorbar(mappable, ax, ...)  ax可以是子图列表
+    # cbar = fig.colorbar(im, ax=axs, orientation='vertical',
+    #                     fraction=0.046, pad=0.04)
+    # cbar.set_label('Color Scale')
+
+    # axs[0].set_yticks(np.arange(cm[0].shape[0]), kA)
+    # num_za, num_zb = cm[-1].shape
+    # num_shrink = float(num_za) / float(num_zb) + 0.01
+    cbar = fig.colorbar(im, ax=axs, orientation='vertical',
+                        fraction=.046, pad=.04)  # ,shrink=num_shrink)
+    plt.subplots_adjust(left=.01, right=.84, top=.99, bottom=.01,
+                        wspace=.089, hspace=.04)
+    return fig
+
+
+def _ac_ext_sub_ver2(cmap, num_zc, cm, figsz, vm, kA, kBs, rotate,
+                     key_tit):
+    from mpl_toolkits.axes_grid1 import ImageGrid
+    fig = plt.figure(figsize=figsz)  # figsize=(10, 4))
+    # 创建一个 1x2 的网格，并在每个子图右侧共享一个 colorbar
+    grid = ImageGrid(fig, 111, nrows_ncols=(1, num_zc), axes_pad=0.15,
+                     cbar_location="right",  # share_all=True,
+                     cbar_mode="single", cbar_size="7%", cbar_pad=0.15,
+                     )  # label_mode='L') #'all')
+    # vmin, vmax = 0, 1
+    # 循环绘制
+    for i, ax in enumerate(grid):
+        # im = ax.imshow(cm[i], vmin=vmin, vmax=vmax, cmap='plasma')
+        # im = _ac_ext_imshow(ax, cm[i], cmap, vmin, vmax)
+        im = _ac_ext_imshow(grid[i], cm[i], i, cmap, vm, [kA, kBs[i]], None)
+        # # 显示每一张图的x轴刻度 ax.axis('on')  或者单独设置
+        # # ax.tick_params(axis='x', which='both', bottom=True, labelbottom=True)
+        # ax.axis('on')
+        # tick_mk_b = np.arange(cm[i].shape[1])
+        # ax.set_xticks(tick_mk_b)
+        # ax.set_xticklabels(kBs[i], rotation=rotate, fontsize=10)
+    # 添加 colorbar
+    grid.cbar_axes[0].colorbar(im)
+
+    tick_mk_a = np.arange(cm[0].shape[0])
+    grid[0].set_yticks(tick_mk_a, kA)
+    # for i, kB in enumerate(kBs):
+    #     tick_mk_b = np.arange(cm[i].shape[1])
+    #     grid[i].set_xticks(tick_mk_b,kB,rotation=rotate)
+    if key_tit and isinstance(key_tit, list):
+        for i, tit in enumerate(key_tit):
+            grid[i].set_title(tit, fontsize=10.5)
+    elif key_tit:
+        # plt.title(key_tit, fontsize=10)
+        grid.axes_all[1].set_title(key_tit, fontsize=10.5)
+    return fig
+
+
+def anal_conf_extended_subplt(Mat_A, Mat_Bs, key_A, key_Bs, figname,
+                              cmap_name='#F4870B',  # figsize=(8.7,2.4),
+                              figsize=(8.1, 2.21), rotate=0,
+                              key_tit=None, ver='ver2'):
+    cm = [_alt_confus_cm_asym(Mat_A, MB) for MB in Mat_Bs]
+    cmap = mpl.colors.LinearSegmentedColormap.from_list(
+        'my_custom', ["white", cmap_name])
+    num_za, num_zc = len(key_A), len(key_Bs)
+    tick_mk_a = np.arange(num_za)
+
+    # fig, axs = plt.subplots(1, num_zc, figsize=(10, 4))
+    vmin = min([i.min().tolist() for i in cm])
+    vmax = max([i.max().tolist() for i in cm])
+    if ver in ['ver1', 'ver3']:
+        fig = _ac_ext_sub_ver1(cmap, num_zc, cm, figsize, [
+                               vmin, vmax], key_A, key_Bs, rotate)
+        _setup_figshow(fig, figname + 'a' * (ver == 'ver3'))
+    if ver in ['ver2', 'ver3']:
+        fig = _ac_ext_sub_ver2(cmap, num_zc, cm, figsize, [
+            vmin, vmax], key_A, key_Bs, rotate, key_tit)
+        _setup_figshow(fig, figname + 'b' * (ver == 'ver3'))
     return
 
 
