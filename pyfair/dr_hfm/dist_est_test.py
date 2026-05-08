@@ -246,6 +246,8 @@ def compare_alternative(nai, m1, m2):
     X_nA_y, A, indices, vec_w = generate_dat(n, nd, na, nai)
     W = weight_generator(n_d=5)
     assert W.shape[0] == 5 + 1
+    assert len(indices) == na and np.all(
+        np.equal([len(i) for i in indices], nai))
 
     k = 0
     A_j = A[:, k]
@@ -299,7 +301,7 @@ def compare_alternative(nai, m1, m2):
         #     X_nA_y, A_j, idx_S0, idx_S1, idx_y_fx, 0, m2)
         intermediate = subcomp_alternative(idx_y_fx, 0)
         # intermediate = subcomp_subaccel(idx_y_fx, 1)
-        pdb.set_trace()
+        # pdb.set_trace()
 
     no_less_than_check(res_1, ans_1[0])
     for i in [0, 1]:  # max,avg
