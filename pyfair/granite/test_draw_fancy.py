@@ -84,6 +84,7 @@ def excl_test_bplot():
                     .4, .6, .8, .5)}, medianprops={"color": "r"})
     axs[1, 2].yaxis.grid(True)
     plt.savefig("chart_bps_sns.pdf", dpi=300)  # plt.show()
+    plt.close(fig)
     return
 
 

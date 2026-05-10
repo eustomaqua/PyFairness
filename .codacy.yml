@@ -1,0 +1,5 @@
+exclude_paths:
+  - "docs/conf.py"
+  - "Dockerfile"
+  - "pyfair/facil/pkgs_pympler.py"
+  - "pyfair/pkgs_AdaFair_py36.py"

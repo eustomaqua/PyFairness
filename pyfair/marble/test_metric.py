@@ -168,8 +168,8 @@ z_trn, z_hat = np.array(z_trn), np.array(z_hat)
 
 
 def test_contingency():
-    from pyfair.facil.metric_cont import (
-        contingency_tab_bi, contg_tab_mu_type3)
+    # from pyfair.facil.metric_cont import (
+    #     contingency_tab_bi, contg_tab_mu_type3)
 
     ans = metrics.cluster.contingency_matrix(y_trn, y_hat)
     res = contg_tab_mu_type3(y_trn, y_hat, list(range(nb_lbl)))
@@ -187,10 +187,11 @@ def test_contingency():
 
 
 def test_performance():
-    from pyfair.facil.metric_cont import contingency_tab_bi
-    from pyfair.marble.metric_perf import (
-        calc_accuracy, calc_precision, calc_recall,
-        calc_f1_score, calc_f_beta, calc_error_rate)
+    # from pyfair.facil.metric_cont import contingency_tab_bi
+    # from pyfair.marble.metric_perf import (
+    #     calc_accuracy, calc_precision, calc_recall,
+    #     calc_f1_score, calc_f_beta, calc_error_rate)
+    from pyfair.marble.metric_perf import calc_error_rate
 
     mid = contingency_tab_bi(z_trn, z_hat, pos=1)
     res = calc_accuracy(*mid)

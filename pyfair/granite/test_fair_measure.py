@@ -351,7 +351,7 @@ def test_group_fair():
 
 
 def test_fair_update():
-    vY, dY = judge_transform_need(y_bin)
+    vY, _ = judge_transform_need(y_bin)    # vY, dY =
     vY = vY[:: -1]
     z, ht = np.array(y_bin), np.array(ht_bin[0])
     g1, g0 = marginalised_np_mat(z, ht, 1, Sjs_bin[0])
