@@ -410,7 +410,8 @@ def _ac_ext_sub_ver2(cmap, num_zc, cm, figsz, vm, kA, kBs, rotate,
     for i, ax in enumerate(grid):
         # im = ax.imshow(cm[i], vmin=vmin, vmax=vmax, cmap='plasma')
         # im = _ac_ext_imshow(ax, cm[i], cmap, vmin, vmax)
-        im = _ac_ext_imshow(grid[i], cm[i], i, cmap, vm, [kA, kBs[i]], None)
+        im = _ac_ext_imshow(ax,  # grid[i],
+                            cm[i], i, cmap, vm, [kA, kBs[i]], None)
         # # 显示每一张图的x轴刻度 ax.axis('on')  或者单独设置
         # # ax.tick_params(axis='x', which='both', bottom=True, labelbottom=True)
         # ax.axis('on')

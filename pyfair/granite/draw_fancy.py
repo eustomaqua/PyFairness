@@ -479,7 +479,7 @@ def multi_boxplot_rect_revised(df, tag_Xs, tag_Ys=None, tag_Zs=None,
                                #     '#184879', '#762E29', '#387EB8', '#C24E44',
                                #     # '#024163', '#8E0f31',
                                #     '#066190', '#C42238', '#77AECD', '#D98380'],
-                               palette=['black', '#387EB8', '#C24E44', '#184879', '#762E29', '#066190', '#C42238', '#024163', '#8E0F31'],
+                               palette=('black', '#387EB8', '#C24E44', '#184879', '#762E29', '#066190', '#C42238', '#024163', '#8E0F31'),
                                locate='best', figname='', figsize='M-WS'):
     fig, ax = plt.subplots(figsize=_setup_config[figsize])
     if tag_Ys is None:
@@ -544,7 +544,7 @@ def _radar_X(ax, df, tag_Xs, annotX, clockwise=False,
     scores = df[tag_Xs].values.astype(DTY_FLT)
     scores = np.concatenate([scores, scores[:, 0].reshape(
         -1, 1)], axis=1)
-    for i, sc in enumerate(scores):
+    for sc in scores:  # for i, sc in enumerate(scores):
         ax.plot(angles, sc)
     # ax.set_thetagrids(angles * 180 / np.pi, labels)  # 标签显示
     # ax.set_theta_zero_location('N')  # 设置雷达图的0度起始位置
@@ -563,7 +563,7 @@ def _radar_X(ax, df, tag_Xs, annotX, clockwise=False,
 
 
 def _radar_X_revised(ax, df, tag_Xs, annotX, clockwise=False,
-                     palette = [
+                     palette = (
         # # 'darkgrey', 'black', '#066190', '#C42238', '#024163', '#8E0F31',
         # # '#77AECD', '#D98380', '#066190', '#C42238'], stylish=False):
         # # 'darkgrey', 'black', '#066190', '#024163', '#C42238', '#8E0F31',
@@ -571,7 +571,7 @@ def _radar_X_revised(ax, df, tag_Xs, annotX, clockwise=False,
         # 'black', 'darkgrey', '#024163', '#77AECD', '#8E0F31', '#D98380',
         # '#066190', '#77AECD', '#C42238', '#D98380'], stylish=False):
         'black', 'darkgrey', '#184879', '#6299CA', '#762E29', '#C87271',
-        '#387EB8', '#6299CA', '#C24E44', '#C87271'], stylish=False):
+        '#387EB8', '#6299CA', '#C24E44', '#C87271'), stylish=False):
 
     angles = np.linspace(0, 2 * np.pi, len(tag_Xs), endpoint=False)
     labels = annotX + [annotX[0]]

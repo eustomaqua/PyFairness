@@ -16,7 +16,7 @@ from pyfair.marble.metric_perf import (
 from pyfair.facil.metric_cont import (
     contingency_tab_bi, contg_tab_mu_type3)
 contingency_tab_mu = contg_tab_mu_type3
-del contg_tab_mu_type3
+# del contg_tab_mu_type3
 
 
 # ==========================
@@ -168,8 +168,8 @@ z_trn, z_hat = np.array(z_trn), np.array(z_hat)
 
 
 def test_contingency():
-    from pyfair.facil.metric_cont import (
-        contingency_tab_bi, contg_tab_mu_type3)
+    # from pyfair.facil.metric_cont import (
+    #     contingency_tab_bi, contg_tab_mu_type3)
 
     ans = metrics.cluster.contingency_matrix(y_trn, y_hat)
     res = contg_tab_mu_type3(y_trn, y_hat, list(range(nb_lbl)))
@@ -187,10 +187,11 @@ def test_contingency():
 
 
 def test_performance():
-    from pyfair.facil.metric_cont import contingency_tab_bi
-    from pyfair.marble.metric_perf import (
-        calc_accuracy, calc_precision, calc_recall,
-        calc_f1_score, calc_f_beta, calc_error_rate)
+    # from pyfair.facil.metric_cont import contingency_tab_bi
+    # from pyfair.marble.metric_perf import (
+    #     calc_accuracy, calc_precision, calc_recall,
+    #     calc_f1_score, calc_f_beta, calc_error_rate)
+    from pyfair.marble.metric_perf import calc_error_rate
 
     mid = contingency_tab_bi(z_trn, z_hat, pos=1)
     res = calc_accuracy(*mid)
@@ -278,8 +279,8 @@ def test_group_fair():
         assert ans_1m[0] > prev[0] > ans_1b[0]
         fp2 = ans_2m[0] > prev[1] > ans_2b[0]
         fp3 = ans_3m[0] > prev[2] > ans_3b[0]
-        # if not fp2 or not fp3:  # not (fp2 and fp3):
-        #     pdb.set_trace()
+        if not fp2 or not fp3:  # not (fp2 and fp3):
+            pdb.set_trace()
         assert fp2  # assert ans_2m[0] > ans_2b[0]
         assert fp3  # assert ans_3m[0] > ans_3b[0]
 
