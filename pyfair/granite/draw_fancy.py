@@ -553,7 +553,7 @@ def _radar_X(ax, df, tag_Xs, annotX, clockwise=False,
 
     kws = {}  # {'fontsize': 14, 'style': 'italic'}
     if stylish:
-        for i, sc in enumerate(scores):
+        for sc in scores:  # for i, sc in enumerate(scores):
             ax.fill(angles, sc, alpha=.25)
         kws['style'] = 'italic'
     ax.set_thetagrids(angles * 180 / np.pi, labels, **kws)

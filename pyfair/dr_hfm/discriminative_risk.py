@@ -378,7 +378,7 @@ def perturb_numpy_ver(X, sen_att, priv_val, ratio=.5):
             if X_qtb[i, sa] != pv:
                 X_qtb[i, sa] = pv
             else:
-                X_qtb[i, sa] = np.random.choice(un) 
+                X_qtb[i, sa] = np.random.choice(un)
 
     return X_qtb  # np.ndarray
 

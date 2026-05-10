@@ -18,7 +18,7 @@ from pyfair.marble.metric_fair import (  # hfm.metrics.fair_grp_ext
 
 
 import numpy as np
-# import pdb
+import pdb
 # import lightgbm
 
 # from pyfair.facil.utils_const import check_equal
@@ -127,10 +127,11 @@ def test_metric_grp1():
     m6 = UD_grp1_DP.yev_cx(y, y_hat, A1_bin, val_A1, pos)
     m7 = UD_grp1_DP.mu_sp(y, y_hat, A1_bin, priv_val, pos)
     m8 = UD_grp1_DP.mu_cx(y, y_hat, A1_bin, priv_val, pos)
-    assert check_equal(m1[0][0], [m2[0], m4[0][3][0]])  # m3[0][0],
-    assert check_equal(m6[0][2][0], [m7[0], m8[0][1]])  # m8[0][0]])
+    assert check_equal(m1[0][0], [m2[0], m4[0][3][0], ])  # m3[0][0],
+    assert check_equal(m6[0][2][0], [m7[0], m8[0][1], ])  # m8[0][0]])
 
     # pdb.set_trace()
+    assert len(m3[0]) == len(m2) and isinstance(m3[1], float)
     assert check_equal(jt_prev[0], alterGrps_sing(tm1[-1], hfm_idx_nsa_bin)[0])
     assert check_equal(jt_prev[0], [
         m2[0], m1[0][0], m4[0][-1][0], m6[0][-1][0], m7[0], ] + list(m6[0][:-1]))
@@ -163,6 +164,18 @@ def test_metric_grp1():
                                     qb_5_a[0], qb_5_b[0]])
 
     # pdb.set_trace()
+    # assert isinstance(qa_4[-1], float)
+    # assert isinstance()
+    # assert len(m3[0]) == len(m2) and len(qb_3) == len(qb_2) == len(qb_6)
+
+    assert isinstance(qa_5[-1], float)
+    assert isinstance(qa_6[-1], float)
+    assert isinstance(m5[-1], float)
+    assert isinstance(m3[-1], float)
+    assert isinstance(qa_3[-1], float)
+    assert isinstance(qb_3[-1], float)
+    assert isinstance(qb_6[-1], float)
+    assert isinstance(qb_4[-1], float)
     return
 
 
@@ -181,10 +194,11 @@ def test_metric_grp2():
     m6 = UD_grp2_EO.yev_cx(y, y_hat, A1_bin, val_A1, pos)
     m7 = UD_grp2_EO.mu_sp(y, y_hat, A1_bin, priv_val, pos)
     m8 = UD_grp2_EO.mu_cx(y, y_hat, A1_bin, priv_val, pos)
-    assert check_equal(m1[0][0], [m2[0], m4[0][3][0]])
+    assert check_equal(m1[0][0], [m2[0], m4[0][3][0], ])
     assert check_equal(m6[0][2][0], [m7[0], m8[0][1]])
 
     # pdb.set_trace()
+    assert len(m5[0][-1]) == len(m4[-2][-1]) and isinstance(m5[-1], float)
     assert check_equal(jt_prev[1], alterGrps_sing(tm1[-1], hfm_idx_nsa_bin)[0])
     assert check_equal(jt_prev[1], [m1[0][0], m2[0], m4[
         0][-1][0], m6[0][-1][0], m7[0], ] + list(m6[0][:-1]))
@@ -216,6 +230,12 @@ def test_metric_grp2():
     assert check_equal(qb_2[0], [qb_7[0], qb_8[0]])
 
     # pdb.set_trace()
+    assert len(m3[0]) == len(m2) and isinstance(m3[-1], float)
+    assert isinstance(qb_4[-1], float)
+    assert isinstance(qb_6[-1], float)
+    assert isinstance(qb_3[-1], float)
+    assert isinstance(qa_3[-1], float)
+    assert isinstance(qa_5[-1], float)
     return
 
 
@@ -242,9 +262,13 @@ def test_metric_grp3():
     assert check_equal(m6[0][2][0], [m7[0], m8[0][1]])
 
     # pdb.set_trace()
+    assert len(m3[0]) == len(m2) and isinstance(m3[1], float)
     assert check_equal(jt_prev[2], alterGrps_sing(tm1[-1], hfm_idx_nsa_bin)[0])
     assert check_equal(jt_prev[2], [m1[0][0], m2[0], m4[
         0][-1][0], m6[0][-1][0], m7[0], ] + list(m6[0][:-1]))
+
+    assert isinstance(m5[-1], float)
+    assert isinstance(m4[-1], float)
     return
 
 
@@ -294,7 +318,9 @@ def test_metric_indv():
     # assert tm3[0] >= t4[0] and tm3[1] >= t4[1]
     # assert tm4[0] >= t6[0] and tm4[1] >= t6[1]
     # assert tm5[0] >= t5[0] and tm5[1] >= t5[1]
-    # # pdb.set_trace()
+
+    # pdb.set_trace()
+    assert len(m4) == 2 and isinstance(m4[-1], float)
     return
 
 
@@ -318,7 +344,7 @@ Sjs_non = [multi_pv == 1, multi_pv == 0, multi_pv == 2]
 
 def test_group_fair():
     def subroutine(y, hx, pos, priv):
-        vY, dY = judge_transform_need(y)
+        vY, _ = judge_transform_need(y)    # vY, dY
         vY = vY[:: -1]
         z, ht = np.array(y), np.array(hx)
         g1M, g0M = marginalised_np_mat(z, ht, pos, priv)
@@ -375,9 +401,11 @@ def test_fair_update():
 
         assert len(tmp_1[-1]) == 2 and len(tmp_2[-1]) == 3
         assert ans == res_0[0] == res_1
-        # pdb.set_trace()
         # if grpstr in ('DP'):
         #     assert check_equal(res_1, res_2[1])
+        # pdb.set_trace()
+        assert type(res_3[-1]) == type(res_4[-1])
+        assert isinstance(res_2, tuple) and len(res_2) == 2
 
     sub_update(ans_1, 1, multi_pv, extGrp1_DP_sing, UD_grp1_DP, 'DP')
     sub_update(ans_2, 1, multi_pv, extGrp2_EO_sing, UD_grp2_EO, 'EO')

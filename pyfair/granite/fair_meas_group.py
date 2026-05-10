@@ -352,6 +352,7 @@ class UD_grp2_EOdd(UD_grp2_EO):
         ans = g_ans * n_pos / n + z_ans * n_neg / n
         alt = g_alt * n_pos / n + z_alt * n_neg / n
         return ans, alt
+        # return float(ans), float(alt)
 
     @classmethod
     @fantasy_timer
@@ -401,6 +402,7 @@ class UD_grp2_EOdd(UD_grp2_EO):
         del g_alt, g_alt_alt, z_alt, z_alt_alt
         del n, n_ai, n_pos, n_neg
         return ans, alt, alt_alt
+        # return float(ans), float(alt), float(alt_alt)
 
 
 # Definition 2.8 (Predictive equality)

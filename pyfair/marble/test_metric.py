@@ -2,7 +2,7 @@
 
 import sklearn.metrics as metrics
 import numpy as np
-# import pdb
+import pdb
 from pyfair.facil.utils_const import (
     check_equal, judge_transform_need,
     synthetic_dat, synthetic_clf, synthetic_set)

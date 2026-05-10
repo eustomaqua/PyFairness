@@ -54,6 +54,9 @@ def test_subsubsec_241():
         clue = scipy_ttest_for1(errs, .18, alpha)
         assert mark == clue[0] and tau_t == clue[1]
 
+    assert isinstance(s2, float)  # pdb.set_trace()
+    return
+
 
 def test_subsubsec_242():
 
